@@ -39,6 +39,10 @@ bool cScene::LoadLevel(int level)
 	id_DL=glGenLists(1);
 	glNewList(id_DL,GL_COMPILE);
 		glBegin(GL_QUADS);
+			
+			fscanf(fd,"%c",&tile);//ignores first line of file(numEnemies)
+			fscanf(fd,"%c",&tile);//and the /n
+
 			for(j=SCENE_HEIGHT-1;j>=0;j--)
 			{
 				px=SCENE_Xo;
@@ -48,8 +52,7 @@ bool cScene::LoadLevel(int level)
 				{
 					fscanf(fd,"%c",&tile);
 					if(tile ==',') fscanf(fd,"%c",&tile);
-					//if(tile == EOF ) fscanf(fd,"%c",&tile);
-					if(tile=='0')
+					if(tile=='0' || tile =='e')
 					{
 						//Tiles must be != 0 !!!
 						map[(j*SCENE_WIDTH)+i]=0;

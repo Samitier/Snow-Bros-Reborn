@@ -45,6 +45,8 @@ bool cGame::Init()
 	Player.SetWidthHeight(32,32);
 	Player.SetState(STATE_LOOKRIGHT);
 
+	ui.init();
+
 	return res;
 }
 
@@ -108,6 +110,8 @@ void cGame::Render()
 
 	for(int i=0;i<enemies.size();++i) enemies[i].Draw(IMG_ENEMY);
 
+	ui.Draw();
+
 	glutSwapBuffers();
 }
 
@@ -120,8 +124,8 @@ bool cGame::LoadEnemies(int level) {
 
 	res=true;
 
-	if(level<10) sprintf(file,"%s0%d%s",(char *)"enemy",level,(char *)".txt");
-	else		 sprintf(file,"%s%d%s",(char *)"enemy",level,(char *)".txt");
+	if(level<10) sprintf(file,"%s0%d%s",(char *)"levels/",level,(char *)".txt");
+	else		 sprintf(file,"%s%d%s",(char *)"levels/",level,(char *)".txt");
 
 	fd=fopen(file,"r");
 	if(fd==NULL) return false;
@@ -136,7 +140,7 @@ bool cGame::LoadEnemies(int level) {
 		for(int j=0; j<SCENE_WIDTH; ++j) {
 			fscanf(fd,"%c",&tile);
 			if(tile ==',') fscanf(fd,"%c",&tile);
-			if(tile=='7') {
+			if(tile=='e') {
 				Enemy en;
 				en.init();
 				en.SetWidthHeight(32,32);

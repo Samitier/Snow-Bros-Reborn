@@ -5,10 +5,9 @@
 #include "cPlayer.h"
 #include "Enemy.h"
 #include "cData.h"
+#include "UI.h"
 using namespace std;
 
-#define GAME_WIDTH	960
-#define GAME_HEIGHT 640
 
 class cGame
 {
@@ -33,7 +32,7 @@ public:
 private:
 	unsigned char keys[256];
 	cScene Scene;
-	
+	UI ui;
 	cPlayer Player;
 	cData Data;
 	vector<Enemy> enemies;

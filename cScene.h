@@ -4,8 +4,8 @@
 
 #define SCENE_Xo		0
 #define SCENE_Yo		0
-#define SCENE_WIDTH		30
-#define SCENE_HEIGHT	20
+#define SCENE_WIDTH		18
+#define SCENE_HEIGHT	13
 
 #define FILENAME		"levels/"
 #define FILENAME_EXT	".txt"
