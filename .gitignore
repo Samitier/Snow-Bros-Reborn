@@ -156,3 +156,4 @@ corona.*
 
 *.filters
 *.user
+*.sublime-*
