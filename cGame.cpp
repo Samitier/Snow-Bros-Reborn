@@ -78,12 +78,12 @@ bool cGame::Process()
 	bool res=true;
 	
 	//Process Input
-	if(keys[27])			res=false;
-	if(keys['c']||keys['C'])			Player.Throw(Scene.GetMap());
-	if(keys['w'] ||keys['W'])			Player.Jump(Scene.GetMap());
-	if(keys['a']|| keys['A'])			Player.MoveLeft(Scene.GetMap());
-	else if(keys['d']|| keys['D'])		Player.MoveRight(Scene.GetMap());
-	else Player.Stop();
+	if (	keys[27])						res=false;
+	if (	keys['c'] || keys['C'])			Player.Throw(Scene.GetMap());
+	if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
+	if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
+	else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
+	else 									Player.Stop();
 	
 	
 	//Game Logic
