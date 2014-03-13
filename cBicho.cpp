@@ -1,5 +1,4 @@
 #include "cBicho.h"
-#include "cScene.h"
 #include "Globals.h"
 
 cBicho::cBicho(void)
@@ -80,6 +79,7 @@ bool cBicho::CollidesMapWall(int *map,bool right)
 
 bool cBicho::CollidesMapFloor(int *map)
 {
+	if(y>=TILE_SIZE*SCENE_HEIGHT) return false;
 	int tile_x,tile_y;
 	int width_tiles;
 	bool on_base;

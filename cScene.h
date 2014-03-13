@@ -2,9 +2,6 @@
 
 #include "cTexture.h"
 
-#define SCENE_Xo		0
-#define SCENE_Yo		0
-
 
 class cScene
 {

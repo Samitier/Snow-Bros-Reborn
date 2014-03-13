@@ -13,6 +13,10 @@
 #define SCENE_WIDTH		18
 #define SCENE_HEIGHT	13
 
+//Separation from window size to game size//
+#define SCENE_Xo		0
+#define SCENE_Yo		0
+
 //Size of the tiles in px//
 #define TILE_SIZE		32
 #define BLOCK_SIZE		32
@@ -20,6 +24,8 @@
 //Directory and extension of the level files//
 #define FILENAME_DIR	"levels/"
 #define FILENAME_EXT	".txt"
+
+
 
 //Player defines//
 #define PLAYER_WIDTH		 32
