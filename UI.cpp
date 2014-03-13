@@ -13,8 +13,8 @@ UI::~UI(void)
 
 void UI::init() {
 	points = 0;
-	lives = 0;
-	level =0;
+	lives = PLAYER_MAX_LIVES;
+	level =1;
 	width = GAME_WIDTH;
 	height = DEFAULT_UI_HEIGHT;
 	GenerateCallList();
@@ -37,4 +37,8 @@ void UI::GenerateCallList() {
 void UI::Draw() {
 	glCallList(id0);
 	//pintar points lives i level
+}
+
+void UI::setLives(int l){
+	lives =l;
 }

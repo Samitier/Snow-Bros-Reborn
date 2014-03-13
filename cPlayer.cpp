@@ -44,3 +44,29 @@ void cPlayer::Draw(int tex_id)
 
 	DrawRect(tex_id,xo,yo,xf,yf);
 }
+
+void cPlayer::Die() {
+	currentLives--;
+	isDead = true;
+	//Play the death animation
+}
+
+bool cPlayer::checkIfPlayerDead() {
+	if(isDead) {
+		//We have to check the time the player have been dead. If the time is > than a MAX_TIME_DEATH, 
+		//then play the regeneration animation (if currentLives >0) & set the player x, y in the init position of the map
+	}
+	return false;
+}
+
+int cPlayer:: GetCurrentLives() {
+	return currentLives;
+}
+
+bool cPlayer::Collides(cBicho bicho) {
+	//Collision algorithm
+	return false;
+}
+
+
+

@@ -20,6 +20,8 @@ public:
 	bool Loop();
 	void Finalize();
 
+	void GameOver();
+
 	bool LoadEnemies(int level);
 
 	//Input

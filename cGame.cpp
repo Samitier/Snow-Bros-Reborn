@@ -79,22 +79,37 @@ bool cGame::Process()
 {
 	bool res=true;
 	
-	//Process Input
-	if (	keys[27])						res=false;
-	if (	keys['c'] || keys['C'])			Player.Throw(Scene.GetMap());
-	if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
-	if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
-	else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
-	else 									Player.Stop();
+	if(!Player.checkIfPlayerDead()) { //if the player is dead we will not do anything until it revives
+		//Process Input 
+		if (	keys[27])						res=false;
+		if (	keys['c'] || keys['C'])			Player.Throw(Scene.GetMap());
+		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
+		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
+		else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
+		else 									Player.Stop();
 	
 	
-	//Game Logic
-	Player.Logic(Scene.GetMap());
+		//Game Logic
+		Player.Logic(Scene.GetMap());
 	
-	for(int i=0;i<enemies.size();++i) {
-		enemies[i].Move(Scene.GetMap());
-		enemies[i].Logic(Scene.GetMap());
+		//IA MOVEMENT
+		for(int i=0;i<enemies.size();++i) {
+			enemies[i].Move(Scene.GetMap());
+			enemies[i].Logic(Scene.GetMap());
+		}
+
+		//COLLISIONS
+		for(int i=0; i<enemies.size(); ++i) {
+			if(Player.Collides(enemies[i])) {
+				Player.Die();
+				if(Player.GetCurrentLives() == 0) GameOver();
+				else {
+					ui.setLives(Player.GetCurrentLives());
+				}
+			}
+		}
 	}
+
 	return res;
 }
 
@@ -124,8 +139,8 @@ bool cGame::LoadEnemies(int level) {
 
 	res=true;
 
-	if(level<10) sprintf(file,"%s0%d%s",(char *)"levels/",level,(char *)".txt");
-	else		 sprintf(file,"%s%d%s",(char *)"levels/",level,(char *)".txt");
+	if(level<10) sprintf(file,"%s0%d%s",(char *)FILENAME_DIR,level,(char *)FILENAME_EXT);
+	else		 sprintf(file,"%s%d%s",(char *)FILENAME_DIR,level,(char *)FILENAME_EXT);
 
 	fd=fopen(file,"r");
 	if(fd==NULL) return false;
@@ -154,4 +169,9 @@ bool cGame::LoadEnemies(int level) {
 	}
 	fclose(fd);
 	return res;
+}
+
+void cGame::GameOver() {
+	//Game stops. Points set to 0. Lives set to PLAYER_MAX_LIVES. Show a "continue" message. If user presses yes, 
+	//then the level resets and we keep playing. If not, the game starts again at level 1 or it returns to the main menu (if any). 
 }
