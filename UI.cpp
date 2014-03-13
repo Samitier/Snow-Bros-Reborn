@@ -33,17 +33,35 @@ void UI::GenerateCallList() {
 			glVertex2i(width,GAME_HEIGHT);
 		glEnd();
 		glColor4f(1,1,1,1);
+		char *text[] = {"LIVES", "POINTS", "LEVEL"};
+		for(int i=0; i<3;++i) {
+			glRasterPos2f(5+(GAME_WIDTH/3)*i,GAME_HEIGHT-20); 
+			render_string(GLUT_BITMAP_HELVETICA_10,text[i]);
+		}
 	glEndList();
 }
 
 void UI::Draw() {
 	glCallList(id0);
 	//pintar points lives i level
-	glRasterPos2f(10,GAME_HEIGHT-height/2); 
 	stringstream strs;
+	
 	strs << lives;
 	string temp_str = strs.str();
 	char* lvs = (char*) temp_str.c_str();
+	glRasterPos2f(GAME_WIDTH/6,GAME_HEIGHT-20); 
+	render_string(GLUT_BITMAP_HELVETICA_10,lvs);
+	strs.str("");
+	strs << points;
+	temp_str = strs.str();
+	lvs = (char*) temp_str.c_str();
+	glRasterPos2f(3*(GAME_WIDTH/6),GAME_HEIGHT-20); 
+	render_string(GLUT_BITMAP_HELVETICA_10,lvs);
+	strs.str("");
+	strs << level;
+	temp_str = strs.str();
+	lvs = (char*) temp_str.c_str();
+	glRasterPos2f(5*(GAME_WIDTH/6),GAME_HEIGHT-20); 
 	render_string(GLUT_BITMAP_HELVETICA_10,lvs);
 }
 
