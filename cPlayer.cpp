@@ -4,6 +4,14 @@
 cPlayer::cPlayer() {}
 cPlayer::~cPlayer(){}
 
+void cPlayer::init() {
+	SetWidthHeight(PLAYER_WIDTH,PLAYER_HEIGHT);
+	//Player.SetWidthHeight(17,25);
+	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
+	SetState(STATE_LOOKRIGHT);
+	currentLives = PLAYER_MAX_LIVES;
+}
+
 void cPlayer::Draw(int tex_id)
 {	
 	float xo,yo,xf,yf;
@@ -63,10 +71,6 @@ int cPlayer:: GetCurrentLives() {
 	return currentLives;
 }
 
-bool cPlayer::Collides(cBicho bicho) {
-	//Collision algorithm
-	return false;
-}
 
 
 

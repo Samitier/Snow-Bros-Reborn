@@ -39,11 +39,7 @@ bool cGame::Init()
 	//Player initialization
 	res = Data.LoadImage(IMG_PLAYER,"img/SnowBrosSheet.png",GL_RGBA);
 	if(!res) return false;
-	Player.SetWidthHeight(32,32);
-	//Player.SetWidthHeight(17,25);
-	Player.SetTile(4,5);
-	Player.SetWidthHeight(32,32);
-	Player.SetState(STATE_LOOKRIGHT);
+	Player.init();
 
 	ui.init();
 
@@ -99,8 +95,11 @@ bool cGame::Process()
 		}
 
 		//COLLISIONS
+		cRect rec;
 		for(int i=0; i<enemies.size(); ++i) {
-			if(Player.Collides(enemies[i])) {
+			cRect* rc = &rec;
+			enemies[i].GetArea(rc);
+			if(Player.Collides(rc)) {
 				Player.Die();
 				if(Player.GetCurrentLives() == 0) GameOver();
 				else {

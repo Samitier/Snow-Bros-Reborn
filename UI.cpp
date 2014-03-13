@@ -1,6 +1,8 @@
 #include "UI.h"
 #include "Globals.h"
-
+#include<string>
+#include <sstream>
+using namespace std;
 
 UI::UI(void)
 {
@@ -37,8 +39,21 @@ void UI::GenerateCallList() {
 void UI::Draw() {
 	glCallList(id0);
 	//pintar points lives i level
+	glRasterPos2f(10,GAME_HEIGHT-height/2); 
+	stringstream strs;
+	strs << lives;
+	string temp_str = strs.str();
+	char* lvs = (char*) temp_str.c_str();
+	render_string(GLUT_BITMAP_HELVETICA_10,lvs);
 }
 
 void UI::setLives(int l){
 	lives =l;
+}
+
+void UI::render_string(void* font, const char* string)
+{
+	int i,len = strlen(string);
+	for(i=0;i<len;i++)
+		glutBitmapCharacter(font, string[i]);
 }

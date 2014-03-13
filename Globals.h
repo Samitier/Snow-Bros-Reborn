@@ -6,8 +6,8 @@
 #include <gl/glut.h>
 
 //Number of pixels of the window//
-#define GAME_WIDTH 576
-#define GAME_HEIGHT 448
+#define GAME_WIDTH		576
+#define GAME_HEIGHT		448
 
 //Number of tiles of the levels//
 #define SCENE_WIDTH		18
@@ -21,4 +21,9 @@
 #define FILENAME_DIR	"levels/"
 #define FILENAME_EXT	".txt"
 
-#define PLAYER_MAX_LIVES 3
+//Player defines//
+#define PLAYER_WIDTH		 32
+#define PLAYER_HEIGHT		 32
+#define INIT_PLAYER_X_TILE	  4
+#define INIT_PLAYER_Y_TILE	  5
+#define PLAYER_MAX_LIVES	  300000

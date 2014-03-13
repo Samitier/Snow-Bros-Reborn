@@ -24,5 +24,6 @@ private:
 	int id0;
 
 	void GenerateCallList();
+	void render_string(void* font, const char* string);
 };
 
