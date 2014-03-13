@@ -78,7 +78,12 @@ bool cGame::Process()
 	if(!Player.checkIfPlayerDead()) { //if the player is dead we will not do anything until it revives
 		//Process Input 
 		if (	keys[27])						res=false;
-		if (	keys['c'] || keys['C'])			Player.Throw(Scene.GetMap());
+		if (	keys['c'] || keys['C'])	
+		{
+				Player.Throw(Scene.GetMap());
+				projectileInit();
+
+		}
 		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
 		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
 		else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
@@ -87,7 +92,14 @@ bool cGame::Process()
 	
 		//Game Logic
 		Player.Logic(Scene.GetMap());
-	
+		
+		//PROJECTILES
+		for (int i = 0; i < Projectiles.size(); ++i)
+		{
+			Projectiles[i].Move(Scene.GetMap());
+			Projectiles[i].Logic(Scene.GetMap());
+		}
+
 		//IA MOVEMENT
 		for(int i=0;i<enemies.size();++i) {
 			enemies[i].Move(Scene.GetMap());
@@ -121,8 +133,12 @@ void cGame::Render()
 
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
 	Player.Draw(Data.GetID(IMG_PLAYER));
+	
+	for(int i=0;i<enemies.size();++i) 
+		enemies[i].Draw(IMG_ENEMY);
 
-	for(int i=0;i<enemies.size();++i) enemies[i].Draw(IMG_ENEMY);
+	for (int i = 0; i < Projectiles.size(); ++i) 
+		Projectiles[i].Draw(Data.GetID(IMG_PLAYER));
 
 	ui.Draw();
 
@@ -173,4 +189,23 @@ bool cGame::LoadEnemies(int level) {
 void cGame::GameOver() {
 	//Game stops. Points set to 0. Lives set to PLAYER_MAX_LIVES. Show a "continue" message. If user presses yes, 
 	//then the level resets and we keep playing. If not, the game starts again at level 1 or it returns to the main menu (if any). 
+}
+
+bool  cGame::projectileInit() {
+		cProjectile proj;
+		int x, y;
+		int *ax, *ay;
+		ax = &x;
+		ay = &y;
+		Player.GetPosition(ax,ay);
+		bool res = true;
+		res = Data.LoadImage(IMG_PLAYER,"img/SnowBrosSheet.png",GL_RGBA);
+		if(!res) return false;
+		//if stateright go right
+		proj.SetWidthHeight(15,10);
+		proj.SetPosition(*ax,*ay);
+		proj.SetWidthHeight(15,10);
+		proj.SetState(STATE_WALKRIGHT);
+		Projectiles.push_back(proj);
+		return res;
 }

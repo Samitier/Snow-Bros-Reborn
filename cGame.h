@@ -5,6 +5,7 @@
 #include "cPlayer.h"
 #include "Enemy.h"
 #include "cData.h"
+#include "cProjectile.h"
 #include "UI.h"
 
 using namespace std;
@@ -34,9 +35,11 @@ public:
 
 private:
 	unsigned char keys[256];
+	bool  projectileInit();
 	cScene Scene;
 	UI ui;
 	cPlayer Player;
 	cData Data;
 	vector<Enemy> enemies;
+	vector<cProjectile> Projectiles;
 };
