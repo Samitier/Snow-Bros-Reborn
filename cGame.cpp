@@ -102,8 +102,10 @@ bool cGame::Process()
 	//PROJECTILES
 	for (int i = 0; i < Projectiles.size(); ++i)
 	{
-		Projectiles[i].Move(Scene.GetMap());
-		Projectiles[i].Logic(Scene.GetMap());
+		if (Projectiles[i].Logic(Scene.GetMap())) 
+		{
+			Projectiles.erase(Projectiles.begin() + i);
+		}
 	}
 
 	//IA MOVEMENT

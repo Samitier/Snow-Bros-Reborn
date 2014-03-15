@@ -5,20 +5,25 @@
 cProjectile::cProjectile(cBicho b)
 {
 		
-		int x, y;
-		int *ax, *ay;
-		ax = &x;
-		ay = &y;
-		b.GetPosition(ax,ay);
+		int x, y, w, h, aux;
+		b.GetPosition(&x,&y);
+		b.GetWidthHeight(&w, &h);
+		if (b.GetState() == STATE_THROWLEFT) 
+		{
+			aux = STATE_WALKLEFT;
+			x -= 10; //15;
+		}
+		else 
+		{
+			aux = STATE_WALKRIGHT;
+			x += w - 5;//w;
+		}
+		y += h/2 - 5;
 		SetWidthHeight(15,10);
-		SetPosition(*ax,*ay);
-		SetWidthHeight(15,10);
-		int aux = (b.GetState() == STATE_THROWLEFT)
-			? aux = STATE_WALKLEFT 
-			: aux = STATE_WALKRIGHT;
+		SetPosition(x, y); 
 		SetState(aux);
-		falling_y = *ay;
-		falling_alfa  = 0;
+		falling_y = y;
+		falling_alfa  = 80;
 }
 
 
@@ -43,35 +48,26 @@ void cProjectile::Draw(int tex_id)
 	DrawRect(tex_id,xo,yo,xf,yf);
 }
 
-void cProjectile::Move(int *map)
-{
-	if (GetState() == STATE_WALKRIGHT) MoveRight(map);
-	else MoveLeft(map);
 
-}
-
-void cProjectile::Logic(int *map)
+bool cProjectile::Logic(int *map)
 {
 	float alfa;
-	int auxx, auxy;
-	int *x = &auxx;
-	int *y = &auxy;
-	GetPosition(x, y);
-	falling_alfa += 6; //
-	if(falling_alfa == 180) *y = falling_y;
-	else
+	int x, y;
+	GetPosition(&x,&y);
+	if (GetState() == STATE_WALKRIGHT) 
 	{
-		alfa = ((float)falling_alfa) * 0.017453f;
-		*y = falling_y + (int)( ((float)96) * sin(alfa) );//
-		if(falling_alfa > 90)
-		{
-			//Over floor?
-			if(CollidesMapFloor(map)) 
-			{
-
-			}
-		}
+		x += 5;
 	}
+	else 
+	{
+		x -= 5;
+	}
+	falling_alfa  += HIGHT_STEP;
 	alfa = ((float)falling_alfa) * 0.017453f;
-	SetPosition(*x,*y);
+	y = falling_y - 195 + (int)( ((float)MAX_HEIGHT) * sin(alfa) );
+	SetPosition(x,y);
+	if (CollidesMapFloor(map)) return true;
+	if (CollidesMapWall(map, false)) return true;
+	if (CollidesMapWall(map, true)) return true;
+	return false;
 }

@@ -53,6 +53,7 @@ void cPlayer::Draw(int tex_id)
 								NextFrame(2);
 								break;
 	}
+
 	if(isInvincible) {
 		alfa-=incAlfa;
 		if(alfa <= 0.0){
