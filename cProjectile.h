@@ -9,5 +9,10 @@ public:
 
 	void Draw(int tex_id);
 	void Move(int *map);
+	void Logic(int *map);
+
+private:
+	int falling_alfa;
+	int falling_y;
 };
 

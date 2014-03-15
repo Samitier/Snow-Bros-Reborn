@@ -35,7 +35,7 @@ public:
 
 private:
 	unsigned char keys[256];
-	bool  projectileInit();
+	void  projectileInit();
 	cScene Scene;
 	UI ui;
 	cPlayer Player;

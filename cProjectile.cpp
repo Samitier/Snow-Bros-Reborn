@@ -30,5 +30,14 @@ void cProjectile::Draw(int tex_id)
 
 void cProjectile::Move(int *map)
 {
-	MoveRight(map);
+	if (GetState() == STATE_WALKRIGHT) MoveRight(map);
+	else MoveLeft(map);
+
+}
+
+void cProjectile::Logic(int *map)
+{
+	/*float alfa;
+	alfa = ((float)falling_alfa) * 0.017453f;
+	y = falling_y + (int)( ((float)JUMP_HEIGHT) * sin(alfa) );*/
 }

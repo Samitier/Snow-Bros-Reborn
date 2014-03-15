@@ -107,6 +107,7 @@ bool cGame::Process()
 		}
 
 		//COLLISIONS
+
 		cRect rec;
 		for(int i=0; i<enemies.size(); ++i) {
 			cRect* rc = &rec;
@@ -191,21 +192,19 @@ void cGame::GameOver() {
 	//then the level resets and we keep playing. If not, the game starts again at level 1 or it returns to the main menu (if any). 
 }
 
-bool  cGame::projectileInit() {
+void  cGame::projectileInit() {
 		cProjectile proj;
 		int x, y;
 		int *ax, *ay;
 		ax = &x;
 		ay = &y;
 		Player.GetPosition(ax,ay);
-		bool res = true;
-		res = Data.LoadImage(IMG_PLAYER,"img/SnowBrosSheet.png",GL_RGBA);
-		if(!res) return false;
-		//if stateright go right
 		proj.SetWidthHeight(15,10);
 		proj.SetPosition(*ax,*ay);
 		proj.SetWidthHeight(15,10);
-		proj.SetState(STATE_WALKRIGHT);
+		int aux = (Player.GetState() == STATE_THROWLEFT)
+			? aux = STATE_WALKLEFT 
+			: aux = STATE_WALKRIGHT;
+		proj.SetState(aux);
 		Projectiles.push_back(proj);
-		return res;
 }
