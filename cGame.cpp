@@ -42,7 +42,7 @@ bool cGame::Init()
 	Player.init();
 
 	ui.init();
-
+	time = glutGet(GLUT_ELAPSED_TIME);
 	return res;
 }
 
@@ -51,7 +51,9 @@ bool cGame::Loop()
 	bool res=true;
 
 	res = Process();
+	time= glutGet(GLUT_ELAPSED_TIME);
 	if(res) Render();
+	
 
 	return res;
 }
@@ -74,8 +76,10 @@ void cGame::ReadMouse(int button, int state, int x, int y)
 bool cGame::Process()
 {
 	bool res=true;
+	bool playerDead = Player.checkIfPlayerDead(DeltaTime());
+	bool playerInvincible = Player.checkIfPlayerInvincible(DeltaTime());
 	
-	if(!Player.checkIfPlayerDead()) { //if the player is dead we will not do anything until it revives
+	if(!playerDead) { //if the player is dead we will not do anything until it revives
 		//Process Input 
 		if (	keys[27])						res=false;
 		if (	keys['c'] || keys['C'])	
@@ -89,25 +93,26 @@ bool cGame::Process()
 		else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
 		else 									Player.Stop();
 	
-	
 		//Game Logic
 		Player.Logic(Scene.GetMap());
+
+	}
 		
-		//PROJECTILES
-		for (int i = 0; i < Projectiles.size(); ++i)
-		{
-			Projectiles[i].Move(Scene.GetMap());
-			Projectiles[i].Logic(Scene.GetMap());
-		}
+	//PROJECTILES
+	for (int i = 0; i < Projectiles.size(); ++i)
+	{
+		Projectiles[i].Move(Scene.GetMap());
+		Projectiles[i].Logic(Scene.GetMap());
+	}
 
-		//IA MOVEMENT
-		for(int i=0;i<enemies.size();++i) {
-			enemies[i].Move(Scene.GetMap());
-			enemies[i].Logic(Scene.GetMap());
-		}
+	//IA MOVEMENT
+	for(int i=0;i<enemies.size();++i) {
+		enemies[i].Move(Scene.GetMap());
+		enemies[i].Logic(Scene.GetMap());
+	}
 
-		//COLLISIONS
-
+		//ENEMY COLLISIONS
+	if(!playerDead && !playerInvincible) {
 		cRect rec;
 		for(int i=0; i<enemies.size(); ++i) {
 			cRect* rc = &rec;
@@ -207,4 +212,8 @@ void  cGame::projectileInit() {
 			: aux = STATE_WALKRIGHT;
 		proj.SetState(aux);
 		Projectiles.push_back(proj);
+}
+
+int cGame::DeltaTime() {
+	return glutGet(GLUT_ELAPSED_TIME)-time;
 }

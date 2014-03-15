@@ -16,6 +16,7 @@
 #define STATE_JUMPRIGHT		5
 #define STATE_THROWLEFT		6
 #define STATE_THROWRIGHT	7
+#define STATE_DIE			8
 
 class cRect
 {

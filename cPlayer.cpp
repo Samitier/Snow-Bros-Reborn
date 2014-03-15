@@ -10,6 +10,9 @@ void cPlayer::init() {
 	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
 	SetState(STATE_LOOKRIGHT);
 	currentLives = PLAYER_MAX_LIVES;
+	timecount =0;
+	alfa = 1.0;
+	incAlfa = 0.05;
 }
 
 void cPlayer::Draw(int tex_id)
@@ -46,23 +49,62 @@ void cPlayer::Draw(int tex_id)
 		case STATE_THROWLEFT:	xo = 5*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
 								NextFrame(2);
 								break;
+		case STATE_DIE:			xo = 8*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+								NextFrame(2);
+								break;
 	}
+	if(isInvincible) {
+		alfa-=incAlfa;
+		if(alfa <= 0.0){
+			alfa=0.0;
+			incAlfa *=-1.0;
+		}
+		else if(alfa >= 1.0){
+			alfa=1.0;
+			incAlfa *=-1.0;
+		}
+		glColor4f(alfa,alfa,alfa,1.0);
+	}
+	else glColor4f(1.0,1.0,1.0,1.0);
+
 	xf = xo + 0.0283f;
 	yf = yo - 0.0313f;
 
 	DrawRect(tex_id,xo,yo,xf,yf);
+	glColor4f(1.0,1.0,1.0,1.0);
 }
 
 void cPlayer::Die() {
 	currentLives--;
 	isDead = true;
-	//Play the death animation
+	SetState(STATE_DIE);
 }
 
-bool cPlayer::checkIfPlayerDead() {
+bool cPlayer::checkIfPlayerDead(int time) {
 	if(isDead) {
-		//We have to check the time the player have been dead. If the time is > than a MAX_TIME_DEATH, 
-		//then play the regeneration animation (if currentLives >0) & set the player x, y in the init position of the map
+		timecount+= time;
+		if(timecount >= TIME_DEATH) {
+			timecount =0;
+			isDead = false;
+			SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
+			isInvincible=true;
+			SetState(STATE_LOOKRIGHT);
+			return false;
+		}
+		else return true;
+	}
+	return false;
+}
+
+bool cPlayer::checkIfPlayerInvincible(int time) {
+	if(isInvincible) {
+		timecount+= time;
+		if(timecount >= TIME_INVINCIBLE) {
+			timecount =0;
+			isInvincible = false;
+			return false;
+		}
+		else return true;
 	}
 	return false;
 }

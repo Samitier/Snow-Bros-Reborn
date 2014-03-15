@@ -12,6 +12,8 @@ public:
 	~cPlayer();
 
 	bool isDead; //must set to false in init function
+	bool isInvincible;
+
 	int currentLives; //must set to PLAYER_MAX_LIVES in init function
 
 	void init();
@@ -19,7 +21,14 @@ public:
 	
 	void Die();
 	
-	bool checkIfPlayerDead();
+	bool checkIfPlayerDead(int time);
+
+	bool checkIfPlayerInvincible(int time);
 
 	int GetCurrentLives();
+
+private: 
+	int timecount;
+	float alfa;
+	float incAlfa;
 };

@@ -33,10 +33,13 @@ public:
 	//Output
 	void Render();
 
+	int DeltaTime();
+
 private:
 	unsigned char keys[256];
 	void  projectileInit();
 	cScene Scene;
+	long time;
 	UI ui;
 	cPlayer Player;
 	cData Data;

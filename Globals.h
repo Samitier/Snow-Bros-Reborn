@@ -26,10 +26,11 @@
 #define FILENAME_EXT	".txt"
 
 
-
 //Player defines//
 #define PLAYER_WIDTH		 32
 #define PLAYER_HEIGHT		 32
-#define INIT_PLAYER_X_TILE	  4
-#define INIT_PLAYER_Y_TILE	  5
-#define PLAYER_MAX_LIVES	  300000
+#define INIT_PLAYER_X_TILE	  8
+#define INIT_PLAYER_Y_TILE	  1
+#define PLAYER_MAX_LIVES	  3
+#define TIME_INVINCIBLE		 2000
+#define TIME_DEATH			 800
