@@ -85,7 +85,8 @@ bool cGame::Process()
 		if (	keys['c'] || keys['C'])	
 		{
 				Player.Throw(Scene.GetMap());
-				projectileInit();
+				cProjectile proj(Player);
+				Projectiles.push_back(proj);
 
 		}
 		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
@@ -196,24 +197,6 @@ void cGame::GameOver() {
 	//Game stops. Points set to 0. Lives set to PLAYER_MAX_LIVES. Show a "continue" message. If user presses yes, 
 	//then the level resets and we keep playing. If not, the game starts again at level 1 or it returns to the main menu (if any). 
 }
-
-void  cGame::projectileInit() {
-		cProjectile proj;
-		int x, y;
-		int *ax, *ay;
-		ax = &x;
-		ay = &y;
-		Player.GetPosition(ax,ay);
-		proj.SetWidthHeight(15,10);
-		proj.SetPosition(*ax,*ay);
-		proj.SetWidthHeight(15,10);
-		int aux = (Player.GetState() == STATE_THROWLEFT)
-			? aux = STATE_WALKLEFT 
-			: aux = STATE_WALKRIGHT;
-		proj.SetState(aux);
-		Projectiles.push_back(proj);
-}
-
 int cGame::DeltaTime() {
 	return glutGet(GLUT_ELAPSED_TIME)-time;
 }

@@ -2,8 +2,23 @@
 
 
 
-cProjectile::cProjectile(void)
+cProjectile::cProjectile(cBicho b)
 {
+		
+		int x, y;
+		int *ax, *ay;
+		ax = &x;
+		ay = &y;
+		b.GetPosition(ax,ay);
+		SetWidthHeight(15,10);
+		SetPosition(*ax,*ay);
+		SetWidthHeight(15,10);
+		int aux = (b.GetState() == STATE_THROWLEFT)
+			? aux = STATE_WALKLEFT 
+			: aux = STATE_WALKRIGHT;
+		SetState(aux);
+		falling_y = *ay;
+		falling_alfa  = 0;
 }
 
 
@@ -37,7 +52,26 @@ void cProjectile::Move(int *map)
 
 void cProjectile::Logic(int *map)
 {
-	/*float alfa;
+	float alfa;
+	int auxx, auxy;
+	int *x = &auxx;
+	int *y = &auxy;
+	GetPosition(x, y);
+	falling_alfa += 6; //
+	if(falling_alfa == 180) *y = falling_y;
+	else
+	{
+		alfa = ((float)falling_alfa) * 0.017453f;
+		*y = falling_y + (int)( ((float)96) * sin(alfa) );//
+		if(falling_alfa > 90)
+		{
+			//Over floor?
+			if(CollidesMapFloor(map)) 
+			{
+
+			}
+		}
+	}
 	alfa = ((float)falling_alfa) * 0.017453f;
-	y = falling_y + (int)( ((float)JUMP_HEIGHT) * sin(alfa) );*/
+	SetPosition(*x,*y);
 }

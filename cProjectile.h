@@ -4,7 +4,7 @@
 class cProjectile :	public cBicho
 {
 public:
-	cProjectile(void);
+	cProjectile(cBicho b);
 	virtual ~cProjectile(void);
 
 	void Draw(int tex_id);
