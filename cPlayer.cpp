@@ -12,6 +12,8 @@ void cPlayer::init() {
 	currentLives = PLAYER_MAX_LIVES;
 	timecount =0;
 	alfa = 1.0;
+	lastThrow = -TIME_BETWEEN_PROJ;
+	canThrow = true;
 	incAlfa = 0.05;
 }
 
@@ -79,6 +81,24 @@ void cPlayer::Die() {
 	currentLives--;
 	isDead = true;
 	SetState(STATE_DIE);
+}
+
+bool cPlayer::checkCanThrow() 
+{
+	if(canThrow) 
+	{
+		canThrow = false;
+		lastThrow = glutGet(GLUT_ELAPSED_TIME);
+		return true;
+	}
+	else
+	{
+		if (glutGet(GLUT_ELAPSED_TIME) > lastThrow + TIME_BETWEEN_PROJ)
+		{
+			canThrow = true;
+		}
+	}
+	return false;
 }
 
 bool cPlayer::checkIfPlayerDead(int time) {

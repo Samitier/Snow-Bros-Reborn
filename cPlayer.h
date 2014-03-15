@@ -20,15 +20,17 @@ public:
 	void Draw(int tex_id);
 	
 	void Die();
-	
-	bool checkIfPlayerDead(int time);
 
+	bool checkIfPlayerDead(int time);
 	bool checkIfPlayerInvincible(int time);
+	bool checkCanThrow();
 
 	int GetCurrentLives();
 
 private: 
 	int timecount;
+	bool canThrow;
+	int lastThrow;
 	float alfa;
 	float incAlfa;
 };

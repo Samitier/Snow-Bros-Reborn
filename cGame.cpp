@@ -53,8 +53,6 @@ bool cGame::Loop()
 	res = Process();
 	time= glutGet(GLUT_ELAPSED_TIME);
 	if(res) Render();
-	
-
 	return res;
 }
 
@@ -84,15 +82,12 @@ bool cGame::Process()
 		if (	keys[27])	res=false;
 		if (	keys['c'] || keys['C'])	
 		{
-				long t;
-				Player.GetLastThrow(&t);
-				Player.Throw(Scene.GetMap(),t);
-				//TODO:
-				//if (DeltaTime() > t+100) 
-				//{
-					cProjectile proj(Player);
-					Projectiles.push_back(proj);
-				//}
+			if (Player.checkCanThrow()) 
+			{
+				Player.Throw(Scene.GetMap());
+				cProjectile proj(Player);
+				Projectiles.push_back(proj);
+			}
 		}
 		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
 		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
@@ -106,12 +101,8 @@ bool cGame::Process()
 		
 	//PROJECTILES
 	for (int i = 0; i < Projectiles.size(); ++i)
-	{
 		if (Projectiles[i].Logic(Scene.GetMap())) 
-		{
 			Projectiles.erase(Projectiles.begin() + i);
-		}
-	}
 
 	//IA MOVEMENT
 	for(int i=0;i<enemies.size();++i) {

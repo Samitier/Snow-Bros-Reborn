@@ -46,10 +46,6 @@ void cBicho::GetWidthHeight(int *width,int *height)
 	*width = w;
 	*height = h;
 }
-void cBicho::GetLastThrow(long * t)
-{
-	*t = lastThrow;
-}
 
 bool cBicho::Collides(cRect *rc)
 {
@@ -268,10 +264,9 @@ void cBicho::Jump(int *map)
 	}
 }
 
-void cBicho::Throw(int *map,long t)
+void cBicho::Throw(int *map)
 {
 	throwing = true;
-	lastThrow = t;
 	switch(state)
 	{
 		case STATE_LOOKLEFT:
