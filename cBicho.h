@@ -58,12 +58,12 @@ public:
 	void NextFrame(int max);
 	int  GetFrame();
 	
+	bool jumping;
 private:
 	int x,y;
 	int w,h;
 	int state;
 
-	bool jumping;
 	bool throwing;
 	int jump_alfa;
 	int jump_y;

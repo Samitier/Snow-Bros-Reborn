@@ -88,6 +88,7 @@ bool cPlayer::checkIfPlayerDead(int time) {
 			isDead = false;
 			SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
 			isInvincible=true;
+			jumping= false;
 			SetState(STATE_LOOKRIGHT);
 			return false;
 		}
