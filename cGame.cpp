@@ -81,13 +81,18 @@ bool cGame::Process()
 	
 	if(!playerDead) { //if the player is dead we will not do anything until it revives
 		//Process Input 
-		if (	keys[27])						res=false;
+		if (	keys[27])	res=false;
 		if (	keys['c'] || keys['C'])	
 		{
-				Player.Throw(Scene.GetMap());
-				cProjectile proj(Player);
-				Projectiles.push_back(proj);
-
+				long t;
+				Player.GetLastThrow(&t);
+				Player.Throw(Scene.GetMap(),t);
+				//TODO:
+				//if (DeltaTime() > t+100) 
+				//{
+					cProjectile proj(Player);
+					Projectiles.push_back(proj);
+				//}
 		}
 		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
 		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
@@ -114,7 +119,7 @@ bool cGame::Process()
 		enemies[i].Logic(Scene.GetMap());
 	}
 
-		//ENEMY COLLISIONS
+	//ENEMY COLLISIONS
 	if(!playerDead && !playerInvincible) {
 		cRect rec;
 		for(int i=0; i<enemies.size(); ++i) {
@@ -129,6 +134,7 @@ bool cGame::Process()
 			}
 		}
 	}
+
 
 	return res;
 }

@@ -48,9 +48,10 @@ public:
 	void MoveRight(int *map);
 	void MoveLeft(int *map);
 	void Jump(int *map);
-	void Throw(int *map);
+	void Throw(int *map,long t);
 	void Stop();
 	void Logic(int *map);
+	void GetLastThrow(long * t);
 
 	int  GetState();
 	void SetState(int s);
@@ -63,7 +64,7 @@ private:
 	int x,y;
 	int w,h;
 	int state;
-
+	long lastThrow;
 	bool throwing;
 	int jump_alfa;
 	int jump_y;

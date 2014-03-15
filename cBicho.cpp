@@ -46,6 +46,11 @@ void cBicho::GetWidthHeight(int *width,int *height)
 	*width = w;
 	*height = h;
 }
+void cBicho::GetLastThrow(long * t)
+{
+	*t = lastThrow;
+}
+
 bool cBicho::Collides(cRect *rc)
 {
 	return ! (
@@ -138,7 +143,6 @@ void cBicho::DrawRect(int tex_id,float xo,float yo,float xf,float yf)
 
 	glDisable(GL_TEXTURE_2D);
 }
-//TODO: Cambiar direccion en salto
 void cBicho::MoveLeft(int *map)
 {
 	int xaux;
@@ -175,7 +179,6 @@ void cBicho::MoveLeft(int *map)
 		}
 	}
 }
-//TODO: Cambiar direccion en salto
 void cBicho::MoveRight(int *map)
 {
 	int xaux;
@@ -265,9 +268,10 @@ void cBicho::Jump(int *map)
 	}
 }
 
-void cBicho::Throw(int *map)
+void cBicho::Throw(int *map,long t)
 {
 	throwing = true;
+	lastThrow = t;
 	switch(state)
 	{
 		case STATE_LOOKLEFT:
