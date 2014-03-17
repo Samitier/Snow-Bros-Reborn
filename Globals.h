@@ -37,5 +37,5 @@
 
 
 //Enemy defines//
-#define TIME_WITH_SNOW		100
+#define TIME_WITH_SNOW		50
 #define TOTAL_HITS			4

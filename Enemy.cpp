@@ -17,9 +17,18 @@ void Enemy::init() {
 void Enemy::Draw(int tex_id)
 {	
 	float xo,yo,xf,yf;
-	xo=0; yo=1;
-	xf = 1;
+	xo=0.125*4; yo=0.125;
+	xf = 0.125*5;
 	yf = 0;
+
+	if(hit) {
+		xo=0.125*(life-1);
+		xf=xo+0.125;
+		if(!isSnowball) {
+			yo=(GetFrame()+1)*0.125; yf = GetFrame()*0.125;
+		}
+		NextFrame(2);
+	}
 
 	DrawRect(tex_id,xo,yo,xf,yf);
 }
@@ -61,6 +70,7 @@ bool Enemy::isHit() {
 void Enemy::Hit() {
 	hit=true;
 	++life;
+	timecount =0;
 	if(life>=TOTAL_HITS) {
 		life =TOTAL_HITS;
 		isSnowball = true;
