@@ -23,7 +23,7 @@ public:
 	bool isInvincible();
 	bool checkCanThrow();
 
-	void Logic(int *map);
+	virtual void Logic(int *map);
 
 	void GetCurrentPoints(int* p);
 	void GetCurrentLives(int* l);

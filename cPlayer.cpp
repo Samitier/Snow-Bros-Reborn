@@ -12,7 +12,6 @@ void cPlayer::init() {
 	lives = PLAYER_MAX_LIVES;
 	points = 0;
 	timecount =0;
-	lives = PLAYER_MAX_LIVES;
 	alfa = 1.0;
 	incAlfa = 0.1;
 	dead = false;

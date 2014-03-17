@@ -9,16 +9,17 @@ public:
 	~Enemy();
 
 	void init();
-	void Draw(int tex_id);
-	void Logic(int *map);
+	virtual void Draw(int tex_id);
+	virtual void Logic(int *map);
 	void Hit();
+	virtual void AI(int *map);
 	bool isHit();
+	void IsSnowball(bool* b);
+	void GetLife(int* l);
+	void GetTimecount(int* t);
 
 private:
 	int amountOfSnow;
-	int points;
-	int movsps;
-	int rnd;
 	bool hit;
 	bool isSnowball;
 	int life;

@@ -11,7 +11,7 @@ public:
 	virtual ~cProjectile(void);
 
 	void Draw(int tex_id);
-	bool Logic(int *map);
+	void Logic(int *map);
 
 private:
 	int falling_alfa;

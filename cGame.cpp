@@ -98,10 +98,17 @@ bool cGame::Process()
 	Player.Logic(Scene.GetMap());
 		
 	//PROJECTILES LOGIC
-	for (int i = 0; i < Projectiles.size(); ++i)
-		if (Projectiles[i].Logic(Scene.GetMap())) 
+	for (int i = 0; i < Projectiles.size(); ++i) 
+	{
+		if (Projectiles[i].CollidesMapFloor(Scene.GetMap()) ||
+			Projectiles[i].CollidesMapWall(Scene.GetMap(), false) ||
+			Projectiles[i].CollidesMapWall(Scene.GetMap(), true)) 
+		{
 			Projectiles.erase(Projectiles.begin() + i);
-
+		}
+		else Projectiles[i].Logic(Scene.GetMap()) ;
+}
+	
 	//ENEMY LOGIC
 	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
 
@@ -170,23 +177,21 @@ bool cGame::LoadEnemies(int level) {
 	if(fd==NULL) return false;
 
 	fscanf(fd,"%c",&tile);
-	int numEnemies = tile-48;
-	enemies = vector<Enemy>(numEnemies);
+
+	enemies = vector<EnemyOne>();
 
 	fscanf(fd,"%c",&tile);
-	int k =0;
 	for(int i=SCENE_HEIGHT-1;i>=0;i--){
 		for(int j=0; j<SCENE_WIDTH; ++j) {
 			fscanf(fd,"%c",&tile);
 			if(tile ==',') fscanf(fd,"%c",&tile);
 			if(tile=='e') {
-				Enemy en;
+				EnemyOne en;
 				en.init();
 				en.SetWidthHeight(32,32);
 				en.SetTile(j,i);
 				en.SetState(STATE_LOOKRIGHT);
-				enemies[k] = en;
-				k++;
+				enemies.push_back(en);
 			}
 
 		}
