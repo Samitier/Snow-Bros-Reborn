@@ -9,8 +9,10 @@ void cPlayer::init() {
 	//Player.SetWidthHeight(17,25);
 	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
 	SetState(STATE_LOOKRIGHT);
-	currentLives = PLAYER_MAX_LIVES;
+	lives = PLAYER_MAX_LIVES;
+	points = 0;
 	timecount =0;
+	lives = PLAYER_MAX_LIVES;
 	alfa = 1.0;
 	incAlfa = 0.1;
 	dead = false;
@@ -79,8 +81,13 @@ void cPlayer::Draw(int tex_id)
 	}
 }
 
+void cPlayer::GetCurrentPoints(int* p)
+{
+	*p = points; 
+}
+
 void cPlayer::Die() {
-	currentLives--;
+	lives--;
 	dead = true;
 	SetState(STATE_DIE);
 }
@@ -93,8 +100,8 @@ bool cPlayer::isInvincible() {
 	return invincible;
 }
 
-int cPlayer:: GetCurrentLives() {
-	return currentLives;
+void cPlayer:: GetCurrentLives(int* l) {
+	*l = lives;
 }
 
 void cPlayer::Logic(int *map) {
