@@ -42,7 +42,7 @@ bool cGame::Init()
 	Player.init();
 
 	ui.init();
-	time = glutGet(GLUT_ELAPSED_TIME);
+	throwing = false;
 	return res;
 }
 
@@ -51,7 +51,6 @@ bool cGame::Loop()
 	bool res=true;
 
 	res = Process();
-	time= glutGet(GLUT_ELAPSED_TIME);
 	if(res) Render();
 	return res;
 }
@@ -74,53 +73,51 @@ void cGame::ReadMouse(int button, int state, int x, int y)
 bool cGame::Process()
 {
 	bool res=true;
-	bool playerDead = Player.checkIfPlayerDead(DeltaTime());
-	bool playerInvincible = Player.checkIfPlayerInvincible(DeltaTime());
-	
-	if(!playerDead) { //if the player is dead we will not do anything until it revives
+
+	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
 		//Process Input 
 		if (	keys[27])	res=false;
-		if (	keys['c'] || keys['C'])	
+		if (	(keys[' ']) && !throwing)
 		{
-			if (Player.checkCanThrow()) 
-			{
+				throwing = true;
 				Player.Throw(Scene.GetMap());
 				cProjectile proj(Player);
 				Projectiles.push_back(proj);
-			}
 		}
+		if(!keys[' ']) throwing = false;
 		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
 		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
 		else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
 		else 									Player.Stop();
-	
-		//Game Logic
-		Player.Logic(Scene.GetMap());
-
 	}
+
+	//PLAYER LOGIC
+	Player.Logic(Scene.GetMap());
 		
-	//PROJECTILES
+	//PROJECTILES LOGIC
 	for (int i = 0; i < Projectiles.size(); ++i)
 		if (Projectiles[i].Logic(Scene.GetMap())) 
 			Projectiles.erase(Projectiles.begin() + i);
 
-	//IA MOVEMENT
-	for(int i=0;i<enemies.size();++i) {
-		enemies[i].Move(Scene.GetMap());
-		enemies[i].Logic(Scene.GetMap());
-	}
+	//ENEMY LOGIC
+	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
 
-	//ENEMY COLLISIONS
-	if(!playerDead && !playerInvincible) {
+	//COLLISIONS
+	if(!Player.isDead()) {
 		cRect rec;
 		for(int i=0; i<enemies.size(); ++i) {
-			cRect* rc = &rec;
-			enemies[i].GetArea(rc);
-			if(Player.Collides(rc)) {
+			enemies[i].GetArea(&rec);
+			if(!Player.isInvincible() && Player.Collides(&rec) && !enemies[i].isHit()) {
 				Player.Die();
 				if(Player.GetCurrentLives() == 0) GameOver();
 				else {
 					ui.setLives(Player.GetCurrentLives());
+				}
+			}
+			for(int j=0; j<Projectiles.size();++j) {
+				if(Projectiles[j].Collides(&rec)){
+					enemies[i].Hit();
+					Projectiles.erase(Projectiles.begin() + j);
 				}
 			}
 		}
@@ -138,14 +135,14 @@ void cGame::Render()
 	glLoadIdentity();
 
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
-	Player.Draw(Data.GetID(IMG_PLAYER));
+	
 	
 	for(int i=0;i<enemies.size();++i) 
 		enemies[i].Draw(IMG_ENEMY);
 
 	for (int i = 0; i < Projectiles.size(); ++i) 
 		Projectiles[i].Draw(Data.GetID(IMG_PLAYER));
-
+	Player.Draw(Data.GetID(IMG_PLAYER));
 	ui.Draw();
 
 	glutSwapBuffers();
@@ -195,7 +192,4 @@ bool cGame::LoadEnemies(int level) {
 void cGame::GameOver() {
 	//Game stops. Points set to 0. Lives set to PLAYER_MAX_LIVES. Show a "continue" message. If user presses yes, 
 	//then the level resets and we keep playing. If not, the game starts again at level 1 or it returns to the main menu (if any). 
-}
-int cGame::DeltaTime() {
-	return glutGet(GLUT_ELAPSED_TIME)-time;
 }

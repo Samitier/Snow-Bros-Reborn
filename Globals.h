@@ -32,6 +32,10 @@
 #define INIT_PLAYER_X_TILE	8
 #define INIT_PLAYER_Y_TILE	1
 #define PLAYER_MAX_LIVES	3
-#define TIME_INVINCIBLE		2000
-#define TIME_DEATH			800
-#define TIME_BETWEEN_PROJ	500
+#define TIME_INVINCIBLE		180
+#define TIME_DEATH			100
+
+
+//Enemy defines//
+#define TIME_WITH_SNOW		100
+#define TOTAL_HITS			4

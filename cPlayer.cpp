@@ -12,9 +12,9 @@ void cPlayer::init() {
 	currentLives = PLAYER_MAX_LIVES;
 	timecount =0;
 	alfa = 1.0;
-	lastThrow = -TIME_BETWEEN_PROJ;
-	canThrow = true;
-	incAlfa = 0.05;
+	incAlfa = 0.1;
+	dead = false;
+	invincible = false;
 }
 
 void cPlayer::Draw(int tex_id)
@@ -55,86 +55,70 @@ void cPlayer::Draw(int tex_id)
 								NextFrame(2);
 								break;
 	}
-
-	if(isInvincible) {
+	xf = xo + 0.0283f;
+	yf = yo - 0.0313f;
+	if(invincible) {
 		alfa-=incAlfa;
-		if(alfa <= 0.0){
-			alfa=0.0;
+		if(alfa <= 0){
+			alfa=0;
 			incAlfa *=-1.0;
 		}
 		else if(alfa >= 1.0){
 			alfa=1.0;
 			incAlfa *=-1.0;
 		}
-		glColor4f(alfa,alfa,alfa,1.0);
+		glColor4f(1.0,1.0,1.0,alfa);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		DrawRect(tex_id,xo,yo,xf,yf);
+		glDisable(GL_BLEND);
+		glColor4f(1.0,1.0,1.0,1.0);
 	}
-	else glColor4f(1.0,1.0,1.0,1.0);
-
-	xf = xo + 0.0283f;
-	yf = yo - 0.0313f;
-
-	DrawRect(tex_id,xo,yo,xf,yf);
-	glColor4f(1.0,1.0,1.0,1.0);
+	else {
+		DrawRect(tex_id,xo,yo,xf,yf);
+	}
 }
 
 void cPlayer::Die() {
 	currentLives--;
-	isDead = true;
+	dead = true;
 	SetState(STATE_DIE);
 }
 
-bool cPlayer::checkCanThrow() 
-{
-	if(canThrow) 
-	{
-		canThrow = false;
-		lastThrow = glutGet(GLUT_ELAPSED_TIME);
-		return true;
-	}
-	else
-	{
-		if (glutGet(GLUT_ELAPSED_TIME) > lastThrow + TIME_BETWEEN_PROJ)
-		{
-			canThrow = true;
-		}
-	}
-	return false;
+bool cPlayer::isDead() {
+	return dead;
 }
 
-bool cPlayer::checkIfPlayerDead(int time) {
-	if(isDead) {
-		timecount+= time;
-		if(timecount >= TIME_DEATH) {
-			timecount =0;
-			isDead = false;
-			SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
-			isInvincible=true;
-			jumping= false;
-			SetState(STATE_LOOKRIGHT);
-			return false;
-		}
-		else return true;
-	}
-	return false;
-}
-
-bool cPlayer::checkIfPlayerInvincible(int time) {
-	if(isInvincible) {
-		timecount+= time;
-		if(timecount >= TIME_INVINCIBLE) {
-			timecount =0;
-			isInvincible = false;
-			return false;
-		}
-		else return true;
-	}
-	return false;
+bool cPlayer::isInvincible() {
+	return invincible;
 }
 
 int cPlayer:: GetCurrentLives() {
 	return currentLives;
 }
 
+void cPlayer::Logic(int *map) {
+	if(dead) {
+		timecount++;
+		if(timecount >= TIME_DEATH) {
+			timecount =0;
+			dead = false;
+			SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
+			invincible=true;
+			jumping= false;
+			SetState(STATE_LOOKRIGHT);
+		}
+	}
+	else if (invincible) {
+		timecount++;
+		if(timecount >= TIME_INVINCIBLE) {
+			timecount =0;
+			alfa = 1.0;
+			invincible = false;
+		}
+	}
+	cBicho::Logic(map);
+}
 
 
 

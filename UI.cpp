@@ -46,6 +46,9 @@ void UI::Draw() {
 	//pintar points lives i level
 	stringstream strs;
 	
+	//char s[32];
+	//sprintf(s,"vida %d %.2f",points,time);
+
 	strs << lives;
 	string temp_str = strs.str();
 	char* lvs = (char*) temp_str.c_str();
