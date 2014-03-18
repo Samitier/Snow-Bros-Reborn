@@ -40,8 +40,11 @@ bool cGame::Init()
 	res = Data.LoadImage(IMG_PLAYER,"img/SnowBrosSheet.png",GL_RGBA);
 	if(!res) return false;
 	Player.init();
-
-	ui.init();
+	int pnt;
+	int liv;
+	Player.GetCurrentPoints (&pnt);
+	Player.GetCurrentLives (&liv);
+	ui.init(pnt,liv);
 	throwing = false;
 	return res;
 }
@@ -76,7 +79,7 @@ bool cGame::Process()
 
 	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
 		//Process Input 
-		if (	keys[27])	res=false;
+		if (	keys[27])						res=false;
 		if (	(keys[' ']) && !throwing)
 		{
 				throwing = true;
@@ -95,24 +98,31 @@ bool cGame::Process()
 	Player.Logic(Scene.GetMap());
 		
 	//PROJECTILES LOGIC
-	for (int i = 0; i < Projectiles.size(); ++i)
-		if (Projectiles[i].Logic(Scene.GetMap())) 
+	for (int i = 0; i < Projectiles.size(); ++i) 
+	{
+		if (Projectiles[i].CollidesMapFloor(Scene.GetMap()) ||
+			Projectiles[i].CollidesMapWall(Scene.GetMap(), false) ||
+			Projectiles[i].CollidesMapWall(Scene.GetMap(), true)) 
+		{
 			Projectiles.erase(Projectiles.begin() + i);
-
+		}
+		else Projectiles[i].Logic(Scene.GetMap()) ;
+}
+	
 	//ENEMY LOGIC
 	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
 
 	//COLLISIONS
-	if(!Player.isDead()) {
+	if(!Player.isDead()) { 
 		cRect rec;
+		int l, p;
+		Player.GetCurrentLives(&l);
+		Player.GetCurrentPoints(&p);
 		for(int i=0; i<enemies.size(); ++i) {
 			enemies[i].GetArea(&rec);
 			if(!Player.isInvincible() && Player.Collides(&rec) && !enemies[i].isHit()) {
 				Player.Die();
-				if(Player.GetCurrentLives() == 0) GameOver();
-				else {
-					ui.setLives(Player.GetCurrentLives());
-				}
+				if(l == 0) GameOver();
 			}
 			for(int j=0; j<Projectiles.size();++j) {
 				if(Projectiles[j].Collides(&rec)){
@@ -143,7 +153,10 @@ void cGame::Render()
 	for (int i = 0; i < Projectiles.size(); ++i) 
 		Projectiles[i].Draw(Data.GetID(IMG_PLAYER));
 	Player.Draw(Data.GetID(IMG_PLAYER));
-	ui.Draw();
+	int l, p;
+	Player.GetCurrentLives(&l);
+	Player.GetCurrentPoints(&p);
+	ui.Draw(l,p);
 
 	glutSwapBuffers();
 }
@@ -164,24 +177,23 @@ bool cGame::LoadEnemies(int level) {
 	if(fd==NULL) return false;
 
 	fscanf(fd,"%c",&tile);
-	int numEnemies = tile-48;
-	enemies = vector<Enemy>(numEnemies);
+
+	enemies = vector<EnemyOne>();
 
 	fscanf(fd,"%c",&tile);
-	int k =0;
 	for(int i=SCENE_HEIGHT-1;i>=0;i--){
 		for(int j=0; j<SCENE_WIDTH; ++j) {
 			fscanf(fd,"%c",&tile);
 			if(tile ==',') fscanf(fd,"%c",&tile);
 			if(tile=='e') {
-				Enemy en;
+				EnemyOne en;
 				en.init();
 				en.SetWidthHeight(32,32);
 				en.SetTile(j,i);
 				en.SetState(STATE_LOOKRIGHT);
-				enemies[k] = en;
-				k++;
+				enemies.push_back(en);
 			}
+
 		}
 		fscanf(fd,"%c",&tile); //pass enter
 	}

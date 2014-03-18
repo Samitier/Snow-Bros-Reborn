@@ -50,7 +50,7 @@ public:
 	void Jump(int *map);
 	void Throw(int *map);
 	void Stop();
-	void Logic(int *map);
+	virtual void Logic(int *map);
 
 	int  GetState();
 	void SetState(int s);

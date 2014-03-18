@@ -13,6 +13,7 @@ void Enemy::init() {
 	timecount =0;
 }
 
+
 void Enemy::Draw(int tex_id)
 {	
 	float xo,yo,xf,yf;
@@ -52,8 +53,19 @@ void Enemy::Draw(int tex_id)
 								xf =  0.125f*(1+GetFrame());	yf = 4*0.125; NextFrame(4);
 								break;
 	}
-
 	DrawRect(tex_id,xo,yo,xf,yf);
+}
+
+void Enemy::GetTimecount(int* t){
+	*t = timecount;
+}
+
+void Enemy::GetLife(int* l){
+	*l = life;
+}
+
+void Enemy::IsSnowball(bool* b){
+	*b = GetState() == STATE_SNOWBALL;
 }
 
 void Enemy::Logic(int *map)
@@ -95,12 +107,18 @@ void Enemy::Logic(int *map)
 			}
 		}
 	}
+	//else AI(map);
 	cBicho::Logic(map);
+}
+
+void Enemy::AI(int *map){
+
 }
 
 bool Enemy::isHit() {
 	return (GetState() == STATE_HIT || GetState() == STATE_SNOWBALL);
 }
+
 void Enemy::Hit() {
 	++life;
 	timecount =0;

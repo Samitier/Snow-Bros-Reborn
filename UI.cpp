@@ -13,9 +13,9 @@ UI::~UI(void)
 {
 }
 
-void UI::init() {
-	points = 0;
-	lives = PLAYER_MAX_LIVES;
+void UI::init(int pnt, int liv) {
+	pnt = 0;
+	liv = PLAYER_MAX_LIVES;
 	level =1;
 	width = GAME_WIDTH;
 	height = DEFAULT_UI_HEIGHT;
@@ -41,7 +41,7 @@ void UI::GenerateCallList() {
 	glEndList();
 }
 
-void UI::Draw() {
+void UI::Draw(int lives, int points) {
 	glCallList(id0);
 	//pintar points lives i level
 	stringstream strs;
@@ -66,10 +66,6 @@ void UI::Draw() {
 	lvs = (char*) temp_str.c_str();
 	glRasterPos2f(5*(GAME_WIDTH/6),GAME_HEIGHT-20); 
 	render_string(GLUT_BITMAP_HELVETICA_10,lvs);
-}
-
-void UI::setLives(int l){
-	lives =l;
 }
 
 void UI::render_string(void* font, const char* string)

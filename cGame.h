@@ -4,6 +4,7 @@
 #include "cScene.h"
 #include "cPlayer.h"
 #include "Enemy.h"
+#include "EnemyOne.h"
 #include "cData.h"
 #include "cProjectile.h"
 #include "UI.h"
@@ -40,7 +41,7 @@ private:
 	UI ui;
 	cPlayer Player;
 	cData Data;
-	vector<Enemy> enemies;
+	vector<EnemyOne> enemies;
 	vector<cProjectile> Projectiles;
 	bool throwing;
 };

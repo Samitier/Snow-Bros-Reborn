@@ -11,12 +11,12 @@ cProjectile::cProjectile(cBicho b)
 		if (b.GetState() == STATE_THROWLEFT) 
 		{
 			aux = STATE_WALKLEFT;
-			x -= 10; //15;
+			x -= 10;
 		}
 		else 
 		{
 			aux = STATE_WALKRIGHT;
-			x += w - 5;//w;
+			x += w - 5;
 		}
 		y += h/2 - 5;
 		SetWidthHeight(15,10);
@@ -49,25 +49,15 @@ void cProjectile::Draw(int tex_id)
 }
 
 
-bool cProjectile::Logic(int *map)
+void cProjectile::Logic(int *map)
 {
 	float alfa;
 	int x, y;
 	GetPosition(&x,&y);
-	if (GetState() == STATE_WALKRIGHT) 
-	{
-		x += 5;
-	}
-	else 
-	{
-		x -= 5;
-	}
+	if (GetState() == STATE_WALKRIGHT) x += 5;
+	else x -= 5;
 	falling_alfa  += HIGHT_STEP;
 	alfa = ((float)falling_alfa) * 0.017453f;
 	y = falling_y - 195 + (int)( ((float)MAX_HEIGHT) * sin(alfa) );
 	SetPosition(x,y);
-	if (CollidesMapFloor(map)) return true;
-	if (CollidesMapWall(map, false)) return true;
-	if (CollidesMapWall(map, true)) return true;
-	return false;
 }
