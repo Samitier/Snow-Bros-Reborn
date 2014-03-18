@@ -39,4 +39,4 @@
 //Enemy defines//
 #define TIME_WITH_SNOW		45
 #define TOTAL_HITS			4
-#define TIME_STUNNED        55
+#define TIME_STUNNED        56
