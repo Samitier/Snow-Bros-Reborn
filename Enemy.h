@@ -2,6 +2,10 @@
 
 #include "cBicho.h"
 
+#define STATE_HIT 25
+#define STATE_SNOWBALL 26
+#define STATE_STUNNED 27
+
 class Enemy: public cBicho
 {
 public:
@@ -19,8 +23,6 @@ private:
 	int points;
 	int movsps;
 	int rnd;
-	bool hit;
-	bool isSnowball;
 	int life;
 	int timecount;
 };
