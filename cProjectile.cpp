@@ -25,13 +25,13 @@ void cProjectile::Draw(int tex_id)
 
 	switch(state)
 	{
-		case STATE_THROWLEFT  :	xo = 0.0f;	yo = 0.0313f;
+		case STATE_THROWLEFT  :	xo = 0.0f;	yo = 0.125f;
 							break;
-		case STATE_THROWRIGHT :	xo = 0.0283f;	yo = 0.0313f;
+		case STATE_THROWRIGHT :	xo = 0.0f;	yo = 0.125f;
 							break;
 	}
-	xf = xo + 0.0283f;
-	yf = yo - 0.0313f;
+	xf = xo + 0.125f;
+	yf = yo - 0.125f;
 
 	DrawRect(tex_id,xo,yo,xf,yf);
 }
@@ -42,8 +42,8 @@ void cProjectile::Logic(int *map)
 	float alfa;
 	int x, y;
 	GetPosition(&x,&y);
-	if (GetState() == STATE_THROWRIGHT) x += 5;
-	else x -= 5;
+	if (GetState() == STATE_THROWRIGHT) x += 10;
+	else x -= 10;
 	falling_alfa  += HIGHT_STEP;
 	alfa = ((float)falling_alfa) * 0.017453f;
 	y = falling_y - 195 + (int)( ((float)MAX_HEIGHT) * sin(alfa) );
