@@ -8,6 +8,7 @@ public:
 	~EnemyOne(void);
 	virtual void AI(int *map);
 	virtual void Draw(int tex_id);
+	void fire();
 
 private:
 	int movsps;

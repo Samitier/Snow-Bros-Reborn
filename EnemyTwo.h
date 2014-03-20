@@ -1,11 +1,19 @@
 #pragma once
-#include "cbicho.h"
+#include "enemy.h"
 
 class EnemyTwo :
-	public cBicho
+	public Enemy
 {
 public:
 	EnemyTwo(void);
-	virtual ~EnemyTwo(void);
+	~EnemyTwo(void);
+	virtual void AI(int *map);
+	virtual void Draw(int tex_id);
+
+private:
+	int movsps;
+	int rnd;
 };
+
+
 

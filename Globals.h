@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <vector>
 #include <gl/glut.h>
 
 //Number of pixels of the window//
