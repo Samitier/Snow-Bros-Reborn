@@ -64,8 +64,8 @@ void Enemy::GetLife(int* l){
 	*l = life;
 }
 
-void Enemy::IsSnowball(bool* b){
-	*b = GetState() == STATE_SNOWBALL;
+bool Enemy::IsSnowball(){
+	return GetState() == STATE_SNOWBALL;
 }
 
 void Enemy::Logic(int *map)
@@ -107,7 +107,7 @@ void Enemy::Logic(int *map)
 			}
 		}
 	}
-	//else AI(map);
+	//else AI(map); <- este else no se de ke es else porque he cambado la condicion del if 
 	cBicho::Logic(map);
 }
 

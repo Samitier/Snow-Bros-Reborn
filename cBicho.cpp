@@ -56,6 +56,7 @@ bool cBicho::Collides(cRect *rc)
 		(x+w < rc->left) );
 	//return ((x >= rc->left) && (x+w <= rc->right) && (y >= rc->bottom) && (y+h <= rc->top));
 }
+
 bool cBicho::CollidesMapWall(int *map,bool right)
 {
 	int tile_x,tile_y;
@@ -254,6 +255,10 @@ void cBicho::Jump(int *map)
 					state = STATE_JUMPLEFT;		break;
 				case STATE_WALKRIGHT:
 					state = STATE_JUMPRIGHT;	break;
+				case STATE_PUSH_LEFT:
+					state = STATE_JUMPLEFT;		break;
+				case STATE_PUSH_RIGHT:
+					state = STATE_JUMPRIGHT;	break;
 			}
 			seq = 0;
 			delay = 0;				 
@@ -340,4 +345,20 @@ int cBicho::GetState()
 void cBicho::SetState(int s)
 {
 	state = s;
+}
+
+int cBicho::GetLeft() {
+	return x;
+}
+
+int cBicho::GetRight() {
+	return x+w;
+}
+
+int cBicho::GetTop() {
+	return y+h;
+}
+
+int cBicho::GetBottom() {
+	return y;
 }

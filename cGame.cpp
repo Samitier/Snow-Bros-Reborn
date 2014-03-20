@@ -78,20 +78,72 @@ bool cGame::Process()
 	bool res=true;
 
 	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
-		//Process Input 
-		if (	keys[27])						res=false;
-		if (	(keys[' ']) && !throwing)
-		{
+		//INPUT
+		//ESC
+		if (keys[27]) res=false; 
+		
+		//SPACEBAR
+		if (keys[' '] && !throwing) {
 				throwing = true;
-				Player.Throw(Scene.GetMap());
-				cProjectile proj(Player);
-				Projectiles.push_back(proj);
+				if(Player.GetState() == STATE_PUSH_LEFT) ; //shoots the snowball to the left
+				else if(Player.GetState() == STATE_PUSH_RIGHT); //shoots the snowball to the right
+				else {
+					Player.Throw(Scene.GetMap());
+					cProjectile proj(Player);
+					Projectiles.push_back(proj);
+				}
 		}
-		if(!keys[' ']) throwing = false;
-		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
-		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
-		else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
-		else 									Player.Stop();
+		else if(!keys[' ']) throwing = false;
+		
+		//W
+		if (keys['w'] || keys['W']){
+			Player.Jump(Scene.GetMap());
+		}
+		
+		//A
+		if (keys['a'] || keys['A'])	{
+			//if we aren't pushing a ball, jumping or standing on the top of the ball, we move normally
+			if(Player.GetSnowballPushing() == -1 || Player.GetState() == STATE_JUMPLEFT|| Player.GetSnowballOnTopOf() != -1) {
+				Player.MoveLeft(Scene.GetMap());
+				Player.SetSnowballPushing(-1);
+			}
+			else {
+				if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()){
+					Player.SetState(STATE_PUSH_LEFT);
+					//move ball <-
+				}
+				else {
+					Player.MoveLeft(Scene.GetMap());
+					Player.SetSnowballPushing(-1);
+				}
+			}
+		}
+		
+		//D
+		else if(keys['d'] || keys['D'])	 {
+			//if we aren't pushing a ball, jumping or standing on the top of the ball, we move normally
+			if(Player.GetSnowballPushing() == -1 ||Player.GetState() == STATE_JUMPRIGHT || Player.GetSnowballOnTopOf() != -1) {
+				Player.MoveRight(Scene.GetMap());
+				Player.SetSnowballPushing(-1);
+			}
+			else {
+				if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()){
+					Player.SetState(STATE_PUSH_RIGHT);
+					//move ball ->
+				}
+				else {
+					Player.MoveRight(Scene.GetMap());
+					Player.SetSnowballPushing(-1);
+				}
+			}
+		}
+		
+		else 	{
+			Player.Stop();
+			if(Player.GetState()==STATE_PUSH_RIGHT) Player.SetState(STATE_LOOKRIGHT);
+			else if(Player.GetState()==STATE_PUSH_LEFT) Player.SetState(STATE_LOOKLEFT);
+			Player.SetSnowballPushing(-1);
+		}
 	}
 
 	//PLAYER LOGIC
@@ -113,16 +165,42 @@ bool cGame::Process()
 	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
 
 	//COLLISIONS
+
 	if(!Player.isDead()) { 
 		cRect rec;
+		
+		//this checks wether you exit a collision with a snowball if you were standing on top of it
+		if(Player.GetSnowballOnTopOf() != -1) {
+		enemies[Player.GetSnowballOnTopOf()].GetArea(&rec);
+		if(!enemies[Player.GetSnowballOnTopOf()].IsSnowball() ||!Player.Collides(&rec)) {
+				Player.SetSnowballOnTopOf(-1);
+			}
+		}
+
 		int l, p;
 		Player.GetCurrentLives(&l);
 		Player.GetCurrentPoints(&p);
 		for(int i=0; i<enemies.size(); ++i) {
 			enemies[i].GetArea(&rec);
-			if(!Player.isInvincible() && Player.Collides(&rec) && !enemies[i].isHit()) {
-				Player.Die();
-				if(l == 0) GameOver();
+			if(Player.Collides(&rec)) {
+				if(enemies[i].IsSnowball()){
+					if(Player.GetBottom() == enemies[i].GetTop()) {
+						Player.SetSnowballOnTopOf(i);
+					}
+					else if(Player.GetTop() == enemies[i].GetBottom()) {
+						enemies[i].Jump(Scene.GetMap());
+					}
+					else if(Player.GetLeft() == enemies[i].GetRight()) {
+						Player.SetSnowballPushing(i);
+					}
+					else if(Player.GetRight()==enemies[i].GetLeft()) {
+						Player.SetSnowballPushing(i);
+					}
+				}
+				else if(!Player.isInvincible() && !enemies[i].isHit()) {
+					Player.Die();
+					if(l == 0) GameOver();
+				}
 			}
 			for(int j=0; j<Projectiles.size();++j) {
 				if(Projectiles[j].Collides(&rec)){
@@ -132,8 +210,6 @@ bool cGame::Process()
 			}
 		}
 	}
-
-
 	return res;
 }
 
