@@ -38,6 +38,6 @@
 #define PUSH_STEP_LENGTH    1
 
 //Enemy defines//
-#define TIME_WITH_SNOW		45
+#define TIME_WITH_SNOW		45000
 #define TOTAL_HITS			4
 #define TIME_STUNNED        45
