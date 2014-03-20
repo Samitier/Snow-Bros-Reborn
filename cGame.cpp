@@ -110,7 +110,7 @@ bool cGame::Process()
 			else {
 				if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()){
 					Player.SetState(STATE_PUSH_LEFT);
-					//move ball <-
+					if(enemies[Player.GetSnowballPushing()].PushLeft(Scene.GetMap())) Player.PushLeft(Scene.GetMap());
 				}
 				else {
 					Player.MoveLeft(Scene.GetMap());
@@ -129,7 +129,7 @@ bool cGame::Process()
 			else {
 				if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()){
 					Player.SetState(STATE_PUSH_RIGHT);
-					//move ball ->
+					if(enemies[Player.GetSnowballPushing()].PushRight(Scene.GetMap())) Player.PushRight(Scene.GetMap());
 				}
 				else {
 					Player.MoveRight(Scene.GetMap());

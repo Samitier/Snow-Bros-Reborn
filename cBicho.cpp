@@ -176,6 +176,30 @@ void cBicho::MoveLeft(int *map)
 		}
 	}
 }
+
+bool cBicho::PushLeft(int *map)
+{
+	int xaux;
+	
+	//Whats next tile?
+	if( (x % TILE_SIZE) == 0)
+	{
+		xaux = x;
+		x -= STEP_LENGTH;
+
+		if(CollidesMapWall(map,false))
+		{
+			x = xaux;
+			return false;
+		}
+	}
+	//Advance, no problem
+	else
+	{
+		x -= STEP_LENGTH;
+		return true;
+	}
+}
 void cBicho::MoveRight(int *map)
 {
 	int xaux;
@@ -213,6 +237,30 @@ void cBicho::MoveRight(int *map)
 		}
 	}
 }
+
+bool cBicho::PushRight(int *map)
+{
+	int xaux;
+	//Whats next tile?
+	if( (x % TILE_SIZE) == 0)
+	{
+		xaux = x;
+		x += STEP_LENGTH;
+
+		if(CollidesMapWall(map,true))
+		{
+			x = xaux;
+			return false;
+		}
+	}
+	//Advance, no problem
+	else
+	{
+		x += STEP_LENGTH;
+		return true;
+	}
+}
+
 void cBicho::Stop()
 {
 	switch(state)

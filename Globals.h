@@ -35,7 +35,6 @@
 #define TIME_INVINCIBLE		180
 #define TIME_DEATH			100
 #define STEP_LENGTH			2
-#define PUSH_STEP_LENGTH    1
 
 //Enemy defines//
 #define TIME_WITH_SNOW		45000

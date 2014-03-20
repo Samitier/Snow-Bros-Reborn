@@ -48,6 +48,8 @@ public:
 
 	void MoveRight(int *map);
 	void MoveLeft(int *map);
+	bool PushRight(int *map);
+	bool PushLeft(int *map);
 	void Jump(int *map);
 	void Throw(int *map);
 	void Stop();
