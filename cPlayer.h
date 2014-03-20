@@ -23,15 +23,23 @@ public:
 	bool isInvincible();
 	bool checkCanThrow();
 
+
 	virtual void Logic(int *map);
+	
+	virtual bool CollidesMapFloor (int *map);
 
 	void GetCurrentPoints(int* p);
 	void GetCurrentLives(int* l);
-
+	int GetSnowballPushing();
+	void SetSnowballPushing(int snowball);
+	int GetSnowballOnTopOf();
+	void SetSnowballOnTopOf(int snowball);
 private: 
 	int timecount;
 	float alfa;
 	int points;
 	float incAlfa;
 	int lives;
+	int snowballPushing;
+	int snowballOnTopOf;
 };

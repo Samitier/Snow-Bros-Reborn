@@ -78,20 +78,91 @@ bool cGame::Process()
 	bool res=true;
 
 	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
-		//Process Input 
-		if (	keys[27])						res=false;
-		if (	(keys[' ']) && !throwing)
-		{
+		//INPUT
+		//ESC
+		if (keys[27]) res=false; 
+		
+		//SPACEBAR
+		if (keys[' '] && !throwing) {
 				throwing = true;
-				Player.Throw(Scene.GetMap());
-				cProjectile proj(Player);
-				Projectiles.push_back(proj);
+				if(Player.GetState() == STATE_PUSH_LEFT) ; //shoots the snowball to the left
+				else if(Player.GetState() == STATE_PUSH_RIGHT); //shoots the snowball to the right
+				else {
+					Player.Throw(Scene.GetMap());
+					cProjectile proj(Player);
+					Projectiles.push_back(proj);
+				}
 		}
-		if(!keys[' ']) throwing = false;
-		if (	keys['w'] || keys['W'])			Player.Jump(Scene.GetMap());
-		if (	keys['a'] || keys['A'])			Player.MoveLeft(Scene.GetMap());
-		else if(keys['d'] || keys['D'])			Player.MoveRight(Scene.GetMap());
-		else 									Player.Stop();
+		else if(!keys[' ']) throwing = false;
+		
+		//W
+		if (keys['w'] || keys['W']){
+			Player.Jump(Scene.GetMap());
+			Player.SetSnowballOnTopOf(-1);
+		}
+		
+		//A
+		if (keys['a'] || keys['A'])	{
+			bool pushing = false; int i;
+			if (Player.GetState() != STATE_JUMPLEFT) {
+				cRect rc;
+				for(i=0; i<enemies.size();++i) {
+					enemies[i].GetArea(&rc);
+					if(enemies[i].IsSnowball() && Player.Collides(&rc) && Player.GetLeft() == enemies[i].GetRight()){
+						pushing = true;
+						break;
+					}
+ 				}
+			}
+			if(pushing) {
+				Player.SetState(STATE_PUSH_LEFT);
+				Player.SetSnowballPushing(i);
+			}
+			else {
+				Player.MoveLeft(Scene.GetMap());
+				Player.SetSnowballPushing(-1);
+			}
+		}
+		
+		//D
+		else if(keys['d'] || keys['D'])	 {
+			bool pushing = false;
+			int i;
+			if (Player.GetState() != STATE_JUMPRIGHT) {
+				cRect cr;
+				for(i=0; i<enemies.size();++i) {
+					enemies[i].GetArea(&cr);
+					if(enemies[i].IsSnowball() && Player.Collides(&cr) && Player.GetRight()==enemies[i].GetLeft()) {
+						pushing = true;
+						break;
+					}
+				}
+			}
+			if(pushing) {
+					Player.SetState(STATE_PUSH_RIGHT);
+					Player.SetSnowballPushing(i);
+			}
+			else {
+				Player.MoveRight(Scene.GetMap());
+				Player.SetSnowballPushing(-1);
+			}
+		}
+		
+		else 	{
+			Player.Stop();
+			if(Player.GetState()==STATE_PUSH_RIGHT) Player.SetState(STATE_LOOKRIGHT);
+			else if(Player.GetState()==STATE_PUSH_LEFT) Player.SetState(STATE_LOOKLEFT);
+			Player.SetSnowballPushing(-1);
+		}
+	}
+
+	//EXITING COLLISION WITH SNOWBALL
+	if(Player.GetSnowballOnTopOf() != -1) {
+		if(!enemies[Player.GetSnowballOnTopOf()].IsSnowball() ||
+			Player.GetRight() < enemies[Player.GetSnowballOnTopOf()].GetLeft() || 
+			Player.GetLeft()> enemies[Player.GetSnowballOnTopOf()].GetRight()) {
+				Player.SetSnowballOnTopOf(-1);
+		}
 	}
 
 	//PLAYER LOGIC
@@ -113,6 +184,7 @@ bool cGame::Process()
 	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
 
 	//COLLISIONS
+
 	if(!Player.isDead()) { 
 		cRect rec;
 		int l, p;
@@ -120,9 +192,17 @@ bool cGame::Process()
 		Player.GetCurrentPoints(&p);
 		for(int i=0; i<enemies.size(); ++i) {
 			enemies[i].GetArea(&rec);
-			if(!Player.isInvincible() && Player.Collides(&rec) && !enemies[i].isHit()) {
-				Player.Die();
-				if(l == 0) GameOver();
+			if(Player.Collides(&rec)) {
+				if(enemies[i].IsSnowball()){
+					if(Player.GetBottom() == enemies[i].GetTop()) {
+						Player.SetSnowballOnTopOf(i);
+					}
+					else if(Player.GetTop() == enemies[i].GetBottom()) enemies[i].Jump(Scene.GetMap());
+				}
+				else if(!Player.isInvincible() && !enemies[i].isHit()) {
+					Player.Die();
+					if(l == 0) GameOver();
+				}
 			}
 			for(int j=0; j<Projectiles.size();++j) {
 				if(Projectiles[j].Collides(&rec)){
@@ -132,8 +212,6 @@ bool cGame::Process()
 			}
 		}
 	}
-
-
 	return res;
 }
 

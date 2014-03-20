@@ -16,6 +16,8 @@ void cPlayer::init() {
 	incAlfa = 0.1;
 	dead = false;
 	invincible = false;
+	snowballPushing = -1;
+	snowballOnTopOf = -1;
 }
 
 void cPlayer::Draw(int tex_id)
@@ -54,6 +56,10 @@ void cPlayer::Draw(int tex_id)
 								break;
 		case STATE_DIE:			xo = 8*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
 								NextFrame(2);
+								break;
+		case STATE_PUSH_LEFT:   xo = 5*0.0283f; yo = 0.0313f + 0.0313f*2;
+								break;
+		case STATE_PUSH_RIGHT:  xo = 6*0.0283f; yo = 0.0313f + 0.0313f*2;
 								break;
 	}
 	xf = xo + 0.0283f;
@@ -124,6 +130,27 @@ void cPlayer::Logic(int *map) {
 		}
 	}
 	cBicho::Logic(map);
+}
+
+bool cPlayer::CollidesMapFloor (int *map) {
+	if(snowballOnTopOf != -1) return true;
+	else return cBicho::CollidesMapFloor(map);
+}
+
+int cPlayer::GetSnowballPushing() {
+	return snowballPushing;
+}
+
+void cPlayer::SetSnowballPushing(int snowball) {
+	snowballPushing = snowball;
+}
+
+int cPlayer::GetSnowballOnTopOf() {
+	return snowballOnTopOf;
+}
+
+void cPlayer::SetSnowballOnTopOf(int snowball) {
+	snowballOnTopOf = snowball;
 }
 
 

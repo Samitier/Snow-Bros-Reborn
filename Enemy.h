@@ -18,7 +18,7 @@ public:
 	void Hit();
 	virtual void AI(int *map);
 	bool isHit();
-	void IsSnowball(bool* b);
+	bool IsSnowball();
 	void GetLife(int* l);
 	void GetTimecount(int* t);
 
