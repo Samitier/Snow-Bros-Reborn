@@ -2,27 +2,15 @@
 
 
 
-cProjectile::cProjectile(cBicho b)
+cProjectile::cProjectile(int xx, int yy, int ww, int hh, int statee)
 {
-		
-		int x, y, w, h, aux;
-		b.GetPosition(&x,&y);
-		b.GetWidthHeight(&w, &h);
-		if (b.GetState() == STATE_THROWLEFT) 
-		{
-			aux = STATE_WALKLEFT;
-			x -= 10;
-		}
-		else 
-		{
-			aux = STATE_WALKRIGHT;
-			x += w - 5;
-		}
-		y += h/2 - 5;
-		SetWidthHeight(15,10);
-		SetPosition(x, y); 
-		SetState(aux);
-		falling_y = y;
+		if (statee == STATE_THROWRIGHT) x = xx + ww - 5;
+		else x = xx +10;
+		y = yy + hh - 5;;
+		w = 20;
+		h = 20;
+		state = statee;
+		falling_y = yy;
 		falling_alfa  = 80;
 }
 
@@ -35,11 +23,11 @@ void cProjectile::Draw(int tex_id)
 {	
 	float xo,yo,xf,yf;
 
-	switch(GetState())
+	switch(state)
 	{
-		case STATE_WALKLEFT :	xo = 0.0f;	yo = 0.0313f;
+		case STATE_THROWLEFT  :	xo = 0.0f;	yo = 0.0313f;
 							break;
-		case STATE_WALKRIGHT:	xo = 0.0283f;	yo = 0.0313f;
+		case STATE_THROWRIGHT :	xo = 0.0283f;	yo = 0.0313f;
 							break;
 	}
 	xf = xo + 0.0283f;
@@ -54,7 +42,7 @@ void cProjectile::Logic(int *map)
 	float alfa;
 	int x, y;
 	GetPosition(&x,&y);
-	if (GetState() == STATE_WALKRIGHT) x += 5;
+	if (GetState() == STATE_THROWRIGHT) x += 5;
 	else x -= 5;
 	falling_alfa  += HIGHT_STEP;
 	alfa = ((float)falling_alfa) * 0.017453f;

@@ -19,6 +19,8 @@
 #define STATE_PUSH_LEFT     9
 #define STATE_PUSH_RIGHT   10
 
+using namespace std;
+
 class cRect
 {
 public:
@@ -64,16 +66,15 @@ public:
 	void NextFrame(int max);
 	int  GetFrame();
 
+protected:
 	bool jumping;
-
-
-private:
+	bool throwing;
 	int x,y;
 	int w,h;
 	int state;
-	bool throwing;
+
+private:
 	int jump_alfa;
 	int jump_y;
-
 	int seq,delay;
 };

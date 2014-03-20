@@ -84,14 +84,10 @@ bool cGame::Process()
 		
 		//SPACEBAR
 		if (keys[' '] && !throwing) {
-				throwing = true;
-				if(Player.GetState() == STATE_PUSH_LEFT) ; //shoots the snowball to the left
-				else if(Player.GetState() == STATE_PUSH_RIGHT); //shoots the snowball to the right
-				else {
-					Player.Throw(Scene.GetMap());
-					cProjectile proj(Player);
-					Projectiles.push_back(proj);
-				}
+			throwing = true;
+			if(Player.GetState() == STATE_PUSH_LEFT) ; //shoots the snowball to the left
+			else if(Player.GetState() == STATE_PUSH_RIGHT); //shoots the snowball to the right
+			else Player.Throw(Scene.GetMap());	
 		}
 		else if(!keys[' ']) throwing = false;
 		
@@ -148,18 +144,6 @@ bool cGame::Process()
 
 	//PLAYER LOGIC
 	Player.Logic(Scene.GetMap());
-		
-	//PROJECTILES LOGIC
-	for (int i = 0; i < Projectiles.size(); ++i) 
-	{
-		if (Projectiles[i].CollidesMapFloor(Scene.GetMap()) ||
-			Projectiles[i].CollidesMapWall(Scene.GetMap(), false) ||
-			Projectiles[i].CollidesMapWall(Scene.GetMap(), true)) 
-		{
-			Projectiles.erase(Projectiles.begin() + i);
-		}
-		else Projectiles[i].Logic(Scene.GetMap()) ;
-}
 	
 	//ENEMY LOGIC
 	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
@@ -202,10 +186,11 @@ bool cGame::Process()
 					if(l == 0) GameOver();
 				}
 			}
-			for(int j=0; j<Projectiles.size();++j) {
-				if(Projectiles[j].Collides(&rec)){
+			vector<cProjectile> p = Player.GetProjectiles();
+			for(int j=0; j<int(p.size());++j) {
+				if(p[j].Collides(&rec)){
 					enemies[i].Hit();
-					Projectiles.erase(Projectiles.begin() + j);
+					Player.EraseProjectile(j);
 				}
 			}
 		}
@@ -226,9 +211,11 @@ void cGame::Render()
 	for(int i=0;i<enemies.size();++i) 
 		enemies[i].Draw(IMG_ENEMY);
 
-	for (int i = 0; i < Projectiles.size(); ++i) 
-		Projectiles[i].Draw(Data.GetID(IMG_PLAYER));
 	Player.Draw(Data.GetID(IMG_PLAYER));
+	vector<cProjectile> proj = Player.GetProjectiles();
+	for (int i = 0; i < int(proj.size()); ++i) 
+		proj[i].Draw(Data.GetID(IMG_PLAYER));
+
 	int l, p;
 	Player.GetCurrentLives(&l);
 	Player.GetCurrentPoints(&p);

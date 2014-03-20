@@ -23,7 +23,7 @@ void EnemyTwo::AI(int *map)
 		movsps =0;
 		rnd = rand()%100; 
 	}
-	else if(rnd <= 80 && CanJump(map)) {
+	else if(rnd <= 80) {
 		Jump(map);
 	}
 	else if(rnd < 50) {
