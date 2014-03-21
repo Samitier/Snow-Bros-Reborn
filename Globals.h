@@ -37,6 +37,6 @@
 #define STEP_LENGTH			2
 
 //Enemy defines//
-#define TIME_WITH_SNOW		45000
+#define TIME_WITH_SNOW		4500
 #define TOTAL_HITS			4
 #define TIME_STUNNED        45
