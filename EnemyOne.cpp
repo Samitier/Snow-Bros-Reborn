@@ -5,31 +5,10 @@ EnemyOne::EnemyOne(void)
 {
 	movsps = 0;
 	rnd = rand()%100;
+	projectiles = vector<cProjectile>();
 }
 
-void EnemyOne::Draw(int tex_id) {
-	/* Te lo comento porque he cambiado la funcion draw de enemy y esto y
-	
-	float xo,yo,xf,yf;
-	xo=0.125*4; yo=0.125;
-	xf = 0.125*5;
-	yf = 0;
-
-
-	if(isHit()) {
-		int l;
-		GetLife(&l);
-		xo=0.125*(l-1);
-		xf=xo+0.125;
-		bool b;
-		IsSnowball(&b);
-		if(!b) {
-			yo=(GetFrame()+1)*0.125; yf = GetFrame()*0.125;
-		}
-		NextFrame(2);
-	}
-
-	DrawRect(tex_id,xo,yo,xf,yf);*/ 
+void EnemyOne::Draw(int tex_id) { 
 	Enemy::Draw(tex_id);
 }
 
@@ -45,14 +24,28 @@ void EnemyOne::AI(int *map)
 		movsps =0;
 		rnd = rand()%100; 
 	}
-	if(rnd < 45) {
+	else {
+		if(rand()%1000 <= 5) {
+			Jump(map);
+		}
+		if(rnd < 50) {
 			MoveLeft(map);
 		}
-	else if(rnd<90) {
-		MoveRight(map);
+		else if (rnd > 50) {
+			MoveRight(map);
+		}
 	}
-	else {
-		Jump(map);
-		rnd = rand()%100; 
+	//PROJECTILES
+	if (rand()%1000 < 500) {
+		cProjectile p(x,y,w,h,STATE_THROWRIGHT);
+		projectiles.push_back(p);
+
+  	}
+
+	for (int i = 0; i < int(projectiles.size()); ++i) 
+	{
+		if (projectiles[i].CollidesMapFloor(map)		||
+			projectiles[i].CollidesMapWall(map, false)	||
+			projectiles[i].CollidesMapWall(map, true))		projectiles.erase(projectiles.begin() + i);
 	}
 }

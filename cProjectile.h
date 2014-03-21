@@ -6,9 +6,10 @@
 
 class cProjectile :	public cBicho
 {
+
 public:
-	cProjectile(cBicho b);
-	virtual ~cProjectile(void);
+	cProjectile(int x, int y, int w, int h, int state);
+	~cProjectile(void);
 
 	void Draw(int tex_id);
 	void Logic(int *map);

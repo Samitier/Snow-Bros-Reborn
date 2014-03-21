@@ -1,5 +1,7 @@
 #pragma once
 #include "enemy.h"
+#include "cProjectile.h"
+
 class EnemyOne :
 	public Enemy
 {
@@ -12,5 +14,6 @@ public:
 private:
 	int movsps;
 	int rnd;
+	vector<cProjectile> projectiles;
 };
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "cProjectile.h"
 #include "cBicho.h"
 
 #define PLAYER_START_CX		3
@@ -25,9 +26,9 @@ public:
 
 
 	virtual void Logic(int *map);
-	
 	virtual bool CollidesMapFloor (int *map);
-
+	void EraseProjectile(int i);
+	vector<cProjectile> GetProjectiles();
 	void GetCurrentPoints(int* p);
 	void GetCurrentLives(int* l);
 	int GetSnowballPushing();
@@ -42,4 +43,6 @@ private:
 	int lives;
 	int snowballPushing;
 	int snowballOnTopOf;
+	vector<cProjectile> projectiles;
+
 };

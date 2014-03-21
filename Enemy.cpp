@@ -71,24 +71,7 @@ bool Enemy::IsSnowball(){
 void Enemy::Logic(int *map)
 {	
 	if(GetState() != STATE_HIT && GetState() != STATE_SNOWBALL && GetState() != STATE_STUNNED) {
-		++movsps;
-		if(movsps == 30) {
-			movsps =0;
-			rnd = rand()%100; 
-		}
-		if(rnd < 30) {
-				MoveLeft(map);
-			}
-		else if(rnd<60) {
-			MoveRight(map);
-		}
-		else if(rnd<90){
-			SetState(STATE_LOOKLEFT);
-		}
-		else {
-			Jump(map);
-			rnd = rand()%100; 
-		}
+		AI(map); 
 	}
 	else {
 		++timecount;
@@ -107,7 +90,6 @@ void Enemy::Logic(int *map)
 			}
 		}
 	}
-	//else AI(map); <- este else no se de ke es else porque he cambado la condicion del if 
 	cBicho::Logic(map);
 }
 

@@ -5,6 +5,7 @@ cBicho::cBicho(void)
 {
 	seq=0;
 	delay=0;
+	throwing = false;
 	jumping = false;
 }
 cBicho::~cBicho(void){}
@@ -369,8 +370,7 @@ void cBicho::Logic(int *map)
 		if(!CollidesMapFloor(map))
 			y -= (2*STEP_LENGTH);
 	}
-	//PROGRAMAR LANZAMIENTO
-	if (throwing)  throwing = false;
+
 }
 void cBicho::NextFrame(int max)
 {
