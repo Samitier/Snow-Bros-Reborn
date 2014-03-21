@@ -45,7 +45,7 @@ public:
 	bool Collides(cRect *rc);
 	bool CollidesMapWall(int *map,bool right);
 	virtual bool CollidesMapFloor(int *map);
-	void GetArea(cRect *rc);
+	virtual void GetArea(cRect *rc);
 	void DrawRect(int tex_id,float xo,float yo,float xf,float yf);
 
 	void MoveRight(int *map);
@@ -67,9 +67,9 @@ public:
 
 	void NextFrame(int max);
 	int  GetFrame();
+	bool jumping;
 
 protected:
-	bool jumping;
 	bool throwing;
 	int x,y;
 	int w,h;

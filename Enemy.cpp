@@ -110,3 +110,19 @@ void Enemy::Hit() {
 	}
 	else SetState(STATE_HIT);
 }
+
+void Enemy::GetArea(cRect *rc)
+{
+	if(state != STATE_SNOWBALL) {
+		rc->left   = x;
+		rc->right  = x+w;
+		rc->bottom = y;
+		rc->top    = y+h;
+	}
+	else {
+		rc->left   = x+SNOWBALL_LIMIT;
+		rc->right  = x+w-SNOWBALL_LIMIT;
+		rc->bottom = y;
+		rc->top    = y+h;
+	}
+}

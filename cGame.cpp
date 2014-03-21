@@ -100,14 +100,14 @@ bool cGame::Process()
 		
 		//A
 		if (keys['a'] || keys['A'])	{
-			//if we aren't pushing a ball, jumping or standing on the top of the ball, we move normally
-			if(Player.GetSnowballPushing() == -1 || Player.GetState() == STATE_JUMPLEFT|| Player.GetSnowballOnTopOf() != -1) {
+			//if we aren't pushing a ball or standing on the top of the ball, we move normally
+			if(Player.GetSnowballPushing() == -1 || Player.GetSnowballOnTopOf() != -1) {
 				Player.MoveLeft(Scene.GetMap());
 				Player.SetSnowballPushing(-1);
 			}
 			else {
-				if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()){
-					Player.SetState(STATE_PUSH_LEFT);
+				if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()-SNOWBALL_LIMIT){
+					if (!Player.jumping)Player.SetState(STATE_PUSH_LEFT);
 					if(enemies[Player.GetSnowballPushing()].PushLeft(Scene.GetMap())) Player.PushLeft(Scene.GetMap());
 				}
 				else {
@@ -120,13 +120,13 @@ bool cGame::Process()
 		//D
 		else if(keys['d'] || keys['D'])	 {
 			//if we aren't pushing a ball, jumping or standing on the top of the ball, we move normally
-			if(Player.GetSnowballPushing() == -1 ||Player.GetState() == STATE_JUMPRIGHT || Player.GetSnowballOnTopOf() != -1) {
+			if(Player.GetSnowballPushing() == -1 || Player.GetSnowballOnTopOf() != -1) {
 				Player.MoveRight(Scene.GetMap());
 				Player.SetSnowballPushing(-1);
 			}
 			else {
-				if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()){
-					Player.SetState(STATE_PUSH_RIGHT);
+				if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()+SNOWBALL_LIMIT){
+					if (!Player.jumping)Player.SetState(STATE_PUSH_RIGHT);
 					if(enemies[Player.GetSnowballPushing()].PushRight(Scene.GetMap())) Player.PushRight(Scene.GetMap());
 				}
 				else {
@@ -170,16 +170,16 @@ bool cGame::Process()
 			enemies[i].GetArea(&rec);
 			if(Player.Collides(&rec)) {
 				if(enemies[i].IsSnowball()){
-					if(Player.GetBottom() == enemies[i].GetTop()) {
+					if(Player.GetBottom() == rec.top) {
 						Player.SetSnowballOnTopOf(i);
 					}
-					else if(Player.GetTop() == enemies[i].GetBottom()) {
+					else if(Player.GetTop() == rec.bottom) {
 						enemies[i].Jump(Scene.GetMap());
 					}
-					else if(Player.GetLeft() == enemies[i].GetRight()) {
+					else if(Player.GetLeft() == rec.right) {
 						Player.SetSnowballPushing(i);
 					}
-					else if(Player.GetRight()==enemies[i].GetLeft()) {
+					else if(Player.GetRight()== rec.left) {
 						Player.SetSnowballPushing(i);
 					}
 				}

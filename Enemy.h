@@ -15,6 +15,7 @@ public:
 	void init();
 	virtual void Draw(int tex_id);
 	virtual void Logic(int *map);
+	virtual void GetArea(cRect *rc);
 	void Hit();
 	virtual void AI(int *map);
 	bool isHit();
