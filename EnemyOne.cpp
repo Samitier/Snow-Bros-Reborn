@@ -9,7 +9,6 @@ EnemyOne::EnemyOne(void)
 }
 
 void EnemyOne::Draw(int tex_id) { 
-	int s = state;
 	Enemy::Draw(tex_id);
 }
 
@@ -19,7 +18,7 @@ EnemyOne::~EnemyOne(void)
 
 void EnemyOne::Logic(int* map) 
 {
-		//PROJECTILES
+	//PROJECTILES
 	if (throwing)  {
 		++timeThrowing;
 		if (timeThrowing > 30) {

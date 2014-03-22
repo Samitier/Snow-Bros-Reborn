@@ -19,6 +19,8 @@ cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir,int typee)
 		falling_y = yy + hh/2 -5;
 		falling_alfa  = 80;
 		timeAlive = 0;
+		seq = 0;
+		delay = 0;
 }
 
 
@@ -46,13 +48,19 @@ void cProjectile::Draw(int tex_id)
 		case TYPE_2 :
 			switch(state)
 			{
-				case STATE_GO_LEFT  : xo = 0.1250f;	yo = 6*0.1250f;
-									break;
-				case STATE_GO_RIGHT : xo = 0.1250f;	yo = 7*0.1250f;;
-									break;
+				case STATE_GO_LEFT  :
+					xo = 13*0.0625f+(GetFrame()*0.0625f);
+					yo = 0.0625f;
+					NextFrame(2);
+				break;
+				case STATE_GO_RIGHT : 
+					xo = 13*0.0625f+(GetFrame()*0.0625f);
+					yo = 2*0.0625f;
+					NextFrame(2);
+				break;
 			}
-			xf = xo + 0.1250f;
-			yf = yo - 0.1250f;
+			xf = xo + 0.0625f;
+			yf = yo - 0.0625f;
 		break;
 	}
 	DrawRect(tex_id,xo,yo,xf,yf);
