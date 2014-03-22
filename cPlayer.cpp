@@ -28,43 +28,43 @@ void cPlayer::Draw(int tex_id)
 	switch(GetState())
 	{
 		//1
-		case STATE_LOOKLEFT:	//xo = 0.0f;	yo = 0.25f;
-								xo = 0.0f;	yo = 0.0313f;
+		case STATE_LOOKLEFT:	xo = 0.0f;	yo = 0.0625f;
 								break;
 		//4
-		case STATE_LOOKRIGHT:	//xo = 0.25f;	yo = 0.25f;
-								xo = 0.0283f;	yo = 0.0313f;
+		case STATE_LOOKRIGHT:	xo = 0.0f;	yo = 3*0.0625f;
 								break;
 		//1..3
-		case STATE_WALKLEFT:	xo = 0.0f;	yo = 2*0.0313f + (GetFrame()*0.0313f);
-								NextFrame(3);
+		case STATE_WALKLEFT:	xo =  0.0625f+(GetFrame()*0.0625f);	yo = 0.0625f;
+								NextFrame(2);
 								break;
 		//4..6
-		case STATE_WALKRIGHT:	xo = 0.0283f; yo = 2*0.0313f + (GetFrame()*0.0313f);
-								NextFrame(3);
+		case STATE_WALKRIGHT:	xo =  0.0625f+(GetFrame()*0.0625f);	yo = 3*0.0625f;
+								NextFrame(2);
 								break;
-		case STATE_JUMPLEFT:	xo = 2*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_JUMPLEFT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;
+								NextFrame(7);
+								break;
+		case STATE_JUMPRIGHT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//falta
 								NextFrame(4);
 								break;
-		case STATE_JUMPRIGHT:	xo = 3*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
-								NextFrame(4);
-								break;
-		case STATE_THROWRIGHT:	xo = 6*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_THROWRIGHT:	xo = 7*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//??
 								NextFrame(2);
 								break;
-		case STATE_THROWLEFT:	xo = 5*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_THROWLEFT:	xo = 7*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;//??
 								NextFrame(2);
 								break;
-		case STATE_DIE:			xo = 8*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_DIE:			xo = 2*0.0625f+(GetFrame()*0.0625f); yo = 2*0.0625f;
+								NextFrame(8);
+								break;
+		case STATE_PUSH_LEFT:   xo = (GetFrame()*0.0625f); yo = 2*0.0625f;
 								NextFrame(2);
 								break;
-		case STATE_PUSH_LEFT:   xo = 5*0.0283f; yo = 0.0313f + 0.0313f*2;
-								break;
-		case STATE_PUSH_RIGHT:  xo = 6*0.0283f; yo = 0.0313f + 0.0313f*2;
+		case STATE_PUSH_RIGHT:  xo = (GetFrame()*0.0625f); yo = 4*0.0625f;
+								NextFrame(2);
 								break;
 	}
-	xf = xo + 0.0283f;
-	yf = yo - 0.0313f;
+	xf = xo + 0.0625f;
+	yf = yo - 0.0625f;
 	if(invincible) {
 		alfa-=incAlfa;
 		if(alfa <= 0){

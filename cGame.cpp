@@ -34,10 +34,8 @@ bool cGame::Init()
 	if(!res) return false;
 	res = Data.LoadImage(IMG_ENEMY,"img/enemy.png",GL_RGBA);
 	if(!res) return false;
-	res = Data.LoadImage(IMG_PROJECTILES,"img/projectiles.png",GL_RGBA);
-	if(!res) return false;
 	//Player initialization
-	res = Data.LoadImage(IMG_PLAYER,"img/SnowBrosSheet.png",GL_RGBA);
+	res = Data.LoadImage(IMG_PLAYER,"img/player.png",GL_RGBA);
 	if(!res) return false;
 	Player.init();
 	int pnt;
@@ -216,7 +214,7 @@ void cGame::Render()
 	Player.Draw(Data.GetID(IMG_PLAYER));
 	vector<cProjectile> proj = Player.GetProjectiles();
 	for (int i = 0; i < int(proj.size()); ++i) 
-		proj[i].Draw(Data.GetID(IMG_PROJECTILES));
+		proj[i].Draw(Data.GetID(IMG_PLAYER));
 
 	int l, p;
 	Player.GetCurrentLives(&l);

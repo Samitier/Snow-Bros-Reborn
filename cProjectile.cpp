@@ -25,13 +25,13 @@ void cProjectile::Draw(int tex_id)
 
 	switch(state)
 	{
-		case STATE_THROWLEFT  :	xo = 0.0f;	yo = 0.125f;
+		case STATE_THROWLEFT  : xo = 5*0.0625f;	yo = 4*0.0625f;
 							break;
-		case STATE_THROWRIGHT :	xo = 0.0f;	yo = 0.125f;
+		case STATE_THROWRIGHT :	xo = 4*0.0625f;	yo = 4*0.0625f;;
 							break;
 	}
-	xf = xo + 0.125f;
-	yf = yo - 0.125f;
+	xf = xo + 0.0625f;
+	yf = yo - 0.0625f;
 
 	DrawRect(tex_id,xo,yo,xf,yf);
 }

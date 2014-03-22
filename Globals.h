@@ -34,11 +34,11 @@
 #define INIT_PLAYER_Y_TILE	1
 #define PLAYER_MAX_LIVES	3
 #define TIME_INVINCIBLE		180
-#define TIME_DEATH			100
+#define TIME_DEATH			50
 #define STEP_LENGTH			2
 
 //Enemy defines//
-#define TIME_WITH_SNOW		4500
+#define TIME_WITH_SNOW		20
 #define TOTAL_HITS			4
 #define TIME_STUNNED        45
 #define SNOWBALL_LIMIT		10
