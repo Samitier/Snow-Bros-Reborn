@@ -9,7 +9,7 @@
 class Enemy: public cBicho
 {
 public:
-	Enemy();
+	Enemy(void);
 	~Enemy();
 
 	void init();

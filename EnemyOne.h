@@ -14,6 +14,5 @@ public:
 private:
 	int movsps;
 	int rnd;
-	vector<cProjectile> projectiles;
 };
 

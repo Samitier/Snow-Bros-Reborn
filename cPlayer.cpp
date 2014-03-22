@@ -8,7 +8,6 @@ void cPlayer::init() {
 	SetWidthHeight(PLAYER_WIDTH,PLAYER_HEIGHT);
 	//Player.SetWidthHeight(17,25);
 	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
-	SetState(STATE_LOOKRIGHT);
 	lives = PLAYER_MAX_LIVES;
 	points = 0;
 	timecount =0;
@@ -18,7 +17,9 @@ void cPlayer::init() {
 	invincible = false;
 	snowballPushing = -1;
 	snowballOnTopOf = -1;
-	projectiles = vector<cProjectile>();
+	seq=0;
+	delay=0;
+	state = STATE_LOOKLEFT;
 }
 
 void cPlayer::Draw(int tex_id)
@@ -103,9 +104,6 @@ bool cPlayer::isDead() {
 	return dead;
 }
 
-vector<cProjectile> cPlayer::GetProjectiles() {
-	return projectiles;
-}
 void cPlayer::EraseProjectile(int i){
 	projectiles.erase(projectiles.begin()+i);
 }
@@ -136,21 +134,6 @@ void cPlayer::Logic(int *map) {
 			alfa = 1.0;
 			invincible = false;
 		}
-	}
-	//PROJECTILES
-	if (throwing)  {
-		throwing = false;
-		cProjectile p(x,y,w,h,state);
-		projectiles.push_back(p);
-	}
-
-	for (int i = 0; i < int(projectiles.size()); ++i) 
-	{
-		projectiles[i].Logic(map);
-		if (projectiles[i].CollidesMapFloor(map) ||
-			projectiles[i].CollidesMapWall(map, false) ||
-			projectiles[i].CollidesMapWall(map, true)) 
-		projectiles.erase(projectiles.begin() + i);
 	}
 
 	cBicho::Logic(map);

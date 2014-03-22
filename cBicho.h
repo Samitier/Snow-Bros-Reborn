@@ -1,9 +1,8 @@
 #pragma once
 
-#include "cTexture.h"
-#include "Globals.h"
+#include "cObject.h"
+#include "cProjectile.h"
 
-#define FRAME_DELAY		8
 #define JUMP_HEIGHT		96
 #define JUMP_STEP		4
 
@@ -21,32 +20,15 @@
 
 using namespace std;
 
-class cRect
-{
-public:
-	int left,top,
-		right,bottom;
-};
 
-class cBicho
+class cBicho :	public cObject
 {
 public:
+
 	cBicho(void);
 	cBicho(int x,int y,int w,int h);
 	~cBicho(void);
 
-	void SetPosition(int x,int y);
-	void GetPosition(int *x,int *y);
-	void SetTile(int tx,int ty);
-	void GetTile(int *tx,int *ty);
-	void SetWidthHeight(int w,int h);
-	void GetWidthHeight(int *w,int *h);
-
-	bool Collides(cRect *rc);
-	bool CollidesMapWall(int *map,bool right);
-	virtual bool CollidesMapFloor(int *map);
-	virtual void GetArea(cRect *rc);
-	void DrawRect(int tex_id,float xo,float yo,float xf,float yf);
 
 	void MoveRight(int *map);
 	void MoveLeft(int *map);
@@ -56,27 +38,15 @@ public:
 	void Throw(int *map);
 	void Stop();
 	virtual void Logic(int *map);
-
-	int  GetState();
-	void SetState(int s);
-	
-	int GetLeft();
-	int GetRight();
-	int GetBottom();
-	int GetTop();
-
-	void NextFrame(int max);
-	int  GetFrame();
-	bool jumping;
+	vector<cProjectile> GetProjectiles();
+	bool isJumping();
 
 protected:
+	bool jumping;
 	bool throwing;
-	int x,y;
-	int w,h;
-	int state;
+	vector<cProjectile> projectiles;
 
 private:
 	int jump_alfa;
 	int jump_y;
-	int seq,delay;
 };

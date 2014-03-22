@@ -1,5 +1,4 @@
 #include "cGame.h"
-#include "Globals.h"
 
 cGame::cGame(void)
 {
@@ -105,7 +104,7 @@ bool cGame::Process()
 			}
 			else {
 				if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()-SNOWBALL_LIMIT){
-					if (!Player.jumping)Player.SetState(STATE_PUSH_LEFT);
+					if (!Player.isJumping())Player.SetState(STATE_PUSH_LEFT);
 					if(enemies[Player.GetSnowballPushing()].PushLeft(Scene.GetMap())) Player.PushLeft(Scene.GetMap());
 				}
 				else {
@@ -124,7 +123,7 @@ bool cGame::Process()
 			}
 			else {
 				if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()+SNOWBALL_LIMIT){
-					if (!Player.jumping)Player.SetState(STATE_PUSH_RIGHT);
+					if (!Player.isJumping())Player.SetState(STATE_PUSH_RIGHT);
 					if(enemies[Player.GetSnowballPushing()].PushRight(Scene.GetMap())) Player.PushRight(Scene.GetMap());
 				}
 				else {
@@ -146,7 +145,7 @@ bool cGame::Process()
 	Player.Logic(Scene.GetMap());
 	
 	//ENEMY LOGIC
-	for(int i=0;i<enemies.size();++i) enemies[i].Logic(Scene.GetMap());
+	for(int i=0;i<int(enemies.size());++i) enemies[i].Logic(Scene.GetMap());
 
 	//COLLISIONS
 
@@ -164,7 +163,7 @@ bool cGame::Process()
 		int l, p;
 		Player.GetCurrentLives(&l);
 		Player.GetCurrentPoints(&p);
-		for(int i=0; i<enemies.size(); ++i) {
+		for(int i=0; i<int(enemies.size()); ++i) {
 			enemies[i].GetArea(&rec);
 			if(Player.Collides(&rec)) {
 				if(enemies[i].IsSnowball()){
@@ -208,7 +207,7 @@ void cGame::Render()
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
 	
 	
-	for(int i=0;i<enemies.size();++i) 
+	for(int i=0;i<int(enemies.size());++i) 
 		enemies[i].Draw(IMG_ENEMY);
 
 	Player.Draw(Data.GetID(IMG_PLAYER));

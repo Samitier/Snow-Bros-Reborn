@@ -7,6 +7,8 @@
 #include "cData.h"
 #include "cProjectile.h"
 #include "UI.h"
+#include "cObject.h"
+#include "Globals.h"
 
 using namespace std;
 

@@ -2,14 +2,19 @@
 
 
 
-cProjectile::cProjectile(int xx, int yy, int ww, int hh, int statee)
+cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir)
 {
-		if (statee == STATE_THROWRIGHT) x = xx + ww - 5;
-		else x = xx +10;
-		y = yy + hh - 5;;
+		if (dir == 1) {
+			x = xx + ww - 5;
+			state = STATE_GO_RIGHT;
+		}
+		else {
+			x = xx +10;
+			state = STATE_GO_LEFT;
+		}
+		y = yy + hh - 5;
 		w = 20;
 		h = 20;
-		state = statee;
 		falling_y = yy;
 		falling_alfa  = 80;
 }
@@ -25,9 +30,9 @@ void cProjectile::Draw(int tex_id)
 
 	switch(state)
 	{
-		case STATE_THROWLEFT  : xo = 5*0.0625f;	yo = 4*0.0625f;
+		case STATE_GO_LEFT  : xo = 5*0.0625f;	yo = 4*0.0625f;
 							break;
-		case STATE_THROWRIGHT :	xo = 4*0.0625f;	yo = 4*0.0625f;;
+		case STATE_GO_RIGHT :	xo = 4*0.0625f;	yo = 4*0.0625f;;
 							break;
 	}
 	xf = xo + 0.0625f;
@@ -42,7 +47,7 @@ void cProjectile::Logic(int *map)
 	float alfa;
 	int x, y;
 	GetPosition(&x,&y);
-	if (GetState() == STATE_THROWRIGHT) x += 10;
+	if (state== STATE_GO_RIGHT) x += 10;
 	else x -= 10;
 	falling_alfa  += HIGHT_STEP;
 	alfa = ((float)falling_alfa) * 0.017453f;

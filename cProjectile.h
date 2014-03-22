@@ -1,10 +1,12 @@
 #pragma once
-#include "cBicho.h"
+#include "cObject.h"
 
 #define MAX_HEIGHT		200
 #define HIGHT_STEP		4
+#define STATE_GO_RIGHT	0
+#define STATE_GO_LEFT	1
 
-class cProjectile :	public cBicho
+class cProjectile :	public cObject
 {
 
 public:
