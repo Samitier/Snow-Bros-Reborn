@@ -225,7 +225,7 @@ void cGame::Render()
 		enemies[i].Draw(IMG_ENEMY);
 		proj = enemies[i].GetProjectiles();
 		for (int i = 0; i < int(proj.size()); ++i) 
-			proj[i].Draw(Data.GetID(IMG_PLAYER));
+			proj[i].Draw(Data.GetID(IMG_ENEMY));
 	}
 
 	//DRAWPLAYER1

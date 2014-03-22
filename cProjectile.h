@@ -13,7 +13,7 @@ class cProjectile :	public cObject
 public:
 	cProjectile(int x, int y, int w, int h, int state,int type);
 	~cProjectile(void);
-
+	bool Destroy(int* map);
 	void Draw(int tex_id);
 	void Logic(int *map);
 
@@ -21,5 +21,6 @@ private:
 	int falling_alfa;
 	int falling_y;
 	int type;
+	int timeAlive;
 };
 
