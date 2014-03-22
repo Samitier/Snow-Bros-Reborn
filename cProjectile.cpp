@@ -2,7 +2,7 @@
 
 
 
-cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir)
+cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir,int typee)
 {
 		if (dir == 1) {
 			x = xx + ww - 5;
@@ -13,7 +13,7 @@ cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir)
 			state = STATE_GO_LEFT;
 		}
 		y = yy + hh/2 - 5;
-
+		type = typee;
 		w = 20;
 		h = 20;
 		falling_y = yy + hh/2 -5;

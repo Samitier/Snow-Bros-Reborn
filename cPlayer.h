@@ -42,4 +42,6 @@ private:
 	int lives;
 	int snowballPushing;
 	int snowballOnTopOf;
+
+	int timeThrowing;
 };

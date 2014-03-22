@@ -50,5 +50,4 @@ protected:
 private:
 	int jump_alfa;
 	int jump_y;
-	int timeThrow;
 };

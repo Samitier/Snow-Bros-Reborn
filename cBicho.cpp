@@ -9,7 +9,6 @@ cBicho::cBicho(void)
 	projectiles = vector<cProjectile>();
 	jump_alfa = 0;
 	jump_y = y;
-	timeThrow = 0;
 }
 cBicho::~cBicho(void){}
 
@@ -266,26 +265,5 @@ void cBicho::Logic(int *map)
 			y -= (2*STEP_LENGTH);
 	}
 
-	//PROJECTILES
-	if (throwing)  {
-		++timeThrow;
-		if (timeThrow > TIME_THROWING) {
-			timeThrow = 0;
-			throwing = false;
-		}
-		else if (timeThrow == THROW_LOAD) {
-			int aux = (state == STATE_THROWLEFT) ? 0 : 1;
-			cProjectile p(x,y,w,h,aux);
-			projectiles.push_back(p);
-		}
-	}
 
-	for (int i = 0; i < int(projectiles.size()); ++i) 
-	{
-		projectiles[i].Logic(map);
-		if (projectiles[i].CollidesMapFloor(map) ||
-			projectiles[i].CollidesMapWall(map, false) ||
-			projectiles[i].CollidesMapWall(map, true)) 
-		projectiles.erase(projectiles.begin() + i);
-	}
 }

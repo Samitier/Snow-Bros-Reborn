@@ -133,7 +133,28 @@ void cPlayer::Logic(int *map) {
 			invincible = false;
 		}
 	}
+		//PROJECTILES
+	if (throwing)  {
+		++timeThrowing;
+		if (timeThrowing > TIME_THROWING) {
+			timeThrowing = 0;
+			throwing = false;
+		}
+		else if (timeThrowing == THROW_LOAD) {
+			int aux = (state == STATE_THROWLEFT) ? 0 : 1;
+			cProjectile p(x,y,w,h,aux,TYPE_1);
+			projectiles.push_back(p);
+		}
+	}
 
+	for (int i = 0; i < int(projectiles.size()); ++i) 
+	{
+		projectiles[i].Logic(map);
+		if (projectiles[i].CollidesMapFloor(map) ||
+			projectiles[i].CollidesMapWall(map, false) ||
+			projectiles[i].CollidesMapWall(map, true)) 
+		projectiles.erase(projectiles.begin() + i);
+	}
 	cBicho::Logic(map);
 }
 

@@ -5,12 +5,13 @@
 #define HIGHT_STEP		4
 #define STATE_GO_RIGHT	0
 #define STATE_GO_LEFT	1
-
+#define TYPE_1			0
+#define TYPE_2			1
 class cProjectile :	public cObject
 {
 
 public:
-	cProjectile(int x, int y, int w, int h, int state);
+	cProjectile(int x, int y, int w, int h, int state,int type);
 	~cProjectile(void);
 
 	void Draw(int tex_id);
@@ -19,5 +20,6 @@ public:
 private:
 	int falling_alfa;
 	int falling_y;
+	int type;
 };
 

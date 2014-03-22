@@ -149,9 +149,9 @@ bool cGame::Process()
 
 	//COLLISIONS
 
+	//Player 
 	if(!Player.isDead()) { 
 		cRect rec;
-		
 		//this checks wether you exit a collision with a snowball if you were standing on top of it
 		if(Player.GetSnowballOnTopOf() != -1) {
 		enemies[Player.GetSnowballOnTopOf()].GetArea(&rec);
@@ -185,11 +185,24 @@ bool cGame::Process()
 					if(l == 0) GameOver();
 				}
 			}
+			//Player projectiles to  Enemy
 			vector<cProjectile> p = Player.GetProjectiles();
 			for(int j=0; j<int(p.size());++j) {
 				if(p[j].Collides(&rec)){
 					enemies[i].Hit();
 					Player.EraseProjectile(j);
+				}
+			}
+			//Enemy projectiles to Player
+			if (!Player.isInvincible())
+			{
+				Player.GetArea(&rec);
+				p = enemies[i].GetProjectiles();
+				for(int j=0; j<int(p.size());++j) {
+					if(p[j].Collides(&rec)){
+						Player.Die();
+						enemies[i].EraseProjectile(j);
+					}
 				}
 			}
 		}
@@ -206,12 +219,18 @@ void cGame::Render()
 
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
 	
-	
-	for(int i=0;i<int(enemies.size());++i) 
+	vector<cProjectile> proj;
+	//DRAWENEMYS
+	for(int i=0;i<int(enemies.size());++i) {
 		enemies[i].Draw(IMG_ENEMY);
+		proj = enemies[i].GetProjectiles();
+		for (int i = 0; i < int(proj.size()); ++i) 
+			proj[i].Draw(Data.GetID(IMG_PLAYER));
+	}
 
+	//DRAWPLAYER1
 	Player.Draw(Data.GetID(IMG_PLAYER));
-	vector<cProjectile> proj = Player.GetProjectiles();
+	proj = Player.GetProjectiles();
 	for (int i = 0; i < int(proj.size()); ++i) 
 		proj[i].Draw(Data.GetID(IMG_PLAYER));
 
