@@ -35,7 +35,10 @@
 #define PLAYER_MAX_LIVES	3
 #define TIME_INVINCIBLE		180
 #define TIME_DEATH			50
+#define TIME_THROWING		15
 #define STEP_LENGTH			2
+#define TIME_THROWING		15
+#define THROW_LOAD			5		//THROW_LOAD <= TIME_THROWING
 
 //Enemy defines//
 #define TIME_WITH_SNOW		20

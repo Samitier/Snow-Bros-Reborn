@@ -27,7 +27,6 @@ public:
 
 	virtual void Logic(int *map);
 	virtual bool CollidesMapFloor (int *map);
-	void EraseProjectile(int i);
 	void GetCurrentPoints(int* p);
 	void GetCurrentLives(int* l);
 	int GetSnowballPushing();

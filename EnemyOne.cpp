@@ -35,5 +35,5 @@ void EnemyOne::AI(int *map)
 			MoveRight(map);
 		}
 	}
-	if (rand()%1000 < 500) Throw(map);
+	if (rand()%1000 < 50) Throw(map);
 }

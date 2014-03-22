@@ -12,10 +12,11 @@ cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir)
 			x = xx +10;
 			state = STATE_GO_LEFT;
 		}
-		y = yy + hh - 5;
+		y = yy + hh/2 - 5;
+
 		w = 20;
 		h = 20;
-		falling_y = yy;
+		falling_y = yy + hh/2 -5;
 		falling_alfa  = 80;
 }
 

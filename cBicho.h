@@ -37,6 +37,7 @@ public:
 	void Jump(int *map);
 	void Throw(int *map);
 	void Stop();
+	void EraseProjectile(int i);
 	virtual void Logic(int *map);
 	vector<cProjectile> GetProjectiles();
 	bool isJumping();
@@ -49,4 +50,5 @@ protected:
 private:
 	int jump_alfa;
 	int jump_y;
+	int timeThrow;
 };

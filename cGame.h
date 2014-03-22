@@ -43,6 +43,5 @@ private:
 	cPlayer Player;
 	cData Data;
 	vector<EnemyOne> enemies;
-	vector<cProjectile> Projectiles;
 	bool throwing;
 };

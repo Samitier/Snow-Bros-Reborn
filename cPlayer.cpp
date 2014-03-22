@@ -104,9 +104,7 @@ bool cPlayer::isDead() {
 	return dead;
 }
 
-void cPlayer::EraseProjectile(int i){
-	projectiles.erase(projectiles.begin()+i);
-}
+
 bool cPlayer::isInvincible() {
 	return invincible;
 }

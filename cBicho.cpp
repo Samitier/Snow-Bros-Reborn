@@ -9,6 +9,7 @@ cBicho::cBicho(void)
 	projectiles = vector<cProjectile>();
 	jump_alfa = 0;
 	jump_y = y;
+	timeThrow = 0;
 }
 cBicho::~cBicho(void){}
 
@@ -117,7 +118,7 @@ void cBicho::MoveRight(int *map)
 				seq = 0;
 				delay = 0;
 			}
-						switch(state)
+			switch(state)
 			{
 				case STATE_THROWLEFT:	state = STATE_THROWRIGHT;	break;
 				case STATE_JUMPLEFT:	state = STATE_JUMPRIGHT;	break;
@@ -151,25 +152,38 @@ bool cBicho::PushRight(int *map)
 
 void cBicho::Stop()
 {
-	if (!throwing) {
+	switch(state)
+	{
+		case STATE_WALKLEFT:	
+			state = STATE_LOOKLEFT;		break;
+		case STATE_WALKRIGHT:	
+			state = STATE_LOOKRIGHT;	break;		
+	}
+
+	if (!jumping) 
+	{
 		switch(state)
 		{
-			case STATE_WALKLEFT:	state = STATE_LOOKLEFT;		break;
-			case STATE_WALKRIGHT:	state = STATE_LOOKRIGHT;	break;
+			case STATE_JUMPLEFT:	
+				state = STATE_LOOKLEFT;		break;
+			case STATE_JUMPRIGHT:	
+state = STATE_LOOKRIGHT;	break;
 		}
-		if (!jumping) 
+	}
+	if (!throwing)
+	{
+		switch(state)
 		{
-			switch(state)
-			{
-				case STATE_JUMPLEFT:	state = STATE_LOOKLEFT;		break;
-				case STATE_JUMPRIGHT:	state = STATE_LOOKRIGHT;	break;
-			}
+		case STATE_THROWLEFT:	
+			state = STATE_LOOKLEFT;		break;
+		case STATE_THROWRIGHT:	
+			state = STATE_LOOKRIGHT;	break;
 		}
 	}
 }
 void cBicho::Jump(int *map)
-{
-	if(!jumping)
+{	
+	if(!jumping && !throwing)
 	{
 		if(CollidesMapFloor(map))
 		{
@@ -196,6 +210,9 @@ void cBicho::Jump(int *map)
 		}
 	}
 }
+void cBicho::EraseProjectile(int i){
+	projectiles.erase(projectiles.begin()+i);
+}
 
 void cBicho::Throw(int *map)
 {
@@ -215,9 +232,6 @@ void cBicho::Throw(int *map)
 		case STATE_JUMPRIGHT:
 			state = STATE_THROWRIGHT;	break;
 	}
-	int aux = (state == STATE_THROWLEFT) ? 0 : 1;
-	cProjectile p(x,y,w,h,aux);
-	projectiles.push_back(p);
 }
 
 void cBicho::Logic(int *map)
@@ -254,7 +268,16 @@ void cBicho::Logic(int *map)
 
 	//PROJECTILES
 	if (throwing)  {
-		throwing = false;
+		++timeThrow;
+		if (timeThrow > TIME_THROWING) {
+			timeThrow = 0;
+			throwing = false;
+		}
+		else if (timeThrow == THROW_LOAD) {
+			int aux = (state == STATE_THROWLEFT) ? 0 : 1;
+			cProjectile p(x,y,w,h,aux);
+			projectiles.push_back(p);
+		}
 	}
 
 	for (int i = 0; i < int(projectiles.size()); ++i) 
