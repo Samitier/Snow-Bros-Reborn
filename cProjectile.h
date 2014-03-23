@@ -22,5 +22,6 @@ private:
 	int falling_y;
 	int type;
 	int timeAlive;
+	int xor, yor;
 };
 

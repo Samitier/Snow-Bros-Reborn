@@ -23,7 +23,7 @@ public:
 	void GetLife(int* l);
 	void GetTimecount(int* t);
 
-private:
+protected:
 	int amountOfSnow;
 	int points;
 	int movsps;
