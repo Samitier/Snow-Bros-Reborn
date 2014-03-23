@@ -59,7 +59,6 @@ void EnemyOne::Draw(int tex_id) {
 								break;
 		case STATE_SNOWBALL_PLAYER:	xo=0.125*(life-1); xf=xo+0.125; yo=0.125*2; yf = 0.125;
 								break;
-
 	}
 	DrawRect(tex_id,xo,yo,xf,yf);
 }

@@ -27,7 +27,7 @@ public:
 	void ShootSnowballRight();
 	void Die();
 
-private:
+
 
 
 protected:
