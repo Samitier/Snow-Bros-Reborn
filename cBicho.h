@@ -3,8 +3,8 @@
 #include "cObject.h"
 #include "cProjectile.h"
 
-#define JUMP_HEIGHT		96
-#define JUMP_STEP		4
+#define JUMP_HEIGHT			96
+#define JUMP_STEP			4
 
 #define STATE_LOOKLEFT		0
 #define STATE_LOOKRIGHT		1
@@ -16,7 +16,8 @@
 #define STATE_THROWRIGHT	7
 #define STATE_DIE			8
 #define STATE_PUSH_LEFT     9
-#define STATE_PUSH_RIGHT   10
+#define STATE_PUSH_RIGHT	10
+#define STATE_RESPAWN		11
 
 using namespace std;
 

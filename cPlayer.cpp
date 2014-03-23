@@ -64,6 +64,9 @@ void cPlayer::Draw(int tex_id)
 		case STATE_PUSH_RIGHT:  xo = (GetFrame()*0.0625f); yo = 4*0.0625f;
 								NextFrame(2);
 								break;
+		case STATE_RESPAWN:		 xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 4*0.0625f;
+								NextFrame(7);
+								break;
 	}
 	xf = xo + 0.0625f;
 	yf = yo - 0.0625f;
@@ -102,7 +105,7 @@ void cPlayer::Die() {
 }
 
 bool cPlayer::isDead() {
-	return dead;
+	return (dead || state == STATE_RESPAWN);
 }
 
 
@@ -118,6 +121,17 @@ void cPlayer::Logic(int *map) {
 	if(dead) {
 		timecount++;
 		if(timecount >= TIME_DEATH) {
+			timecount =0;
+			dead = false;
+			SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
+			invincible=true;
+			jumping= false;
+			state = STATE_RESPAWN;
+		}
+	}
+	else if(state == STATE_RESPAWN) {
+		timecount++;
+		if(timecount >= TIME_RESPAWN) {
 			timecount =0;
 			dead = false;
 			SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
