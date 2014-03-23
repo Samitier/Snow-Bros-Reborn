@@ -6,6 +6,8 @@ cProjectile::cProjectile(int xx, int yy, int ww, int hh, int statee)
 {
 		if (statee == STATE_THROWRIGHT) x = xx + ww - 5;
 		else x = xx +10;
+		x_ori = xx;
+		y_ori = yy;
 		y = yy + hh - 5;;
 		w = 20;
 		h = 20;
@@ -40,10 +42,10 @@ void cProjectile::Draw(int tex_id)
 void cProjectile::Logic(int *map)
 {
 	float alfa;
-	int x, y;
+	int x, y;// va recte 50 frames, cont 
 	GetPosition(&x,&y);
-	if (GetState() == STATE_THROWRIGHT) x += 10;
-	else x -= 10;
+	if (GetState() == STATE_WALKRIGHT) x += 5;
+	else x -= 5;
 	falling_alfa  += HIGHT_STEP;
 	alfa = ((float)falling_alfa) * 0.017453f;
 	y = falling_y - 195 + (int)( ((float)MAX_HEIGHT) * sin(alfa) );

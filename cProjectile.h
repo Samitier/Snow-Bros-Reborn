@@ -17,5 +17,7 @@ public:
 private:
 	int falling_alfa;
 	int falling_y;
+	int x_ori;
+	int y_ori;
 };
 
