@@ -1,7 +1,7 @@
 #include "Enemy.h"
 #include <stdlib.h> 
 
-Enemy::Enemy() { 
+Enemy::Enemy(void) { 
 }
 
 Enemy::~Enemy(){}
@@ -10,6 +10,7 @@ void Enemy::init() {
 	movsps =0;
 	rnd = rand()%100; 
 	life = 0;
+	state = STATE_LOOKLEFT;
 	timecount =0;
 }
 
@@ -18,12 +19,12 @@ void Enemy::Draw(int tex_id)
 {	
 	float xo,yo,xf,yf;
 	
-	switch(GetState())
+	switch(state)
 	{
 		case STATE_WALKLEFT:	xo = 0.125f*(1+GetFrame());	yo = 3*0.125f;
 								xf =  0.125f*(2+GetFrame());	yf = 2*0.125; NextFrame(4);
 								break;
-		
+
 		case STATE_WALKRIGHT:	xf = 0.125f*(1+GetFrame());	yo = 3*0.125f;
 								xo =  0.125f*(2+GetFrame());	yf = 2*0.125; NextFrame(4);
 								break;
@@ -52,6 +53,13 @@ void Enemy::Draw(int tex_id)
         case STATE_STUNNED:	    xo = 0.125f*(GetFrame());	yo = 5*0.125f;
 								xf =  0.125f*(1+GetFrame());	yf = 4*0.125; NextFrame(4);
 								break;
+		case STATE_THROWLEFT:	xo = 0;	 yo = 3*0.125f;
+								xf =  0.125f;	yf = 2*0.125;
+								break;
+		case STATE_THROWRIGHT:	xo = 0;	 yo = 3*0.125f;
+								xf =  0.125f;	yf = 2*0.125; 
+								break;
+
 	}
 	DrawRect(tex_id,xo,yo,xf,yf);
 }
@@ -70,23 +78,23 @@ bool Enemy::IsSnowball(){
 
 void Enemy::Logic(int *map)
 {	
-	if(GetState() != STATE_HIT && GetState() != STATE_SNOWBALL && GetState() != STATE_STUNNED) {
+	if(state != STATE_HIT && state != STATE_SNOWBALL && state != STATE_STUNNED) {
 		AI(map); 
 	}
 	else {
 		++timecount;
-		if(GetState() == STATE_STUNNED) {
+		if(state == STATE_STUNNED) {
 			if(timecount>=TIME_STUNNED) {
 				timecount =0;
-				SetState(STATE_LOOKLEFT);
+				state = STATE_LOOKLEFT;
 			}
 		}
 		else if(timecount>=TIME_WITH_SNOW*life) {
 			timecount =0;
 			--life;
-			SetState(STATE_HIT);
+			state = STATE_HIT;
 			if(life ==0) {
-				SetState(STATE_STUNNED);
+				state = STATE_STUNNED;
 			}
 		}
 	}

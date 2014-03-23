@@ -7,6 +7,8 @@
 #include "cData.h"
 #include "cProjectile.h"
 #include "UI.h"
+#include "cObject.h"
+#include "Globals.h"
 
 using namespace std;
 
@@ -41,6 +43,5 @@ private:
 	cPlayer Player;
 	cData Data;
 	vector<EnemyOne> enemies;
-	vector<cProjectile> Projectiles;
 	bool throwing;
 };

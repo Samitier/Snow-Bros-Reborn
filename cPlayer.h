@@ -27,14 +27,13 @@ public:
 
 	virtual void Logic(int *map);
 	virtual bool CollidesMapFloor (int *map);
-	void EraseProjectile(int i);
-	vector<cProjectile> GetProjectiles();
 	void GetCurrentPoints(int* p);
 	void GetCurrentLives(int* l);
 	int GetSnowballPushing();
 	void SetSnowballPushing(int snowball);
 	int GetSnowballOnTopOf();
 	void SetSnowballOnTopOf(int snowball);
+
 private: 
 	int timecount;
 	float alfa;
@@ -43,6 +42,6 @@ private:
 	int lives;
 	int snowballPushing;
 	int snowballOnTopOf;
-	vector<cProjectile> projectiles;
 
+	int timeThrowing;
 };

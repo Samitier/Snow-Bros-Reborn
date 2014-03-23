@@ -8,7 +8,6 @@ void cPlayer::init() {
 	SetWidthHeight(PLAYER_WIDTH,PLAYER_HEIGHT);
 	//Player.SetWidthHeight(17,25);
 	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
-	SetState(STATE_LOOKRIGHT);
 	lives = PLAYER_MAX_LIVES;
 	points = 0;
 	timecount =0;
@@ -18,7 +17,9 @@ void cPlayer::init() {
 	invincible = false;
 	snowballPushing = -1;
 	snowballOnTopOf = -1;
-	projectiles = vector<cProjectile>();
+	seq=0;
+	delay=0;
+	state = STATE_LOOKLEFT;
 }
 
 void cPlayer::Draw(int tex_id)
@@ -28,43 +29,43 @@ void cPlayer::Draw(int tex_id)
 	switch(GetState())
 	{
 		//1
-		case STATE_LOOKLEFT:	//xo = 0.0f;	yo = 0.25f;
-								xo = 0.0f;	yo = 0.0313f;
+		case STATE_LOOKLEFT:	xo = 0.0f;	yo = 0.0625f;
 								break;
 		//4
-		case STATE_LOOKRIGHT:	//xo = 0.25f;	yo = 0.25f;
-								xo = 0.0283f;	yo = 0.0313f;
+		case STATE_LOOKRIGHT:	xo = 0.0f;	yo = 3*0.0625f;
 								break;
 		//1..3
-		case STATE_WALKLEFT:	xo = 0.0f;	yo = 2*0.0313f + (GetFrame()*0.0313f);
-								NextFrame(3);
+		case STATE_WALKLEFT:	xo =  0.0625f+(GetFrame()*0.0625f);	yo = 0.0625f;
+								NextFrame(2);
 								break;
 		//4..6
-		case STATE_WALKRIGHT:	xo = 0.0283f; yo = 2*0.0313f + (GetFrame()*0.0313f);
-								NextFrame(3);
+		case STATE_WALKRIGHT:	xo =  0.0625f+(GetFrame()*0.0625f);	yo = 3*0.0625f;
+								NextFrame(2);
 								break;
-		case STATE_JUMPLEFT:	xo = 2*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_JUMPLEFT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;
+								NextFrame(7);
+								break;
+		case STATE_JUMPRIGHT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//falta
 								NextFrame(4);
 								break;
-		case STATE_JUMPRIGHT:	xo = 3*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
-								NextFrame(4);
-								break;
-		case STATE_THROWRIGHT:	xo = 6*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_THROWRIGHT:	xo = 7*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//??
 								NextFrame(2);
 								break;
-		case STATE_THROWLEFT:	xo = 5*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_THROWLEFT:	xo = 7*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;//??
 								NextFrame(2);
 								break;
-		case STATE_DIE:			xo = 8*0.0283f; yo = 0.0313f + (GetFrame()*0.0313f);
+		case STATE_DIE:			xo = 2*0.0625f+(GetFrame()*0.0625f); yo = 2*0.0625f;
+								NextFrame(8);
+								break;
+		case STATE_PUSH_LEFT:   xo = (GetFrame()*0.0625f); yo = 2*0.0625f;
 								NextFrame(2);
 								break;
-		case STATE_PUSH_LEFT:   xo = 5*0.0283f; yo = 0.0313f + 0.0313f*2;
-								break;
-		case STATE_PUSH_RIGHT:  xo = 6*0.0283f; yo = 0.0313f + 0.0313f*2;
+		case STATE_PUSH_RIGHT:  xo = (GetFrame()*0.0625f); yo = 4*0.0625f;
+								NextFrame(2);
 								break;
 	}
-	xf = xo + 0.0283f;
-	yf = yo - 0.0313f;
+	xf = xo + 0.0625f;
+	yf = yo - 0.0625f;
 	if(invincible) {
 		alfa-=incAlfa;
 		if(alfa <= 0){
@@ -103,12 +104,7 @@ bool cPlayer::isDead() {
 	return dead;
 }
 
-vector<cProjectile> cPlayer::GetProjectiles() {
-	return projectiles;
-}
-void cPlayer::EraseProjectile(int i){
-	projectiles.erase(projectiles.begin()+i);
-}
+
 bool cPlayer::isInvincible() {
 	return invincible;
 }
@@ -139,20 +135,24 @@ void cPlayer::Logic(int *map) {
 	}
 	//PROJECTILES
 	if (throwing)  {
-		throwing = false;
-		cProjectile p(x,y,w,h,state);
-		projectiles.push_back(p);
+		++timeThrowing;
+		if (timeThrowing > TIME_THROWING) {
+			timeThrowing = 0;
+			throwing = false;
+		}
+		else if (timeThrowing == THROW_LOAD) {
+			int aux = (state == STATE_THROWLEFT) ? 0 : 1;
+			cProjectile p(x,y,w,h,aux,TYPE_1);
+			projectiles.push_back(p);
+		}
 	}
-
 	for (int i = 0; i < int(projectiles.size()); ++i) 
 	{
 		projectiles[i].Logic(map);
-		if (projectiles[i].CollidesMapFloor(map) ||
-			projectiles[i].CollidesMapWall(map, false) ||
-			projectiles[i].CollidesMapWall(map, true)) 
-		projectiles.erase(projectiles.begin() + i);
+		//Destroy condition
+		if (projectiles[i].Destroy(map)) 
+			projectiles.erase(projectiles.begin() + i);
 	}
-
 	cBicho::Logic(map);
 }
 
