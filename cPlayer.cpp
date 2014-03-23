@@ -63,6 +63,7 @@ void cPlayer::Draw(int tex_id)
 								break;
 		case STATE_PUSH_RIGHT:  xo = (GetFrame()*0.0625f); yo = 4*0.0625f;
 								NextFrame(2);
+								break;
 
 		case STATE_SNOWBALL_PLAYER:	xo =0; yo = 0;  break;
 

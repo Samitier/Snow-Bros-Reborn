@@ -108,15 +108,13 @@ bool cGame::Process()
 				Player.MoveLeft(Scene.GetMap());
 				Player.SetSnowballPushing(-1);
 			}
+			else if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()-SNOWBALL_LIMIT){
+				if (Player.GetState()!=STATE_PUSH_LEFT) if(!Player.isJumping())Player.SetState(STATE_PUSH_LEFT);
+				if(enemies[Player.GetSnowballPushing()].PushLeft(Scene.GetMap())) Player.PushLeft(Scene.GetMap());
+			}
 			else {
-				if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()-SNOWBALL_LIMIT){
-					if (Player.GetState()!=STATE_PUSH_LEFT)if(!Player.isJumping())Player.SetState(STATE_PUSH_LEFT);
-					if(enemies[Player.GetSnowballPushing()].PushLeft(Scene.GetMap())) Player.PushLeft(Scene.GetMap());
-				}
-				else {
-					Player.MoveLeft(Scene.GetMap());
-					Player.SetSnowballPushing(-1);
-				}
+				Player.MoveLeft(Scene.GetMap());
+				Player.SetSnowballPushing(-1);
 			}
 		}
 		
@@ -127,15 +125,13 @@ bool cGame::Process()
 				Player.MoveRight(Scene.GetMap());
 				Player.SetSnowballPushing(-1);
 			}
+			else if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()+SNOWBALL_LIMIT){
+				if (Player.GetState()!=STATE_PUSH_RIGHT)if(!Player.isJumping())Player.SetState(STATE_PUSH_RIGHT);
+				if(enemies[Player.GetSnowballPushing()].PushRight(Scene.GetMap())) Player.PushRight(Scene.GetMap());
+			}
 			else {
-				if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()+SNOWBALL_LIMIT){
-					if (Player.GetState()!=STATE_PUSH_RIGHT)if(!Player.isJumping())Player.SetState(STATE_PUSH_RIGHT);
-					if(enemies[Player.GetSnowballPushing()].PushRight(Scene.GetMap())) Player.PushRight(Scene.GetMap());
-				}
-				else {
-					Player.MoveRight(Scene.GetMap());
-					Player.SetSnowballPushing(-1);
-				}
+				Player.MoveRight(Scene.GetMap());
+				Player.SetSnowballPushing(-1);
 			}
 		}
 		
