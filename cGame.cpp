@@ -80,23 +80,29 @@ bool cGame::Process()
 		//INPUT
 		//ESC
 		if (keys[27]) res=false; 
-		
+
 		//SPACEBAR
-		if (keys[' '] && !throwing) {
+		if (keys[' '] && !throwing && Player.GetState()!=STATE_SNOWBALL_PLAYER)  {
 			throwing = true;
-			if(Player.GetState() == STATE_PUSH_LEFT) ; //shoots the snowball to the left
-			else if(Player.GetState() == STATE_PUSH_RIGHT); //shoots the snowball to the right
+			if(Player.GetState() == STATE_PUSH_LEFT) {
+				enemies[Player.GetSnowballPushing()].ShootSnowballLeft(); 
+			}
+			else if(Player.GetState() == STATE_PUSH_RIGHT){
+				enemies[Player.GetSnowballPushing()].ShootSnowballRight(); 
+			}
 			else Player.Throw(Scene.GetMap());	
 		}
 		else if(!keys[' ']) throwing = false;
 		
 		//W
 		if (keys['w'] || keys['W']){
+			if(Player.GetState()==STATE_SNOWBALL_PLAYER) 
+				enemies[Player.GetSnowballPushing()].SetState(STATE_SNOWBALL_MOVING);
 			Player.Jump(Scene.GetMap());
 		}
 		
 		//A
-		if (keys['a'] || keys['A'])	{
+		if ((keys['a'] || keys['A']) && Player.GetState()!=STATE_SNOWBALL_PLAYER)	{
 			//if we aren't pushing a ball or standing on the top of the ball, we move normally
 			if(Player.GetSnowballPushing() == -1 || Player.GetSnowballOnTopOf() != -1) {
 				Player.MoveLeft(Scene.GetMap());
@@ -115,7 +121,7 @@ bool cGame::Process()
 		}
 		
 		//D
-		else if(keys['d'] || keys['D'])	 {
+		else if((keys['d'] || keys['D'])	&& Player.GetState()!=STATE_SNOWBALL_PLAYER)  {
 			//if we aren't pushing a ball, jumping or standing on the top of the ball, we move normally
 			if(Player.GetSnowballPushing() == -1 || Player.GetSnowballOnTopOf() != -1) {
 				Player.MoveRight(Scene.GetMap());
@@ -133,13 +139,18 @@ bool cGame::Process()
 			}
 		}
 		
-		else 	{
+		else if(Player.GetState()!=STATE_SNOWBALL_PLAYER) 	{
 			Player.Stop();
 			Player.SetSnowballPushing(-1);
 		}
 	}
 
 	//PLAYER LOGIC
+	if(Player.GetState() == STATE_SNOWBALL_PLAYER) {
+		int x, y;
+		enemies[Player.GetSnowballPushing()].GetPosition(&x,&y);
+		Player.SetPosition(x,y); 
+	}
 	Player.Logic(Scene.GetMap());
 	
 	//ENEMY LOGIC
@@ -161,10 +172,33 @@ bool cGame::Process()
 		int l, p;
 		Player.GetCurrentLives(&l);
 		Player.GetCurrentPoints(&p);
+		//if(enemies.size==0)LoadLevel(currentLevel+1);
 		for(int i=0; i<int(enemies.size()); ++i) {
 			enemies[i].GetArea(&rec);
+			if(enemies[i].GetState()==STATE_SNOWBALL_MOVING || enemies[i].GetState()==STATE_SNOWBALL_PLAYER) {
+				/*for(int j=0; j<int(enemies.size()); ++j) {
+					if(i != j) {
+
+				}*///mirar colisions amb altres enemics per matarlos si els toca
+				int x, y;
+				enemies[i].GetPosition(&x,&y);
+				if(y <= BLOCK_SIZE+4 &&(enemies[i].CollidesMapWall(Scene.GetMap(),true)||enemies[i].CollidesMapWall(Scene.GetMap(),false))){
+					//sumar punts per matar al enemic
+					enemies.erase(enemies.begin()+i);
+					if(Player.GetSnowballPushing() ==i ) {
+						Player.SetSnowballPushing(-1);
+						Player.SetState(STATE_LOOKRIGHT);
+					}
+					continue;
+				}
+			}
 			if(Player.Collides(&rec)) {
-				if(enemies[i].IsSnowball()){
+				if(enemies[i].GetState()==STATE_SNOWBALL_MOVING && !Player.isJumping()) {
+						Player.SetState(STATE_SNOWBALL_PLAYER);
+						enemies[i].SetState(STATE_SNOWBALL_PLAYER);
+						Player.SetSnowballPushing(i);
+				}
+				else if(enemies[i].IsSnowball()){
 					if(Player.GetBottom() == rec.top) {
 						Player.SetSnowballOnTopOf(i);
 					}

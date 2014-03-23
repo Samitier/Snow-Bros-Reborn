@@ -5,6 +5,7 @@
 #define STATE_HIT 25
 #define STATE_SNOWBALL 26
 #define STATE_STUNNED 27
+#define STATE_SNOWBALL_MOVING 28
 
 class Enemy: public cBicho
 {
@@ -22,12 +23,19 @@ public:
 	bool IsSnowball();
 	void GetLife(int* l);
 	void GetTimecount(int* t);
+	void ShootSnowballLeft();
+	void ShootSnowballRight();
+	void Die();
 
 private:
+
+
+protected:
 	int amountOfSnow;
 	int points;
 	int movsps;
 	int rnd;
 	int life;
 	int timecount;
+	int direction;
 };

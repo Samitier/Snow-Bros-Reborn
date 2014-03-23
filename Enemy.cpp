@@ -12,6 +12,7 @@ void Enemy::init() {
 	life = 0;
 	state = STATE_LOOKLEFT;
 	timecount =0;
+	direction =0;
 }
 
 
@@ -59,7 +60,10 @@ void Enemy::Draw(int tex_id)
 		case STATE_THROWRIGHT:	xo = 0;	 yo = 3*0.125f;
 								xf =  0.125f;	yf = 2*0.125; 
 								break;
-
+		case STATE_SNOWBALL_MOVING:	xo=0.125*(life-1); xf=xo+0.125; yo=0.125; yf = 0;
+								break;
+		case STATE_SNOWBALL_PLAYER:	xo=0.125*(life-1); xf=xo+0.125; yo=0.125*2; yf = 0.125;
+								break;
 	}
 	DrawRect(tex_id,xo,yo,xf,yf);
 }
@@ -78,10 +82,10 @@ bool Enemy::IsSnowball(){
 
 void Enemy::Logic(int *map)
 {	
-	if(state != STATE_HIT && state != STATE_SNOWBALL && state != STATE_STUNNED) {
+	if(state != STATE_HIT && state != STATE_SNOWBALL && state != STATE_STUNNED && state != STATE_SNOWBALL_MOVING && state != STATE_SNOWBALL_PLAYER) {
 		AI(map); 
 	}
-	else {
+	else if(state != STATE_SNOWBALL_MOVING && state != STATE_SNOWBALL_PLAYER){
 		++timecount;
 		if(state == STATE_STUNNED) {
 			if(timecount>=TIME_STUNNED) {
@@ -98,6 +102,16 @@ void Enemy::Logic(int *map)
 			}
 		}
 	}
+	else {
+		if( (x % TILE_SIZE) == 0) {
+			x += (STEP_LENGTH*direction);
+			if(CollidesMapWall(map,(direction ==1))) {
+				direction *=-1;
+			}
+		}
+		else x += STEP_LENGTH*direction;
+	}
+
 	cBicho::Logic(map);
 }
 
@@ -106,7 +120,7 @@ void Enemy::AI(int *map){
 }
 
 bool Enemy::isHit() {
-	return (GetState() == STATE_HIT || GetState() == STATE_SNOWBALL);
+	return (GetState() == STATE_HIT || GetState() == STATE_SNOWBALL|| GetState()==STATE_SNOWBALL_MOVING||GetState()==STATE_SNOWBALL_PLAYER);
 }
 
 void Enemy::Hit() {
@@ -121,7 +135,7 @@ void Enemy::Hit() {
 
 void Enemy::GetArea(cRect *rc)
 {
-	if(state != STATE_SNOWBALL) {
+	if(state != STATE_SNOWBALL && state != STATE_SNOWBALL_MOVING) {
 		rc->left   = x;
 		rc->right  = x+w;
 		rc->bottom = y;
@@ -133,4 +147,13 @@ void Enemy::GetArea(cRect *rc)
 		rc->bottom = y;
 		rc->top    = y+h;
 	}
+}
+
+void Enemy:: ShootSnowballLeft(){
+	SetState(STATE_SNOWBALL_MOVING);
+	direction = -1;
+}
+void Enemy::ShootSnowballRight(){
+	SetState(STATE_SNOWBALL_MOVING);
+	direction =1;
 }

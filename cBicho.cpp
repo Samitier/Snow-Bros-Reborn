@@ -206,6 +206,8 @@ void cBicho::Jump(int *map)
 					state = STATE_JUMPLEFT;		break;
 				case STATE_PUSH_RIGHT:
 					state = STATE_JUMPRIGHT;	break;
+				case STATE_SNOWBALL_PLAYER:
+					state = STATE_JUMPRIGHT;	break;
 			}
 			seq = 0;
 			delay = 0;				 

@@ -4,22 +4,49 @@
 
 cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir,int typee)
 {
+	switch(typee) {
+	case TYPE_1:
 		if (dir == 1) {
-			x = xx + ww - 5;
+			x = xx;
 			state = STATE_GO_RIGHT;
 		}
 		else {
-			x = xx +10;
+			x = xx;
 			state = STATE_GO_LEFT;
 		}
 		y = yy + hh/2 - 5;
 		type = typee;
-		w = 24;
-		h = 24;
+		w = 16;
+		h = 16;
+
 		delay = 0;
 		falling_y = yy + hh/2 -5;
 		falling_alfa  = 80;
 		timeAlive = 0;
+		xor = xx;
+		yor = yy+ww-10;
+		break;
+	case TYPE_2:
+		if (dir == 1) {
+			x = xx;
+			state = STATE_GO_RIGHT;
+		}
+		else {
+			x = xx;
+			state = STATE_GO_LEFT;
+		}
+		y = yy;
+		type = typee;
+		w = 32;
+		h = 32;
+		delay = 0;
+		falling_y = yy + hh/2 -5;
+		falling_alfa  = 80;
+		timeAlive = 0;
+		xor = xx;
+		yor = yy;
+		break;
+	}
 }
 
 
@@ -73,10 +100,11 @@ void cProjectile::Logic(int *map)
 		case TYPE_1 :
 			float alfa;
 			if (state== STATE_GO_RIGHT) x += 10;
-			else x -= 10;
+			else x -= 10 ;
 			falling_alfa  += HIGHT_STEP;
 			alfa = ((float)falling_alfa) * 0.017453f;
 			y = falling_y - 195 + (int)( ((float)MAX_HEIGHT) * sin(alfa) );
+			//if (abs(x -xor) > 13) y = int(-1*pow(double((x-xor)/8),2)+yor);
 		break;
 
 		case TYPE_2 :
@@ -92,13 +120,15 @@ bool cProjectile::Destroy(int* map)
 	switch(type)
 	{
 		case TYPE_1 :
-			return (CollidesMapFloor(map) ||
-			CollidesMapWall(map, false) ||
+			return (CollidesMapFloor(map)	||
+			CollidesMapWall(map, false)		||
 			CollidesMapWall(map, true));
 		break;
 
 		case TYPE_2 :
-			return (timeAlive == 50);
+			return (timeAlive == 50				|| 
+					CollidesMapWall(map, false) ||
+					CollidesMapWall(map, true));
 		break;
 	}
 	return false;
