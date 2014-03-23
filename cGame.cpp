@@ -223,9 +223,6 @@ void cGame::Render()
 	//DRAWENEMYS
 	for(int i=0;i<int(enemies.size());++i) {
 		enemies[i].Draw(IMG_ENEMY);
-		proj = enemies[i].GetProjectiles();
-		for (int i = 0; i < int(proj.size()); ++i) 
-			proj[i].Draw(Data.GetID(IMG_ENEMY));
 	}
 
 	//DRAWPLAYER1

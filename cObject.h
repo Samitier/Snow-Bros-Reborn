@@ -3,7 +3,7 @@
 #include "cTexture.h"
 #include "Globals.h"
 
-#define FRAME_DELAY		8
+#define FRAME_DELAY		12
 
 using namespace std;
 

@@ -8,7 +8,9 @@ EnemyOne::EnemyOne(void)
 	timeThrowing = 0;
 }
 
-void EnemyOne::Draw(int tex_id) { 
+void EnemyOne::Draw(int tex_id) {
+	for (int i = 0; i < int(projectiles.size()); ++i) 
+		projectiles[i].Draw(tex_id);
 	Enemy::Draw(tex_id);
 }
 

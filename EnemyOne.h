@@ -1,6 +1,7 @@
 #pragma once
 #include "enemy.h"
 #include "cProjectile.h"
+#include "cData.h"
 
 class EnemyOne :
 	public Enemy

@@ -14,13 +14,12 @@ cProjectile::cProjectile(int xx, int yy, int ww, int hh, int dir,int typee)
 		}
 		y = yy + hh/2 - 5;
 		type = typee;
-		w = 20;
-		h = 20;
+		w = 24;
+		h = 24;
+		delay = 0;
 		falling_y = yy + hh/2 -5;
 		falling_alfa  = 80;
 		timeAlive = 0;
-		seq = 0;
-		delay = 0;
 }
 
 
@@ -49,14 +48,14 @@ void cProjectile::Draw(int tex_id)
 			switch(state)
 			{
 				case STATE_GO_LEFT  :
-					xo = 13*0.0625f+(GetFrame()*0.0625f);
+					xo = 13*0.0625f+(seq*0.0625f);
 					yo = 0.0625f;
-					NextFrame(2);
+					if (seq < 2) NextFrame(3);
 				break;
 				case STATE_GO_RIGHT : 
-					xo = 13*0.0625f+(GetFrame()*0.0625f);
+					xo = 13*0.0625f+(seq*0.0625f);
 					yo = 2*0.0625f;
-					NextFrame(2);
+					if (seq < 2) NextFrame(3);
 				break;
 			}
 			xf = xo + 0.0625f;
