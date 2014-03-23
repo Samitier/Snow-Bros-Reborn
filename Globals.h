@@ -42,7 +42,8 @@
 
 //Enemy defines//
 
-#define TIME_WITH_SNOW		45
+#define TIME_WITH_SNOW		40
+
 #define TOTAL_HITS			4
 #define TIME_STUNNED        45
 #define SNOWBALL_LIMIT		10
