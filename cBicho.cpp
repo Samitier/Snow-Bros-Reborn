@@ -19,6 +19,7 @@ cBicho::cBicho(int posx,int posy,int width,int height)
 	h = height;
 }
 
+
 cBicho::~cBicho(void){}
 
 bool cBicho::isJumping(){
