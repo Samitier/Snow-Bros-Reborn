@@ -19,6 +19,7 @@ cBicho::cBicho(int posx,int posy,int width,int height)
 	h = height;
 }
 
+
 cBicho::~cBicho(void){}
 
 bool cBicho::isJumping(){
@@ -29,6 +30,7 @@ vector<cProjectile> cBicho::GetProjectiles() {
 	return projectiles;
 }
 
+>>>>>>> 468c2530df04aa95460ac76758be46e1e002a4a7
 void cBicho::MoveLeft(int *map)
 {
 	int xaux;
