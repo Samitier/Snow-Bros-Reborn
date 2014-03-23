@@ -19,6 +19,7 @@ void cPlayer::init() {
 	snowballOnTopOf = -1;
 	seq=0;
 	delay=0;
+	timeThrowing =0;
 	state = STATE_LOOKLEFT;
 }
 
@@ -48,14 +49,14 @@ void cPlayer::Draw(int tex_id)
 		case STATE_JUMPRIGHT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//falta
 								NextFrame(4);
 								break;
-		case STATE_THROWRIGHT:	xo = 7*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//??
+		case STATE_THROWRIGHT:	xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//??
 								NextFrame(2);
 								break;
-		case STATE_THROWLEFT:	xo = 7*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;//??
+		case STATE_THROWLEFT:	xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;//??
 								NextFrame(2);
 								break;
 		case STATE_DIE:			xo = 2*0.0625f+(GetFrame()*0.0625f); yo = 2*0.0625f;
-								NextFrame(8);
+								NextFrame(9);
 								break;
 		case STATE_PUSH_LEFT:   xo = (GetFrame()*0.0625f); yo = 2*0.0625f;
 								NextFrame(2);

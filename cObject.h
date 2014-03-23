@@ -3,8 +3,6 @@
 #include "cTexture.h"
 #include "Globals.h"
 
-#define FRAME_DELAY		12
-
 using namespace std;
 
 class cRect

@@ -164,6 +164,8 @@ int cObject::GetState()
 void cObject::SetState(int s)
 {
 	state = s;
+	seq=0;
+	delay=0;
 }
 
 int cObject::GetLeft() {

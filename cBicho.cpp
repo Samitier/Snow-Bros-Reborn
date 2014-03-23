@@ -158,7 +158,11 @@ void cBicho::Stop()
 		case STATE_WALKLEFT:	
 			state = STATE_LOOKLEFT;		break;
 		case STATE_WALKRIGHT:	
-			state = STATE_LOOKRIGHT;	break;		
+			state = STATE_LOOKRIGHT;	break;	
+		case STATE_PUSH_RIGHT:
+			state = STATE_LOOKRIGHT; break;
+		case STATE_PUSH_LEFT:
+			state = STATE_LOOKLEFT; break;
 	}
 
 	if (!jumping) 
@@ -168,7 +172,7 @@ void cBicho::Stop()
 			case STATE_JUMPLEFT:	
 				state = STATE_LOOKLEFT;		break;
 			case STATE_JUMPRIGHT:	
-state = STATE_LOOKRIGHT;	break;
+				state = STATE_LOOKRIGHT;	break;
 		}
 	}
 	if (!throwing)
@@ -221,17 +225,17 @@ void cBicho::Throw(int *map)
 	switch(state)
 	{
 		case STATE_LOOKLEFT:
-			state = STATE_THROWLEFT;	break;
+			SetState(STATE_THROWLEFT);	break;
 		case STATE_LOOKRIGHT:
-			state = STATE_THROWRIGHT;	break;
+			SetState(STATE_THROWRIGHT);	break;
 		case STATE_WALKLEFT:
-			state = STATE_THROWLEFT;	break;
+			SetState(STATE_THROWLEFT);	break;
 		case STATE_WALKRIGHT:
-			state = STATE_THROWRIGHT;	break;
+			SetState(STATE_THROWRIGHT);	break;
 		case STATE_JUMPLEFT:
-			state = STATE_THROWLEFT;	break;
+			SetState(STATE_THROWLEFT);	break;
 		case STATE_JUMPRIGHT:
-			state = STATE_THROWRIGHT;	break;
+			SetState(STATE_THROWRIGHT);	break;
 	}
 }
 

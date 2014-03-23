@@ -26,6 +26,8 @@
 #define FILENAME_DIR	"levels/"
 #define FILENAME_EXT	".txt"
 
+//Animations
+#define FRAME_DELAY		10
 
 //Player defines//
 #define PLAYER_WIDTH		32
@@ -34,16 +36,13 @@
 #define INIT_PLAYER_Y_TILE	1
 #define PLAYER_MAX_LIVES	3
 #define TIME_INVINCIBLE		180
-#define TIME_DEATH			75
-#define TIME_THROWING		15
+#define TIME_DEATH			90
 #define STEP_LENGTH			2
-#define TIME_THROWING		15
-#define THROW_LOAD			5		//THROW_LOAD <= TIME_THROWING
+#define TIME_THROWING		19
+#define THROW_LOAD			10		//THROW_LOAD <= TIME_THROWING
 
 //Enemy defines//
-
-#define TIME_WITH_SNOW		40
-
+#define TIME_WITH_SNOW		6000
 #define TOTAL_HITS			4
-#define TIME_STUNNED        45
+#define TIME_STUNNED        50
 #define SNOWBALL_LIMIT		10
