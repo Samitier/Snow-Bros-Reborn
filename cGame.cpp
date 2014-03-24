@@ -33,6 +33,8 @@ bool cGame::Init()
 	if(!res) return false;
 	res = Data.LoadImage(IMG_ENEMY,"img/enemy.png",GL_RGBA);
 	if(!res) return false;
+	res = Data.LoadImage(IMG_ENEMY2,"img/enemy2.png",GL_RGBA);
+	if(!res) return false;
 	//Player initialization
 	res = Data.LoadImage(IMG_PLAYER,"img/player.png",GL_RGBA);
 	if(!res) return false;
@@ -84,18 +86,21 @@ bool cGame::Process()
 		//SPACEBAR
 		if (keys[' '] && !throwing && Player.GetState()!=STATE_SNOWBALL_PLAYER)  {
 			throwing = true;
+			//If we are touching a snowball, we'll shoot it
 			if(Player.GetState() == STATE_PUSH_LEFT) {
 				enemies[Player.GetSnowballPushing()].ShootSnowballLeft(); 
 			}
 			else if(Player.GetState() == STATE_PUSH_RIGHT){
 				enemies[Player.GetSnowballPushing()].ShootSnowballRight(); 
 			}
+			//if not, we shoot projectiles
 			else Player.Throw(Scene.GetMap());	
 		}
 		else if(!keys[' ']) throwing = false;
 		
 		//W
 		if (keys['w'] || keys['W']){
+			//If we are being dragged for a snowball, we'll exit it
 			if(Player.GetState()==STATE_SNOWBALL_PLAYER) 
 				enemies[Player.GetSnowballPushing()].SetState(STATE_SNOWBALL_MOVING);
 			Player.Jump(Scene.GetMap());
@@ -108,6 +113,7 @@ bool cGame::Process()
 				Player.MoveLeft(Scene.GetMap());
 				Player.SetSnowballPushing(-1);
 			}
+			//if not, we push the ball
 			else if(Player.GetLeft()==enemies[Player.GetSnowballPushing()].GetRight()-SNOWBALL_LIMIT){
 				if (Player.GetState()!=STATE_PUSH_LEFT) if(!Player.isJumping())Player.SetState(STATE_PUSH_LEFT);
 				if(enemies[Player.GetSnowballPushing()].PushLeft(Scene.GetMap())) Player.PushLeft(Scene.GetMap());
@@ -125,6 +131,7 @@ bool cGame::Process()
 				Player.MoveRight(Scene.GetMap());
 				Player.SetSnowballPushing(-1);
 			}
+			//if not, we push the ball
 			else if(Player.GetRight()==enemies[Player.GetSnowballPushing()].GetLeft()+SNOWBALL_LIMIT){
 				if (Player.GetState()!=STATE_PUSH_RIGHT)if(!Player.isJumping())Player.SetState(STATE_PUSH_RIGHT);
 				if(enemies[Player.GetSnowballPushing()].PushRight(Scene.GetMap())) Player.PushRight(Scene.GetMap());
@@ -157,6 +164,7 @@ bool cGame::Process()
 	//Player 
 	if(!Player.isDead()) { 
 		cRect rec;
+		
 		//this checks wether you exit a collision with a snowball if you were standing on top of it
 		if(Player.GetSnowballOnTopOf() != -1) {
 		enemies[Player.GetSnowballOnTopOf()].GetArea(&rec);
@@ -171,29 +179,35 @@ bool cGame::Process()
 		//if(enemies.size==0)LoadLevel(currentLevel+1);
 		for(int i=0; i<int(enemies.size()); ++i) {
 			enemies[i].GetArea(&rec);
+			
+			//Logic for the moving snowball collisions
 			if(enemies[i].GetState()==STATE_SNOWBALL_MOVING || enemies[i].GetState()==STATE_SNOWBALL_PLAYER) {
-				/*for(int j=0; j<int(enemies.size()); ++j) {
-					if(i != j) {
-
-				}*///mirar colisions amb altres enemics per matarlos si els toca
+				//Check if it collides with another enemy, and kill it if it does
+				for(int j=0; j<int(enemies.size()); ++j) {
+					if(i != j && enemies[j].Collides(&rec)) {
+						if(enemies[j].IsSnowball()) {
+							//if(enemies[i].direction =-1) enemies[j].
+						}
+						else KillEnemy(j);
+						continue;
+					}
+				}	
+				//Check if enemy is a moving snowball and reached the end of level
 				int x, y;
 				enemies[i].GetPosition(&x,&y);
 				if(y <= BLOCK_SIZE+4 &&(enemies[i].CollidesMapWall(Scene.GetMap(),true)||enemies[i].CollidesMapWall(Scene.GetMap(),false))){
-					//sumar punts per matar al enemic
-					enemies.erase(enemies.begin()+i);
-					if(Player.GetSnowballPushing() ==i ) {
-						Player.SetSnowballPushing(-1);
-						Player.SetState(STATE_LOOKRIGHT);
-					}
+					KillEnemy(i);
 					continue;
 				}
 			}
 			if(Player.Collides(&rec)) {
+				//If the enemy is a moving snowball, it drags the player
 				if(enemies[i].GetState()==STATE_SNOWBALL_MOVING && !Player.isJumping()) {
 						Player.SetState(STATE_SNOWBALL_PLAYER);
 						enemies[i].SetState(STATE_SNOWBALL_PLAYER);
 						Player.SetSnowballPushing(i);
 				}
+				//If the enemy is a non moving snowball, the player can move it or stand on top of it
 				else if(enemies[i].IsSnowball()){
 					if(Player.GetBottom() == rec.top) {
 						Player.SetSnowballOnTopOf(i);
@@ -208,7 +222,8 @@ bool cGame::Process()
 						Player.SetSnowballPushing(i);
 					}
 				}
-				else if(!Player.isInvincible() && !enemies[i].isHit()) {
+				//If the enemy has no snow and the player is not on a moving snowball, the player dies
+				else if(!Player.isInvincible() && !enemies[i].isHit()&& Player.GetState()!=STATE_SNOWBALL_MOVING) {
 					Player.Die();
 					if(l == 0) GameOver();
 				}
@@ -222,7 +237,7 @@ bool cGame::Process()
 				}
 			}
 			//Enemy projectiles to Player
-			if (!Player.isInvincible())
+			if (!Player.isInvincible() && Player.GetState() != Player.GetState()!=STATE_SNOWBALL_MOVING)
 			{
 				Player.GetArea(&rec);
 				p = enemies[i].GetProjectiles();
@@ -250,7 +265,10 @@ void cGame::Render()
 	vector<cProjectile> proj;
 	//DRAWENEMYS
 	for(int i=0;i<int(enemies.size());++i) {
-		enemies[i].Draw(IMG_ENEMY);
+		switch(enemies[i].getType()) {
+			case ENEMY_ONE: enemies[i].Draw(IMG_ENEMY); break;
+			case ENEMY_TWO:  enemies[i].Draw(IMG_ENEMY2); break;
+		}
 	}
 
 	//DRAWPLAYER1
@@ -284,22 +302,27 @@ bool cGame::LoadEnemies(int level) {
 
 	fscanf(fd,"%c",&tile);
 
-	enemies = vector<EnemyOne>();
-
 	fscanf(fd,"%c",&tile);
 	for(int i=SCENE_HEIGHT-1;i>=0;i--){
 		for(int j=0; j<SCENE_WIDTH; ++j) {
 			fscanf(fd,"%c",&tile);
 			if(tile ==',') fscanf(fd,"%c",&tile);
 			if(tile=='e') {
-				EnemyOne en;
+				Enemy en(ENEMY_ONE);
 				en.init();
 				en.SetWidthHeight(32,32);
 				en.SetTile(j,i);
 				en.SetState(STATE_LOOKRIGHT);
 				enemies.push_back(en);
 			}
-
+			else if(tile=='a') {
+				Enemy en(ENEMY_TWO);
+				en.init();
+				en.SetWidthHeight(32,32);
+				en.SetTile(j,i);
+				en.SetState(STATE_LOOKRIGHT);
+				enemies.push_back(en);
+			}
 		}
 		fscanf(fd,"%c",&tile); //pass enter
 	}
@@ -310,4 +333,13 @@ bool cGame::LoadEnemies(int level) {
 void cGame::GameOver() {
 	//Game stops. Points set to 0. Lives set to PLAYER_MAX_LIVES. Show a "continue" message. If user presses yes, 
 	//then the level resets and we keep playing. If not, the game starts again at level 1 or it returns to the main menu (if any). 
+}
+
+void cGame::KillEnemy(int i) {
+	//sumar punts per matar al enemic
+	enemies.erase(enemies.begin()+i);
+	if(Player.GetSnowballPushing() ==i ) {
+		Player.SetSnowballPushing(-1);
+		Player.SetState(STATE_LOOKRIGHT);
+	}
 }

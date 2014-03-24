@@ -3,13 +3,11 @@
 #include "cScene.h"
 #include "cPlayer.h"
 #include "Enemy.h"
-#include "EnemyOne.h"
 #include "cData.h"
 #include "cProjectile.h"
 #include "UI.h"
 #include "cObject.h"
 #include "Globals.h"
-
 using namespace std;
 
 
@@ -38,10 +36,11 @@ public:
 private:
 	unsigned char keys[256];
 	void  projectileInit();
+	void KillEnemy(int index);
 	cScene Scene;
 	UI ui;
 	cPlayer Player;
 	cData Data;
-	vector<EnemyOne> enemies;
+	vector<Enemy> enemies;
 	bool throwing;
 };
