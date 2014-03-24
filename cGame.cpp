@@ -39,11 +39,7 @@ bool cGame::Init()
 	res = Data.LoadImage(IMG_PLAYER,"img/player.png",GL_RGBA);
 	if(!res) return false;
 	Player.init();
-	int pnt;
-	int liv;
-	Player.GetCurrentPoints (&pnt);
-	Player.GetCurrentLives (&liv);
-	ui.init(pnt,liv);
+	ui.init(Player.GetCurrentPoints(),Player.GetCurrentLives());
 	throwing = false;
 	return res;
 
@@ -157,7 +153,8 @@ bool cGame::Process()
 	Player.Logic(Scene.GetMap());
 	
 	//ENEMY LOGIC
-	for(int i=0;i<int(enemies.size());++i) enemies[i].Logic(Scene.GetMap());
+	for(int i=0;i<int(enemies.size());++i) 
+		enemies[i].Logic(Scene.GetMap());
 
 	//COLLISIONS
 
@@ -173,9 +170,6 @@ bool cGame::Process()
 			}
 		}
 
-		int l, p;
-		Player.GetCurrentLives(&l);
-		Player.GetCurrentPoints(&p);
 		//if(enemies.size==0)LoadLevel(currentLevel+1);
 		for(int i=0; i<int(enemies.size()); ++i) {
 			enemies[i].GetArea(&rec);
@@ -230,7 +224,8 @@ bool cGame::Process()
 				//If the enemy has no snow and the player is not on a moving snowball, the player dies
 				else if(!Player.isInvincible() && !enemies[i].isHit()&& Player.GetState()!=STATE_SNOWBALL_MOVING) {
 					Player.Die();
-					if(l == 0) GameOver();
+					if(Player.GetCurrentLives() == 0)
+						GameOver();
 				}
 			}
 			//Player projectiles to  Enemy
@@ -282,10 +277,7 @@ void cGame::Render()
 	for (int i = 0; i < int(proj.size()); ++i) 
 		proj[i].Draw(Data.GetID(IMG_PLAYER));
 
-	int l, p;
-	Player.GetCurrentLives(&l);
-	Player.GetCurrentPoints(&p);
-	ui.Draw(l,p);
+	ui.Draw(Player.GetCurrentLives(),Player.GetCurrentPoints());
 
 	glutSwapBuffers();
 }
@@ -306,8 +298,8 @@ bool cGame::LoadEnemies(int level) {
 	if(fd==NULL) return false;
 
 	fscanf(fd,"%c",&tile);
-
 	fscanf(fd,"%c",&tile);
+
 	for(int i=SCENE_HEIGHT-1;i>=0;i--){
 		for(int j=0; j<SCENE_WIDTH; ++j) {
 			fscanf(fd,"%c",&tile);

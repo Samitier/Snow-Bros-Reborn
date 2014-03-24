@@ -95,9 +95,9 @@ void cPlayer::Draw(int tex_id)
 
 }
 
-void cPlayer::GetCurrentPoints(int* p)
+int cPlayer::GetCurrentPoints()
 {
-	*p = points; 
+	return points; 
 }
 
 void cPlayer::Die() {
@@ -115,8 +115,8 @@ bool cPlayer::isInvincible() {
 	return invincible;
 }
 
-void cPlayer:: GetCurrentLives(int* l) {
-	*l = lives;
+int cPlayer:: GetCurrentLives() {
+	return lives;
 }
 
 void cPlayer::Logic(int *map) {

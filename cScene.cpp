@@ -52,8 +52,7 @@ bool cScene::LoadLevel(int level)
 				{
 					fscanf(fd,"%c",&tile);
 					if(tile ==',') fscanf(fd,"%c",&tile);
-					if(tile=='0' || tile =='e' || tile =='a')
-					{
+					if(tile =='0' || tile == 'e' || tile == 'a') {
 						//Tiles must be != 0 !!!
 						map[(j*SCENE_WIDTH)+i]=0;
 
