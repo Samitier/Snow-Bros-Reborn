@@ -168,7 +168,7 @@ bool cGame::Process()
 		//this checks wether you exit a collision with a snowball if you were standing on top of it
 		if(Player.GetSnowballOnTopOf() != -1) {
 		enemies[Player.GetSnowballOnTopOf()].GetArea(&rec);
-		if(!enemies[Player.GetSnowballOnTopOf()].IsSnowball() ||!Player.Collides(&rec)) {
+			if(!enemies[Player.GetSnowballOnTopOf()].IsSnowball() ||!Player.Collides(&rec)) {
 				Player.SetSnowballOnTopOf(-1);
 			}
 		}
@@ -341,10 +341,17 @@ void cGame::GameOver() {
 }
 
 void cGame::KillEnemy(int i) {
+	
 	//sumar punts per matar al enemic
+	
 	enemies.erase(enemies.begin()+i);
 	if(Player.GetSnowballPushing() ==i ) {
 		Player.SetSnowballPushing(-1);
 		Player.SetState(STATE_LOOKRIGHT);
 	}
+	else if(Player.GetSnowballPushing()>i){
+		Player.SetSnowballPushing(Player.GetSnowballPushing()-1);
+	}
+
+	//instanciar cParticle!
 }
