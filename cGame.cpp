@@ -22,25 +22,24 @@ bool cGame::Init()
 	glAlphaFunc(GL_GREATER, 0.05f);
 	glEnable(GL_ALPHA_TEST);
 
+	state = STATE_MENU;
+
 	//Scene initialization
 	res = Data.LoadImage(IMG_BLOCKS,"img/tileset.png",GL_RGBA);
 	if(!res) return false;
 	res = Data.LoadImage(IMG_BACKGROUND,"img/background.png",GL_RGBA);
 	if(!res) return false;
-	res = Scene.LoadLevel(1);
-	if(!res) return false;
-	res = LoadEnemies(1);
-	if(!res) return false;
 	res = Data.LoadImage(IMG_ENEMY,"img/enemy.png",GL_RGBA);
 	if(!res) return false;
 	res = Data.LoadImage(IMG_ENEMY2,"img/enemy2.png",GL_RGBA);
 	if(!res) return false;
-	//Player initialization
 	res = Data.LoadImage(IMG_PLAYER,"img/player.png",GL_RGBA);
 	if(!res) return false;
-	Player.init();
-	ui.init(Player.GetCurrentPoints(),Player.GetCurrentLives());
-	throwing = false;
+	res = Data.LoadImage(IMG_MENU,"img/menu.png",GL_RGBA);
+	if(!res) return false;
+
+	keyboard_enabled = true;
+	numPlayers = 0;
 	return res;
 
 
@@ -49,7 +48,6 @@ bool cGame::Init()
 bool cGame::Loop()
 {
 	bool res=true;
-
 	res = Process();
 	if(res) Render();
 	return res;
@@ -63,21 +61,67 @@ void cGame::Finalize()
 void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press)
 {
 	keys[key] = press;
+
 }
 
 void cGame::ReadMouse(int button, int state, int x, int y)
 {
 }
 
-//Process
-bool cGame::Process()
-{
-	bool res=true;
+bool cGame::startGame() {
+	bool res = true;
+	res = Scene.LoadLevel(1);
+	if(!res) return false;
+	res = LoadEnemies(1);
+	if(!res) return false;
+	Player.init();
+	ui.init(Player.GetCurrentPoints(),Player.GetCurrentLives());
+	throwing = false;
+	return res;
+}
+bool cGame::ProcessMenu() {
+	bool res = true;
+	if (keys['w'] && keyboard_enabled)  {
+		ui.stateUp();
+		keyboard_enabled = false;
+	}
+	if (keys['s'] && keyboard_enabled)  {
+		ui.stateDown();		
+		keyboard_enabled = false;
+	}
+	if ((!keys['s'] && !keys['w']) && !keyboard_enabled)  {
+	keyboard_enabled = true;
+	}
+	if (keys[' ']) {
+		int s = ui.getMenuState();
+		switch(s) {
+			case 0:	
+				numPlayers = 1;
+				state = STATE_PLAYING;
+				startGame();
+				break;
+			case 1:
+				numPlayers = 1;
+				startGame();
+				state = STATE_PLAYING;
+				break;
+			case 2: 
+				return false;
+				break;
+		}
+	}
+	return res;
+}
 
+bool cGame::ProcessPlaying() {
+	bool res = true;
 	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
 		//INPUT
 		//ESC
-		if (keys[27]) res=false; 
+		if (keys[27]) {
+			state = STATE_MENU; 
+			enemies = vector<Enemy>();
+		}
 
 		//SPACEBAR
 		if (keys[' '] && !throwing && Player.GetState()!=STATE_SNOWBALL_PLAYER)  {
@@ -253,13 +297,23 @@ bool cGame::Process()
 	return res;
 }
 
-//Output
-void cGame::Render()
+//Process
+bool cGame::Process()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	
-	glLoadIdentity();
+	bool res=true;
+	switch (state) {
+		case STATE_MENU:
+			res = ProcessMenu();
+			break;
+		case STATE_PLAYING:
+			res = ProcessPlaying();
+			break;
+	}
+	return res;
+}
 
+void cGame::RenderPlaying()
+{
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
 	
 	vector<cProjectile> proj;
@@ -277,8 +331,28 @@ void cGame::Render()
 	for (int i = 0; i < int(proj.size()); ++i) 
 		proj[i].Draw(Data.GetID(IMG_PLAYER));
 
-	ui.Draw(Player.GetCurrentLives(),Player.GetCurrentPoints());
+	ui.DrawPlaying(Player.GetCurrentLives(),Player.GetCurrentPoints());
+}
 
+void cGame::RenderMenu()
+{
+	ui.DrawMenu(Data.GetID(IMG_MENU));
+}
+
+//Output
+void cGame::Render()
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	
+	glLoadIdentity();
+	switch(state) {
+		case STATE_PLAYING:
+			RenderPlaying();
+		break;
+		case STATE_MENU:
+			RenderMenu();
+		break;
+	}
 	glutSwapBuffers();
 }
 

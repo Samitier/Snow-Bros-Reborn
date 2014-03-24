@@ -6,6 +6,15 @@
 #include <vector>
 #include <gl/glut.h>
 
+//Game States
+#define STATE_MENU		0
+#define STATE_PLAYING		1
+#define STATE_INTRO		2
+#define STATE_PAUSE		3
+#define STATE_GAMEOVER	4
+
+
+
 //Number of pixels of the window//
 #define GAME_WIDTH		576
 #define GAME_HEIGHT		448

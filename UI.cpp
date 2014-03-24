@@ -16,10 +16,16 @@ UI::~UI(void)
 void UI::init(int pnt, int liv) {
 	pnt = 0;
 	liv = PLAYER_MAX_LIVES;
-	level =1;
+	level = 1;
 	width = GAME_WIDTH;
 	height = DEFAULT_UI_HEIGHT;
 	GenerateCallList();
+	delay = 0;
+	seq = 0;
+}
+
+void UI::initMenu() {
+	menuState = 0;
 }
 
 void UI::GenerateCallList() {
@@ -41,7 +47,63 @@ void UI::GenerateCallList() {
 	glEndList();
 }
 
-void UI::Draw(int lives, int points) {
+void UI::NextFrame(int max)
+{
+	delay++;
+	if(delay == 15)
+	{
+		seq++;
+		seq%=max;
+		delay = 0;
+	}
+}
+void UI::stateDown() {
+	++menuState;
+	if (menuState > 2) menuState = 0;
+}
+
+void UI::stateUp() {
+	--menuState;
+	if (menuState < 0) menuState = 2;
+}
+
+int UI::getMenuState() {
+	return menuState;
+}
+void UI::DrawMenu(int tex_id) {
+		float xo, yo, xf, yf;
+
+	switch(menuState) {
+		case 0:
+			xo = seq*0.25f;	yo = 0.25f;
+			NextFrame(2);
+		break;
+		case 1:
+			xo = seq*0.25f;	yo = 2*0.25f;
+			NextFrame(2);
+		break;
+		case 2:
+			xo = seq*0.25f;	yo = 3*0.25f;
+			NextFrame(2);
+		break;
+		break;
+	}
+	xf = xo + 0.25f;	yf = yo - 0.25f;
+
+	glEnable(GL_TEXTURE_2D);
+	
+	glBindTexture(GL_TEXTURE_2D,tex_id);
+	glBegin(GL_QUADS);	
+		glTexCoord2f(xo,yo);	glVertex2i(0  ,0);
+		glTexCoord2f(xf,yo);	glVertex2i(GAME_WIDTH,0);
+		glTexCoord2f(xf,yf);	glVertex2i(GAME_WIDTH,GAME_HEIGHT);
+		glTexCoord2f(xo,yf);	glVertex2i(0  ,GAME_HEIGHT);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+}
+
+void UI::DrawPlaying(int lives, int points) {
 	glCallList(id0);
 	//pintar points lives i level
 	stringstream strs;

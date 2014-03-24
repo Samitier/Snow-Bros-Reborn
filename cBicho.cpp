@@ -89,6 +89,7 @@ bool cBicho::PushLeft(int *map)
 		x -= STEP_LENGTH;
 		return true;
 	}
+	return false;
 }
 void cBicho::MoveRight(int *map)
 {
@@ -149,6 +150,7 @@ bool cBicho::PushRight(int *map)
 		x += STEP_LENGTH;
 		return true;
 	}
+	return false;
 }
 
 void cBicho::Stop()

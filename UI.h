@@ -9,18 +9,25 @@ public:
 	~UI(void);
 
 	void init(int pnt, int liv);
-	void Draw(int lives, int points);
+	void initMenu();
 
+	void DrawPlaying(int lives, int points);
+	void DrawMenu(int tex_id);
+	void stateUp();
+	void stateDown();
 	void setWidthHeight(int width, int height);
 	void setLevel(int level);
+	int getMenuState();
 
 private:
-	int width, height;
+	void NextFrame(int max);
 	
-
+	int width, height;
 	int level;
 	int id0;
-
+	int menuState;
+	int delay;
+	int seq;
 	void GenerateCallList();
 	void render_string(void* font, const char* string);
 };

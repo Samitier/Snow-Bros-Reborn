@@ -30,17 +30,26 @@ public:
 	void ReadMouse(int button, int state, int x, int y);
 	//Process
 	bool Process();
+	bool ProcessMenu();
+	bool ProcessPlaying();
 	//Output
 	void Render();
+	void RenderMenu();
+	void RenderPlaying();
 
 private:
+	bool startGame();
+
 	unsigned char keys[256];
 	void  projectileInit();
 	void KillEnemy(int index);
 	cScene Scene;
+	int state;
 	UI ui;
 	cPlayer Player;
+	int numPlayers;
 	cData Data;
 	vector<Enemy> enemies;
 	bool throwing;
+	bool keyboard_enabled;
 };
