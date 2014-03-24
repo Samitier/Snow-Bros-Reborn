@@ -186,10 +186,15 @@ bool cGame::Process()
 				for(int j=0; j<int(enemies.size()); ++j) {
 					if(i != j && enemies[j].Collides(&rec)) {
 						if(enemies[j].IsSnowball()) {
-							//if(enemies[i].direction =-1) enemies[j].
+							if(enemies[i].getDirection() ==-1) enemies[j].ShootSnowballLeft();
+							else enemies[j].ShootSnowballRight();
+							enemies[i].SetDirection(enemies[i].getDirection()*-1);
 						}
-						else KillEnemy(j);
-						continue;
+						else if(enemies[j].GetState() != STATE_SNOWBALL_MOVING){
+							if(j<i) i--;
+							KillEnemy(j);
+							continue;
+						}
 					}
 				}	
 				//Check if enemy is a moving snowball and reached the end of level
@@ -201,8 +206,8 @@ bool cGame::Process()
 				}
 			}
 			if(Player.Collides(&rec)) {
-				//If the enemy is a moving snowball, it drags the player
-				if(enemies[i].GetState()==STATE_SNOWBALL_MOVING && !Player.isJumping()) {
+				//If the enemy is a moving snowball, it drags the player if he is not in another snowball
+				if(enemies[i].GetState()==STATE_SNOWBALL_MOVING && !Player.isJumping() && Player.GetState() != STATE_SNOWBALL_PLAYER) {
 						Player.SetState(STATE_SNOWBALL_PLAYER);
 						enemies[i].SetState(STATE_SNOWBALL_PLAYER);
 						Player.SetSnowballPushing(i);

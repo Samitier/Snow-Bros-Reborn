@@ -30,7 +30,8 @@ public:
 	void ShootSnowballRight();
 	void Die();
 	int getType();
-
+	int getDirection();
+	void SetDirection(int dir);
 
 
 protected:

@@ -233,3 +233,11 @@ void Enemy::ShootSnowballRight(){
 int Enemy::getType(){
 	return enemyType;
 }
+
+int Enemy::getDirection(){
+	return direction;
+}
+
+void Enemy::SetDirection(int dir) {
+	direction = dir;
+}
