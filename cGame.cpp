@@ -37,11 +37,7 @@ bool cGame::Init()
 	res = Data.LoadImage(IMG_PLAYER,"img/player.png",GL_RGBA);
 	if(!res) return false;
 	Player.init();
-	int pnt;
-	int liv;
-	Player.GetCurrentPoints (&pnt);
-	Player.GetCurrentLives (&liv);
-	ui.init(pnt,liv);
+	ui.init(Player.GetCurrentPoints(),Player.GetCurrentLives());
 	throwing = false;
 	return res;
 
@@ -150,8 +146,11 @@ bool cGame::Process()
 	Player.Logic(Scene.GetMap());
 	
 	//ENEMY LOGIC
-	for(int i=0;i<int(enemies.size());++i) enemies[i].Logic(Scene.GetMap());
-
+	for(int i=0;i<int(enemies.size());++i) 
+		enemies[i].Logic(Scene.GetMap());
+	//ENEMY2 LOGIC
+	for(int i=0;i<int(enemiesTwo.size());++i) 
+		enemiesTwo[i].Logic(Scene.GetMap());
 	//COLLISIONS
 
 	//Player 
@@ -165,9 +164,6 @@ bool cGame::Process()
 			}
 		}
 
-		int l, p;
-		Player.GetCurrentLives(&l);
-		Player.GetCurrentPoints(&p);
 		//if(enemies.size==0)LoadLevel(currentLevel+1);
 		for(int i=0; i<int(enemies.size()); ++i) {
 			enemies[i].GetArea(&rec);
@@ -210,7 +206,8 @@ bool cGame::Process()
 				}
 				else if(!Player.isInvincible() && !enemies[i].isHit()) {
 					Player.Die();
-					if(l == 0) GameOver();
+					if(Player.GetCurrentLives() == 0)
+						GameOver();
 				}
 			}
 			//Player projectiles to  Enemy
@@ -252,6 +249,9 @@ void cGame::Render()
 	for(int i=0;i<int(enemies.size());++i) {
 		enemies[i].Draw(IMG_ENEMY);
 	}
+	//DRAWENEMYS2
+	for(int i=0;i<int(enemiesTwo.size());++i) 
+		enemiesTwo[i].Draw(IMG_ENEMY);
 
 	//DRAWPLAYER1
 	Player.Draw(Data.GetID(IMG_PLAYER));
@@ -259,10 +259,7 @@ void cGame::Render()
 	for (int i = 0; i < int(proj.size()); ++i) 
 		proj[i].Draw(Data.GetID(IMG_PLAYER));
 
-	int l, p;
-	Player.GetCurrentLives(&l);
-	Player.GetCurrentPoints(&p);
-	ui.Draw(l,p);
+	ui.Draw(Player.GetCurrentLives(),Player.GetCurrentPoints());
 
 	glutSwapBuffers();
 }
@@ -285,6 +282,7 @@ bool cGame::LoadEnemies(int level) {
 	fscanf(fd,"%c",&tile);
 
 	enemies = vector<EnemyOne>();
+	enemiesTwo = vector<EnemyTwo>();
 
 	fscanf(fd,"%c",&tile);
 	for(int i=SCENE_HEIGHT-1;i>=0;i--){
@@ -298,6 +296,14 @@ bool cGame::LoadEnemies(int level) {
 				en.SetTile(j,i);
 				en.SetState(STATE_LOOKRIGHT);
 				enemies.push_back(en);
+			}
+			if(tile=='a') {
+				EnemyTwo en;
+				en.init();
+				en.SetWidthHeight(32,32);
+				en.SetTile(j,i);
+				en.SetState(STATE_LOOKRIGHT);
+				enemiesTwo.push_back(en);
 			}
 
 		}

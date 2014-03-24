@@ -8,6 +8,7 @@
 #include "cProjectile.h"
 #include "UI.h"
 #include "cObject.h"
+#include "EnemyTwo.h"
 #include "Globals.h"
 
 using namespace std;
@@ -43,5 +44,6 @@ private:
 	cPlayer Player;
 	cData Data;
 	vector<EnemyOne> enemies;
+	vector<EnemyTwo> enemiesTwo;
 	bool throwing;
 };
