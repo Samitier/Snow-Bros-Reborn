@@ -85,7 +85,7 @@ bool cGame::ProcessMenu() {
 		ui.stateUp();
 		keyboard_enabled = false;
 	}
-	if (keys['s'] && keyboard_enabled)  {
+	else if (keys['s'] && keyboard_enabled)  {
 		ui.stateDown();		
 		keyboard_enabled = false;
 	}
@@ -115,14 +115,19 @@ bool cGame::ProcessMenu() {
 
 bool cGame::ProcessPlaying() {
 	bool res = true;
-	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
-		//INPUT
-		//ESC
-		if (keys[27]) {
+	if (keys[27]) {
 			state = STATE_MENU; 
 			enemies = vector<Enemy>();
-		}
-
+	}
+	if ((keys['p'] || keys['P']) && keyboard_enabled) {
+			state = STATE_PAUSE;
+			keyboard_enabled = false;
+	}
+	if ((!keys['p'] && !keys['P']) && !keyboard_enabled)  {
+		keyboard_enabled = true;
+	}
+	if(!Player.isDead()) { //if the player is dead we will not do anything until it revives
+		//INPUT
 		//SPACEBAR
 		if (keys[' '] && !throwing && Player.GetState()!=STATE_SNOWBALL_PLAYER)  {
 			throwing = true;
@@ -297,6 +302,20 @@ bool cGame::ProcessPlaying() {
 	return res;
 }
 
+bool cGame::ProcessPause() 
+{
+	if ((keys['p'] || keys['P']) && keyboard_enabled) {
+		state = STATE_PLAYING;
+		keyboard_enabled = false;
+	}
+	if ((!keys['p'] && !keys['P']) && !keyboard_enabled)  keyboard_enabled = true;
+	else if (keys[27])  {
+		state = STATE_MENU;
+		enemies = vector<Enemy>();
+	}
+	return true;
+}
+
 //Process
 bool cGame::Process()
 {
@@ -308,6 +327,10 @@ bool cGame::Process()
 		case STATE_PLAYING:
 			res = ProcessPlaying();
 			break;
+		case STATE_PAUSE:
+			res = ProcessPause();
+			break;
+
 	}
 	return res;
 }
@@ -334,11 +357,6 @@ void cGame::RenderPlaying()
 	ui.DrawPlaying(Player.GetCurrentLives(),Player.GetCurrentPoints());
 }
 
-void cGame::RenderMenu()
-{
-	ui.DrawMenu(Data.GetID(IMG_MENU));
-}
-
 //Output
 void cGame::Render()
 {
@@ -350,7 +368,11 @@ void cGame::Render()
 			RenderPlaying();
 		break;
 		case STATE_MENU:
-			RenderMenu();
+			ui.DrawMenu(Data.GetID(IMG_MENU));
+		break;
+		case STATE_PAUSE:
+			RenderPlaying();
+			ui.DrawPause(Data.GetID(IMG_MENU));
 		break;
 	}
 	glutSwapBuffers();

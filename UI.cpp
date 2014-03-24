@@ -50,7 +50,7 @@ void UI::GenerateCallList() {
 void UI::NextFrame(int max)
 {
 	delay++;
-	if(delay == 15)
+	if(delay == 17)
 	{
 		seq++;
 		seq%=max;
@@ -86,7 +86,6 @@ void UI::DrawMenu(int tex_id) {
 			xo = seq*0.25f;	yo = 3*0.25f;
 			NextFrame(2);
 		break;
-		break;
 	}
 	xf = xo + 0.25f;	yf = yo - 0.25f;
 
@@ -103,6 +102,24 @@ void UI::DrawMenu(int tex_id) {
 	glDisable(GL_TEXTURE_2D);
 }
 
+void UI::DrawPause(int tex_id) {
+	float xo, yo, xf, yf;
+	xo = seq*0.25f;		yo = 4*0.25f;
+	NextFrame(2);
+	xf = xo + 0.25f;	yf = yo - 0.25f;
+
+	glEnable(GL_TEXTURE_2D);
+	
+	glBindTexture(GL_TEXTURE_2D,tex_id);
+	glBegin(GL_QUADS);	
+		glTexCoord2f(xo,yo);	glVertex2i(0  ,0);
+		glTexCoord2f(xf,yo);	glVertex2i(GAME_WIDTH,0);
+		glTexCoord2f(xf,yf);	glVertex2i(GAME_WIDTH,GAME_HEIGHT);
+		glTexCoord2f(xo,yf);	glVertex2i(0  ,GAME_HEIGHT);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
+}
 void UI::DrawPlaying(int lives, int points) {
 	glCallList(id0);
 	//pintar points lives i level

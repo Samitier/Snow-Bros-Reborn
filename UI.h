@@ -13,6 +13,7 @@ public:
 
 	void DrawPlaying(int lives, int points);
 	void DrawMenu(int tex_id);
+	void DrawPause(int tex_id);
 	void stateUp();
 	void stateDown();
 	void setWidthHeight(int width, int height);

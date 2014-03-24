@@ -32,9 +32,9 @@ public:
 	bool Process();
 	bool ProcessMenu();
 	bool ProcessPlaying();
+	bool ProcessPause();
 	//Output
 	void Render();
-	void RenderMenu();
 	void RenderPlaying();
 
 private:
