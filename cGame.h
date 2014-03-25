@@ -38,6 +38,7 @@ public:
 	//Output
 	void Render();
 	void RenderPlaying();
+	void LoadLevel(int level);
 
 private:
 	bool startGame();
@@ -55,4 +56,5 @@ private:
 	vector<cParticle> particles;
 	bool throwing;
 	bool keyboard_enabled;
+	int currentLevel;
 };

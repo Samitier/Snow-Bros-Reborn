@@ -42,6 +42,7 @@ bool cGame::Init()
 
 	keyboard_enabled = true;
 	numPlayers = 0;
+	currentLevel=1;
 	return res;
 
 
@@ -288,6 +289,10 @@ bool cGame::ProcessPlaying() {
 				if(enemies[i].CheckProjectileCollisions(&rec)) Player.Die();
 			}
 		}
+		if(enemies.size()==0) {
+			++currentLevel;
+			LoadLevel(currentLevel);
+		}
 	}
 	return res;
 }
@@ -428,4 +433,10 @@ void cGame::KillEnemy(int i) {
 	else if(Player.GetSnowballPushing()>i){
 		Player.SetSnowballPushing(Player.GetSnowballPushing()-1);
 	}
+}
+
+void cGame::LoadLevel(int level) {
+	Scene.LoadLevel(level);
+	Player.SetPosition(INIT_PLAYER_X_TILE, INIT_PLAYER_Y_TILE);
+	LoadEnemies(level);
 }
