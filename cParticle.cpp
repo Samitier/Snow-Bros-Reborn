@@ -11,14 +11,14 @@ cParticle::~cParticle(void){}
 
 cParticle::cParticle(int posx,int posy)
 {
-	x = posx+PLAYER_WIDTH/2 - PARTICLE_SIZE/2;
-	y = posy+PLAYER_HEIGHT/2 - PARTICLE_SIZE/2;
+	x = posx+ENEMY_WIDTH/2 - PARTICLE_SIZE/2;
+	y = posy+ENEMY_HEIGHT/2 - PARTICLE_SIZE/2;
 	seq=0;
 	delay=0;
 	alfa =1.0;
 }
 
-void cParticle:: Draw(int tex_id) {
+void cParticle:: Draw(int tex_id, bool pause) {
 	float xo, yo, xf, yf;
 	if(GetFrame() < 4) {
 		xo =0.25*GetFrame();
@@ -31,14 +31,16 @@ void cParticle:: Draw(int tex_id) {
 	else {
 		xo=0.25;
 		yo=0.25;
-		alfa -=0.09;
-		glColor4f(1.0,1.0,1.0,alfa);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		if(!pause) {
+			alfa -=0.09;
+			glColor4f(1.0,1.0,1.0,alfa);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		}
 	}
 	xf=xo+0.25;
  	yf=yo+0.25;
-	NextFrame(12);
+	if(!pause)NextFrame(12);
 	DrawRect(tex_id, xo,yo,xf,yf);
 	glDisable(GL_BLEND);
 	glColor4f(1.0,1.0,1.0,1.0);

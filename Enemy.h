@@ -17,7 +17,7 @@ public:
 	~Enemy();
 
 	void init();
-	void Draw(int tex_id);
+	void Draw(int tex_id, bool pause);
 	void Logic(int *map);
 	void GetArea(cRect *rc);
 	void Hit();

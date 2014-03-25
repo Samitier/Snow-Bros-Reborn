@@ -16,7 +16,7 @@ public:
 	bool invincible;
 
 	void init();
-	void Draw(int tex_id);
+	void Draw(int tex_id, bool pause);
 	
 	void Die();
 

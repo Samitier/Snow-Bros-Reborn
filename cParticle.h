@@ -12,7 +12,7 @@ public:
 	cParticle(int x,int y);
 	~cParticle(void);
 
-	void Draw(int text_id);
+	void Draw(int text_id, bool pause);
 
 	void NextFrame(int max);
 	int  GetFrame();

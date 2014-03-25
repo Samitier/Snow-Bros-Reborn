@@ -8,7 +8,7 @@
 
 //Game States
 #define STATE_MENU		0
-#define STATE_PLAYING		1
+#define STATE_PLAYING	1
 #define STATE_INTRO		2
 #define STATE_PAUSE		3
 #define STATE_GAMEOVER	4
@@ -52,6 +52,8 @@
 #define THROW_LOAD			FRAME_DELAY+FRAME_DELAY/2		//THROW_LOAD <= TIME_THROWING
 
 //Enemy defines//
+#define ENEMY_WIDTH			32
+#define ENEMY_HEIGHT		32
 #define TIME_WITH_SNOW		150
 #define TOTAL_HITS			4
 #define TIME_STUNNED        50

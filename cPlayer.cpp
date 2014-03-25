@@ -6,7 +6,6 @@ cPlayer::~cPlayer(){}
 
 void cPlayer::init() {
 	SetWidthHeight(PLAYER_WIDTH,PLAYER_HEIGHT);
-	//Player.SetWidthHeight(17,25);
 	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
 	lives = PLAYER_MAX_LIVES;
 	points = 0;
@@ -23,7 +22,7 @@ void cPlayer::init() {
 	state = STATE_LOOKLEFT;
 }
 
-void cPlayer::Draw(int tex_id)
+void cPlayer::Draw(int tex_id, bool pause)
 {	
 	float xo,yo,xf,yf;
 
@@ -37,42 +36,42 @@ void cPlayer::Draw(int tex_id)
 								break;
 		//1..3
 		case STATE_WALKLEFT:	xo =  0.0625f+(GetFrame()*0.0625f);	yo = 0.0625f;
-								NextFrame(2);
+								if(!pause)NextFrame(2);
 								break;
 		//4..6
 		case STATE_WALKRIGHT:	xo =  0.0625f+(GetFrame()*0.0625f);	yo = 3*0.0625f;
-								NextFrame(2);
+								if(!pause)NextFrame(2);
 								break;
 		case STATE_JUMPLEFT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;
-								if (seq < 7) NextFrame(8);
+								if (seq < 7) if(!pause)NextFrame(8);
 								break;
 		case STATE_JUMPRIGHT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//falta
-								if (seq < 7) NextFrame(8);
+								if (seq < 7) if(!pause)NextFrame(8);
 								break;
 		case STATE_THROWRIGHT:	xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//??
-								NextFrame(2);
+								if(!pause)NextFrame(2);
 								break;
 		case STATE_THROWLEFT:	xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;//??
-								NextFrame(2);
+								if(!pause)NextFrame(2);
 								break;
 		case STATE_DIE:			xo = 2*0.0625f+(GetFrame()*0.0625f); yo = 2*0.0625f;
-								NextFrame(9);
+								if(!pause)NextFrame(9);
 								break;
 		case STATE_PUSH_LEFT:   xo = (GetFrame()*0.0625f); yo = 2*0.0625f;
-								NextFrame(2);
+								if(!pause)NextFrame(2);
 								break;
 		case STATE_PUSH_RIGHT:  xo = (GetFrame()*0.0625f); yo = 4*0.0625f;
-								NextFrame(2);
+								if(!pause)NextFrame(2);
 								break;
 		case STATE_SNOWBALL_PLAYER:	xo =0; yo = 0;  break;
 
 		case STATE_RESPAWN:		 xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 4*0.0625f;
-								NextFrame(7);
+								if(!pause)NextFrame(7);
 								break;
 	}
 	xf = xo + 0.0625f;
 	yf = yo - 0.0625f;
-	if(invincible) {
+	if(invincible&&!pause) {
 		alfa-=incAlfa;
 		if(alfa <= 0){
 			alfa=0;

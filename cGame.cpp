@@ -332,18 +332,18 @@ void cGame::RenderPlaying()
 	//DRAWENEMYS
 	for(int i=0;i<int(enemies.size());++i) {
 		switch(enemies[i].getType()) {
-			case ENEMY_ONE: enemies[i].Draw(Data.GetID(IMG_ENEMY)); break;
-			case ENEMY_TWO:  enemies[i].Draw(Data.GetID(IMG_ENEMY2)); break;
+			case ENEMY_ONE: enemies[i].Draw(Data.GetID(IMG_ENEMY), state==STATE_PAUSE); break;
+			case ENEMY_TWO:  enemies[i].Draw(Data.GetID(IMG_ENEMY2), state==STATE_PAUSE); break;
 		}
 	}
 
 	//DRAWPLAYER1
-	Player.Draw(Data.GetID(IMG_PLAYER));
+	Player.Draw(Data.GetID(IMG_PLAYER), state==STATE_PAUSE);
 	
 	//DRAW PARTICLES
 	for(int i=0; i<particles.size();++i) {
 		if(particles[i].Dead()) particles.erase(particles.begin()+i);
-		else particles[i].Draw(Data.GetID(IMG_PARTICLE));
+		else particles[i].Draw(Data.GetID(IMG_PARTICLE),state==STATE_PAUSE);
 	}
 
 	ui.DrawPlaying(Player.GetCurrentLives(),Player.GetCurrentPoints());
@@ -392,17 +392,13 @@ bool cGame::LoadEnemies(int level) {
 			if(tile=='e') {
 				Enemy en(ENEMY_ONE);
 				en.init();
-				en.SetWidthHeight(32,32);
 				en.SetTile(j,i);
-				en.SetState(STATE_LOOKRIGHT);
 				enemies.push_back(en);
 			}
 			else if(tile=='a') {
 				Enemy en(ENEMY_TWO);
 				en.init();
-				en.SetWidthHeight(32,32);
 				en.SetTile(j,i);
-				en.SetState(STATE_LOOKRIGHT);
 				enemies.push_back(en);
 			}
 		}
