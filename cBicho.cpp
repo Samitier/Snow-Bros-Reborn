@@ -26,10 +26,6 @@ bool cBicho::isJumping(){
 	return jumping;
 }
 
-vector<cProjectile> cBicho::GetProjectiles() {
-	return projectiles;
-}
-
 void cBicho::MoveLeft(int *map)
 {
 	int xaux;
@@ -219,9 +215,6 @@ void cBicho::Jump(int *map)
 		}
 	}
 }
-void cBicho::EraseProjectile(int i){
-	projectiles.erase(projectiles.begin()+i);
-}
 
 void cBicho::Throw(int *map)
 {
@@ -276,4 +269,14 @@ void cBicho::Logic(int *map)
 	}
 
 
+}
+
+bool cBicho::CheckProjectileCollisions(cRect *rec) {
+	for(int j=0; j<int(projectiles.size());++j) {
+		if(projectiles[j].Collides(rec)){
+			projectiles.erase(projectiles.begin()+j);
+			return true;
+		}
+	}
+	return false;
 }

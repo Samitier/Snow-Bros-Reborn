@@ -280,24 +280,12 @@ bool cGame::ProcessPlaying() {
 				}
 			}
 			//Player projectiles to  Enemy
-			vector<cProjectile> p = Player.GetProjectiles();
-			for(int j=0; j<int(p.size());++j) {
-				if(p[j].Collides(&rec)){
-					enemies[i].Hit();
-					Player.EraseProjectile(j);
-				}
-			}
+			if(Player.CheckProjectileCollisions(&rec)) enemies[i].Hit();
+
 			//Enemy projectiles to Player
-			if (!Player.isInvincible() && Player.GetState() != Player.GetState()!=STATE_SNOWBALL_MOVING)
-			{
+			if (!Player.isInvincible() && Player.GetState()!=STATE_SNOWBALL_MOVING) {
 				Player.GetArea(&rec);
-				p = enemies[i].GetProjectiles();
-				for(int j=0; j<int(p.size());++j) {
-					if(p[j].Collides(&rec)){
-						Player.Die();
-						enemies[i].EraseProjectile(j);
-					}
-				}
+				if(enemies[i].CheckProjectileCollisions(&rec)) Player.Die();
 			}
 		}
 	}
@@ -340,23 +328,17 @@ bool cGame::Process()
 void cGame::RenderPlaying()
 {
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
-	
-	vector<cProjectile> proj;
 
-	
 	//DRAWENEMYS
 	for(int i=0;i<int(enemies.size());++i) {
 		switch(enemies[i].getType()) {
-			case ENEMY_ONE: enemies[i].Draw(IMG_ENEMY); break;
-			case ENEMY_TWO:  enemies[i].Draw(IMG_ENEMY2); break;
+			case ENEMY_ONE: enemies[i].Draw(Data.GetID(IMG_ENEMY)); break;
+			case ENEMY_TWO:  enemies[i].Draw(Data.GetID(IMG_ENEMY2)); break;
 		}
 	}
 
 	//DRAWPLAYER1
 	Player.Draw(Data.GetID(IMG_PLAYER));
-	proj = Player.GetProjectiles();
-	for (int i = 0; i < int(proj.size()); ++i) 
-		proj[i].Draw(Data.GetID(IMG_PLAYER));
 	
 	//DRAW PARTICLES
 	for(int i=0; i<particles.size();++i) {
@@ -402,9 +384,6 @@ bool cGame::LoadEnemies(int level) {
 
 	fd=fopen(file,"r");
 	if(fd==NULL) return false;
-
-	fscanf(fd,"%c",&tile);
-	fscanf(fd,"%c",&tile);
 
 	for(int i=SCENE_HEIGHT-1;i>=0;i--){
 		for(int j=0; j<SCENE_WIDTH; ++j) {

@@ -241,3 +241,4 @@ int Enemy::getDirection(){
 void Enemy::SetDirection(int dir) {
 	direction = dir;
 }
+

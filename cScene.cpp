@@ -39,9 +39,6 @@ bool cScene::LoadLevel(int level)
 	id_DL=glGenLists(1);
 	glNewList(id_DL,GL_COMPILE);
 		glBegin(GL_QUADS);
-			
-			fscanf(fd,"%c",&tile);//ignores first line of file(numEnemies)
-			fscanf(fd,"%c",&tile);//and the /n
 
 			for(j=SCENE_HEIGHT-1;j>=0;j--)
 			{

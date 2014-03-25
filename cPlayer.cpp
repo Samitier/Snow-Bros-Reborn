@@ -92,7 +92,7 @@ void cPlayer::Draw(int tex_id)
 	else {
 		DrawRect(tex_id,xo,yo,xf,yf);
 	}
-
+	for (int i = 0; i < int(projectiles.size()); ++i) projectiles[i].Draw(tex_id);
 }
 
 int cPlayer::GetCurrentPoints()

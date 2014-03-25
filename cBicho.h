@@ -40,10 +40,9 @@ public:
 	void Jump(int *map);
 	void Throw(int *map);
 	void Stop();
-	void EraseProjectile(int i);
 	virtual void Logic(int *map);
-	vector<cProjectile> GetProjectiles();
 	bool isJumping();
+	bool CheckProjectileCollisions(cRect *rec);
 
 protected:
 	bool jumping;
