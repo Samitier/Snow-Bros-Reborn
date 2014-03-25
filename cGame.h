@@ -7,7 +7,9 @@
 #include "cProjectile.h"
 #include "UI.h"
 #include "cObject.h"
+#include "cParticle.h"
 #include "Globals.h"
+
 using namespace std;
 
 
@@ -50,6 +52,7 @@ private:
 	int numPlayers;
 	cData Data;
 	vector<Enemy> enemies;
+	vector<cParticle> particles;
 	bool throwing;
 	bool keyboard_enabled;
 };

@@ -37,6 +37,8 @@ bool cGame::Init()
 	if(!res) return false;
 	res = Data.LoadImage(IMG_MENU,"img/menu.png",GL_RGBA);
 	if(!res) return false;
+	res = Data.LoadImage(IMG_PARTICLE,"img/particle.png",GL_RGBA);
+	if(!res) return false;
 
 	keyboard_enabled = true;
 	numPlayers = 0;
@@ -340,6 +342,8 @@ void cGame::RenderPlaying()
 	Scene.Draw(Data.GetID(IMG_BLOCKS), Data.GetID(IMG_BACKGROUND));
 	
 	vector<cProjectile> proj;
+
+	
 	//DRAWENEMYS
 	for(int i=0;i<int(enemies.size());++i) {
 		switch(enemies[i].getType()) {
@@ -353,6 +357,12 @@ void cGame::RenderPlaying()
 	proj = Player.GetProjectiles();
 	for (int i = 0; i < int(proj.size()); ++i) 
 		proj[i].Draw(Data.GetID(IMG_PLAYER));
+	
+	//DRAW PARTICLES
+	for(int i=0; i<particles.size();++i) {
+		if(particles[i].Dead()) particles.erase(particles.begin()+i);
+		else particles[i].Draw(Data.GetID(IMG_PARTICLE));
+	}
 
 	ui.DrawPlaying(Player.GetCurrentLives(),Player.GetCurrentPoints());
 }
@@ -431,7 +441,10 @@ void cGame::GameOver() {
 void cGame::KillEnemy(int i) {
 	
 	//sumar punts per matar al enemic
-	
+	int x,y;
+	enemies[i].GetPosition(&x,&y);
+	cParticle prt(x,y);
+	particles.push_back(prt);
 	enemies.erase(enemies.begin()+i);
 	if(Player.GetSnowballPushing() ==i ) {
 		Player.SetSnowballPushing(-1);
@@ -440,6 +453,4 @@ void cGame::KillEnemy(int i) {
 	else if(Player.GetSnowballPushing()>i){
 		Player.SetSnowballPushing(Player.GetSnowballPushing()-1);
 	}
-
-	//instanciar cParticle!
 }
