@@ -284,7 +284,7 @@ bool cGame::ProcessPlaying() {
 			if(Player.CheckProjectileCollisions(&rec)) enemies[i].Hit();
 
 			//Enemy projectiles to Player
-			if (!Player.isInvincible() && Player.GetState()!=STATE_SNOWBALL_MOVING) {
+			if (!Player.isInvincible() && Player.GetState()!=STATE_SNOWBALL_PLAYER) {
 				Player.GetArea(&rec);
 				if(enemies[i].CheckProjectileCollisions(&rec)) Player.Die();
 			}
