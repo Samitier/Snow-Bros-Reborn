@@ -44,10 +44,10 @@ void cPlayer::Draw(int tex_id)
 								NextFrame(2);
 								break;
 		case STATE_JUMPLEFT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 0.0625f;
-								NextFrame(7);
+								if (seq < 7) NextFrame(8);
 								break;
 		case STATE_JUMPRIGHT:	xo = 9*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//falta
-								NextFrame(4);
+								if (seq < 7) NextFrame(8);
 								break;
 		case STATE_THROWRIGHT:	xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 3*0.0625f;//??
 								NextFrame(2);
