@@ -437,6 +437,6 @@ void cGame::KillEnemy(int i) {
 
 void cGame::LoadLevel(int level) {
 	Scene.LoadLevel(level);
-	Player.SetPosition(INIT_PLAYER_X_TILE, INIT_PLAYER_Y_TILE);
+	Player.ResetPosition();
 	LoadEnemies(level);
 }

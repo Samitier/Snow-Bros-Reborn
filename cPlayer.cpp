@@ -193,5 +193,18 @@ void cPlayer::SetSnowballOnTopOf(int snowball) {
 	snowballOnTopOf = snowball;
 }
 
-
+void cPlayer::ResetPosition() {
+	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
+	timecount =0;
+	alfa = 1.0;
+	incAlfa = 0.1;
+	dead = false;
+	invincible = false;
+	snowballPushing = -1;
+	snowballOnTopOf = -1;
+	seq=0;
+	delay=0;
+	timeThrowing =0;
+	state = STATE_LOOKLEFT;
+}
 

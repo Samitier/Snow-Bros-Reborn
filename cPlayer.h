@@ -33,6 +33,7 @@ public:
 	void SetSnowballPushing(int snowball);
 	int GetSnowballOnTopOf();
 	void SetSnowballOnTopOf(int snowball);
+	void ResetPosition();
 
 private: 
 	int timecount;
