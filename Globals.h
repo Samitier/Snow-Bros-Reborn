@@ -5,6 +5,7 @@
 #include <math.h>
 #include <vector>
 #include <gl/glut.h>
+using namespace std;
 
 //Game States
 #define STATE_MENU		0
@@ -12,6 +13,8 @@
 #define STATE_INTRO		2
 #define STATE_PAUSE		3
 #define STATE_GAMEOVER	4
+#define STATE_WINING    5
+#define STATE_TRANSITION 6
 
 
 
@@ -37,6 +40,7 @@
 
 //Animations
 #define FRAME_DELAY		5
+#define TIME_TRANSITION	100
 
 //Player defines//
 #define PLAYER_WIDTH		32
@@ -58,6 +62,7 @@
 #define TOTAL_HITS			4
 #define TIME_STUNNED        50
 #define SNOWBALL_LIMIT		10
+#define ENEMY_POINTS		500
 
 //somos el grupo 07
 //pctic0405.lsi.upc.edu

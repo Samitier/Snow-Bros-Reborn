@@ -188,7 +188,7 @@ void cBicho::Jump(int *map)
 {	
 	if(!jumping && !throwing)
 	{
-		if(CollidesMapFloor(map))
+		if(CollidesMapFloor(map)|| state == STATE_SNOWBALL_PLAYER)
 		{
 			switch(state)
 			{

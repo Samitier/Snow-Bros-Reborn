@@ -6,6 +6,8 @@
 #define PLAYER_START_CX		3
 #define PLAYER_START_CY		2
 
+#define STATE_WINING_LEVEL 15
+
 class cPlayer: public cBicho
 {
 public:
@@ -34,6 +36,7 @@ public:
 	int GetSnowballOnTopOf();
 	void SetSnowballOnTopOf(int snowball);
 	void ResetPosition();
+	void SetCurrentPoints(int pts);
 
 private: 
 	int timecount;

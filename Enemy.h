@@ -32,7 +32,7 @@ public:
 	int getType();
 	int getDirection();
 	void SetDirection(int dir);
-
+	int GetPoints();
 
 protected:
 	int amountOfSnow;

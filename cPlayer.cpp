@@ -68,6 +68,7 @@ void cPlayer::Draw(int tex_id, bool pause)
 		case STATE_RESPAWN:		 xo = 6*0.0625f+(GetFrame()*0.0625f); yo = 4*0.0625f;
 								if(!pause)NextFrame(7);
 								break;
+		case STATE_WINING_LEVEL: xo =1-0.0625f; yo = 0.0625;  break;
 	}
 	xf = xo + 0.0625f;
 	yf = yo - 0.0625f;
@@ -208,3 +209,6 @@ void cPlayer::ResetPosition() {
 	state = STATE_LOOKLEFT;
 }
 
+void cPlayer::SetCurrentPoints(int pts) {
+	points =pts;
+}

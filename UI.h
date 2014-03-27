@@ -11,9 +11,10 @@ public:
 	void init(int pnt, int liv);
 	void initMenu();
 
-	void DrawPlaying(int lives, int points);
+	void DrawPlaying(int lives, int points, int level);
 	void DrawMenu(int tex_id);
 	void DrawPause(int tex_id);
+	void DrawGameOver(int tex_id);
 	void stateUp();
 	void stateDown();
 	void setWidthHeight(int width, int height);
@@ -24,7 +25,6 @@ private:
 	void NextFrame(int max);
 	
 	int width, height;
-	int level;
 	int id0;
 	int menuState;
 	int delay;

@@ -16,7 +16,6 @@ UI::~UI(void)
 void UI::init(int pnt, int liv) {
 	pnt = 0;
 	liv = PLAYER_MAX_LIVES;
-	level = 1;
 	width = GAME_WIDTH;
 	height = DEFAULT_UI_HEIGHT;
 	GenerateCallList();
@@ -120,7 +119,7 @@ void UI::DrawPause(int tex_id) {
 
 	glDisable(GL_TEXTURE_2D);
 }
-void UI::DrawPlaying(int lives, int points) {
+void UI::DrawPlaying(int lives, int points, int level) {
 	glCallList(id0);
 	//pintar points lives i level
 	stringstream strs;
@@ -147,9 +146,28 @@ void UI::DrawPlaying(int lives, int points) {
 	render_string(GLUT_BITMAP_HELVETICA_10,lvs);
 }
 
+
 void UI::render_string(void* font, const char* string)
 {
 	int i,len = strlen(string);
 	for(i=0;i<len;i++)
 		glutBitmapCharacter(font, string[i]);
+}
+
+void UI::DrawGameOver(int tex_id) {
+	float xo,yo,xf,yf;
+	xo = 0.5; yo =0.25;
+	xf = xo + 0.25f;	yf = yo - 0.25f;
+
+	glEnable(GL_TEXTURE_2D);
+	
+	glBindTexture(GL_TEXTURE_2D,tex_id);
+	glBegin(GL_QUADS);	
+		glTexCoord2f(xo,yo);	glVertex2i(0  ,0);
+		glTexCoord2f(xf,yo);	glVertex2i(GAME_WIDTH,0);
+		glTexCoord2f(xf,yf);	glVertex2i(GAME_WIDTH,GAME_HEIGHT);
+		glTexCoord2f(xo,yf);	glVertex2i(0  ,GAME_HEIGHT);
+	glEnd();
+
+	glDisable(GL_TEXTURE_2D);
 }

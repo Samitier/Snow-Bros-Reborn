@@ -16,6 +16,7 @@ void Enemy::init() {
 	state = STATE_LOOKRIGHT;
 	timecount =0;
 	direction =0;
+	points = ENEMY_POINTS;
 }
 
 
@@ -241,3 +242,6 @@ void Enemy::SetDirection(int dir) {
 	direction = dir;
 }
 
+int Enemy::GetPoints() {
+	return points;
+}

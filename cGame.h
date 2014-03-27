@@ -23,7 +23,6 @@ public:
 	bool Loop();
 	void Finalize();
 
-	void GameOver();
 
 	bool LoadEnemies(int level);
 
@@ -35,9 +34,14 @@ public:
 	bool ProcessMenu();
 	bool ProcessPlaying();
 	bool ProcessPause();
+	bool ProcessWining();
+	bool ProcessGameOver();
+	bool ProcessTransition();
 	//Output
 	void Render();
 	void RenderPlaying();
+	void RenderTransition();
+
 	void LoadLevel(int level);
 
 private:
@@ -57,4 +61,6 @@ private:
 	bool throwing;
 	bool keyboard_enabled;
 	int currentLevel;
+	int timer;
+	float alfa;
 };
