@@ -7,6 +7,7 @@ cPlayer::~cPlayer(){}
 void cPlayer::init() {
 	SetWidthHeight(PLAYER_WIDTH,PLAYER_HEIGHT);
 	SetTile(INIT_PLAYER_X_TILE,INIT_PLAYER_Y_TILE);
+	projectiles = vector<cProjectile>();
 	lives = PLAYER_MAX_LIVES;
 	points = 0;
 	timecount =0;

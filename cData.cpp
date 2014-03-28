@@ -3,6 +3,12 @@
 cData::cData(void) {}
 cData::~cData(void){}
 
+void cData::init() {
+	//init FMOD
+	FMOD::System_Create(&system);// create an instance of the game engine
+	system->init(32, FMOD_INIT_NORMAL, 0);// initialise the game engine with 32 channels
+}
+
 int cData::GetID(int img)
 {
 	return texture[img].GetID();
@@ -23,21 +29,27 @@ bool cData::LoadImage(int img, char *filename, int type)
 	return true;
 }
 
-bool cData::LoadSound(int id, string filename)
+bool cData::LoadSound(int id, char *filename)
 {
-	sf::SoundBuffer buffer;
-    if (!buffer.loadFromFile(filename)) return false;
-	else {
-		audiofiles[id] = filename;
-		return true;
-	}
+	//load sounds
+	system->createSound(filename, FMOD_HARDWARE, 0, &sound[id]);
+	sound[id]->setMode(FMOD_LOOP_OFF);    /* drumloop.wav has embedded loop points which automatically makes looping turn on, */
+										/* so turn it off here.  We could have also just put FMOD_LOOP_OFF in the above CreateSound call. */
 	return true;
 }
 
 void cData::PlaySound(int id) {
-	sf::Sound sound;
-    if(buffer.loadFromFile(audiofiles[id])){
-		sound.setBuffer(buffer);
-		sound.play();
+	system->playSound(sound[id], NULL, false, 0);
+}
+
+void cData::Update() {
+		system->update(); //update FMOD, need to call this once per frame to keep the sound engine running
+}
+
+void cData::Release() {
+	for(int i=0; i< NUM_AUDIO ;++i) {
+		sound[i]->release();
 	}
+    system->close();
+    system->release();
 }

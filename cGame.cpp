@@ -11,7 +11,7 @@ cGame::~cGame(void)
 bool cGame::Init()
 {
 	bool res=true;
-
+	Data.init();
 	//Graphics initialization
 	glClearColor(0.0f,0.0f,0.0f,0.0f);
 	glMatrixMode(GL_PROJECTION);
@@ -43,7 +43,20 @@ bool cGame::Init()
 	//Sounds init
 	res = Data.LoadSound(SOUND_SELECT,"sounds/select.wav");
 	if(!res) return false;
-
+	res = Data.LoadSound(SOUND_JUMP,"sounds/jump.wav");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_ENEMY_DEATH,"sounds/enemyDeath.wav");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_PLAYER_SHOT,"sounds/playerShot.wav");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_ENEMY_SHOT,"sounds/enemyShot.wav");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_PLAYER_DEATH,"sounds/playerDeath.wav");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_SNOWBALL_SHOT,"sounds/snowballShot.wav");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_ACCEPT,"sounds/accept.wav");
+	if(!res) return false;
 
 	keyboard_enabled = true;
 	numPlayers = 0;
@@ -65,6 +78,7 @@ bool cGame::Loop()
 
 void cGame::Finalize()
 {
+	Data.Release();
 }
 
 //Input
@@ -81,6 +95,7 @@ void cGame::ReadMouse(int button, int state, int x, int y)
 bool cGame::startGame() {
 	bool res = true;
 	enemies = vector<Enemy>();
+	particles = vector<cParticle>();
 	res = Scene.LoadLevel(1);
 	if(!res) return false;
 	res = LoadEnemies(1);
@@ -109,6 +124,7 @@ bool cGame::ProcessMenu() {
 	}
 	if (keys[' ']) {
 		int s = ui.getMenuState();
+		Data.PlaySound(SOUND_ACCEPT);
 		switch(s) {
 			case 0:	
 				numPlayers = 1;
@@ -135,6 +151,7 @@ bool cGame::ProcessPlaying() {
 	}
 	if ((keys['p'] || keys['P']) && keyboard_enabled) {
 			state = STATE_PAUSE;
+			Data.PlaySound(SOUND_ACCEPT);
 			keyboard_enabled = false;
 	}
 	if ((!keys['p'] && !keys['P']) && !keyboard_enabled)  {
@@ -147,13 +164,18 @@ bool cGame::ProcessPlaying() {
 			throwing = true;
 			//If we are touching a snowball, we'll shoot it
 			if(Player.GetState() == STATE_PUSH_LEFT) {
+				Data.PlaySound(SOUND_SNOWBALL_SHOT);
 				enemies[Player.GetSnowballPushing()].ShootSnowballLeft(); 
 			}
 			else if(Player.GetState() == STATE_PUSH_RIGHT){
+				Data.PlaySound(SOUND_SNOWBALL_SHOT);
 				enemies[Player.GetSnowballPushing()].ShootSnowballRight(); 
 			}
 			//if not, we shoot projectiles
-			else Player.Throw(Scene.GetMap());	
+			else {
+			    Data.PlaySound(SOUND_PLAYER_SHOT);
+				Player.Throw(Scene.GetMap());	
+			}
 		}
 		else if(!keys[' ']) throwing = false;
 		
@@ -163,9 +185,13 @@ bool cGame::ProcessPlaying() {
 			if(Player.GetState()==STATE_SNOWBALL_PLAYER) {
 				enemies[Player.GetSnowballPushing()].SetState(STATE_SNOWBALL_MOVING);
 			}
+			if(Player.CollidesMapFloor(Scene.GetMap())&&!Player.isJumping()&&Player.GetState()!=STATE_THROWLEFT &&Player.GetState()!=STATE_THROWRIGHT)Data.PlaySound(SOUND_JUMP);
 			Player.Jump(Scene.GetMap());
 		}
 		
+		//S
+		if (keys['s'] || keys['S']) Player.SetSnowballOnTopOf(-1);
+
 		//A
 		if ((keys['a'] || keys['A']) && Player.GetState()!=STATE_SNOWBALL_PLAYER)	{
 			//if we aren't pushing a ball or standing on the top of the ball, we move normally
@@ -286,9 +312,10 @@ bool cGame::ProcessPlaying() {
 					}
 				}
 				//If the enemy has no snow and the player is not on a moving snowball, the player dies
-				else if(!Player.isInvincible() && !enemies[i].isHit()&& Player.GetState()!=STATE_SNOWBALL_PLAYER) {
+				else if(!Player.isInvincible() && !enemies[i].isHit()&& enemies[i].GetState() != STATE_STUNNED && Player.GetState()!=STATE_SNOWBALL_PLAYER) {
 					Player.Die();
-					if(Player.GetCurrentLives() == 0)
+					Data.PlaySound(SOUND_PLAYER_DEATH);
+					if(Player.GetCurrentLives() <= 0)
 						state = STATE_GAMEOVER;
 				}
 			}
@@ -298,7 +325,11 @@ bool cGame::ProcessPlaying() {
 			//Enemy projectiles to Player
 			if (!Player.isInvincible() && Player.GetState()!=STATE_SNOWBALL_PLAYER) {
 				Player.GetArea(&rec);
-				if(enemies[i].CheckProjectileCollisions(&rec)) Player.Die();
+				if(enemies[i].CheckProjectileCollisions(&rec)) {
+					Player.Die();
+					Data.PlaySound(SOUND_PLAYER_DEATH);
+					if(Player.GetCurrentLives() <= 0) state = STATE_GAMEOVER;
+				}
 				for(int j=0; j<enemies.size();++j){
 					enemies[j].GetArea(&rec);
 					if(enemies[j].isHit()){
@@ -328,6 +359,12 @@ bool cGame::ProcessPause()
 }
 
 bool cGame::ProcessWining() {
+	if (keys[27]) {
+		alfa =0;
+		timer =0;
+		state = STATE_MENU; 
+	}
+	
 	Player.SetState(STATE_WINING_LEVEL);
 	Player.Logic(Scene.GetMap());
 	if(alfa ==0) alfa =1;
@@ -348,6 +385,11 @@ bool cGame::ProcessWining() {
 }
 
 bool cGame::ProcessTransition() {
+	if (keys[27]) {
+		alfa =0;
+		timer =0;
+		state = STATE_MENU; 
+	}
 	++timer;
 	alfa +=0.01;
 	if (alfa>1) alfa =1;
@@ -391,6 +433,7 @@ bool cGame::Process()
 			res = ProcessTransition();
 			break;
 	}
+	Data.Update();
 	return res;
 }
 
@@ -450,13 +493,8 @@ void cGame::Render()
 }
 
 void cGame::RenderTransition() {
-	glColor4f(1.0,1.0,1.0,alfa);
-	glEnable(GL_BLEND);
-	glEnable(GL_TEXTURE_2D);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(alfa,alfa,alfa,1.0);
 	RenderPlaying();
-	glDisable(GL_TEXTURE_2D);
-	glDisable(GL_BLEND);
 	glColor4f(1.0,1.0,1.0,1.0);
 }
 
@@ -499,8 +537,7 @@ bool cGame::LoadEnemies(int level) {
 }
 
 void cGame::KillEnemy(int i) {
-	
-	//sumar punts per matar al enemic
+	Data.PlaySound(SOUND_ENEMY_DEATH);
 	int x,y;
 	Player.SetCurrentPoints(Player.GetCurrentPoints()+enemies[i].GetPoints());
 	enemies[i].GetPosition(&x,&y);

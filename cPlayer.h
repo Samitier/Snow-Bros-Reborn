@@ -2,6 +2,7 @@
 
 #include "cProjectile.h"
 #include "cBicho.h"
+#include "cData.h"
 
 #define PLAYER_START_CX		3
 #define PLAYER_START_CY		2
