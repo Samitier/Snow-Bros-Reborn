@@ -98,6 +98,7 @@ void cGame::ReadMouse(int button, int state, int x, int y)
 bool cGame::startGame() {
 	bool res = true;
 	enemies = vector<Enemy>();
+	Player.lvlUp();
 	particles = vector<cParticle>();
 	res = Scene.LoadLevel(1);
 	if(!res) return false;
@@ -135,7 +136,7 @@ bool cGame::ProcessMenu() {
 				startGame();
 				break;
 			case 1:
-				numPlayers = 1;
+				numPlayers = 2;
 				startGame();
 				state = STATE_PLAYING;
 				break;

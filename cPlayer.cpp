@@ -104,6 +104,11 @@ int cPlayer::GetCurrentPoints()
 	return points; 
 }
 
+void cPlayer::lvlUp() {
+	projectiles = vector<cProjectile>();
+	blocks = vector<cBlock>();
+}
+
 void cPlayer::Die() {
 	lives--;
 	dead = true;

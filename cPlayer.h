@@ -27,7 +27,7 @@ public:
 	bool isInvincible();
 	bool checkCanThrow();
 
-
+	void lvlUp();
 	virtual void Logic(int *map);
 	virtual bool CollidesMapFloor (int *map);
 	int GetCurrentPoints();
