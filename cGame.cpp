@@ -98,7 +98,7 @@ void cGame::ReadMouse(int button, int state, int x, int y)
 bool cGame::startGame() {
 	bool res = true;
 	enemies = vector<Enemy>();
-	Player.lvlUp();
+	Player.lvlUp(Scene.GetMap());
 	particles = vector<cParticle>();
 	res = Scene.LoadLevel(1);
 	if(!res) return false;
@@ -382,6 +382,7 @@ bool cGame::ProcessWining() {
 		timer =0;
 		alfa=0;
 		++currentLevel;
+		Player.lvlUp(Scene.GetMap());
 		LoadLevel(currentLevel);
 	}
 	return true;

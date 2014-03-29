@@ -104,7 +104,14 @@ int cPlayer::GetCurrentPoints()
 	return points; 
 }
 
-void cPlayer::lvlUp() {
+void cPlayer::lvlUp(int* map) {
+	for (int i = 0; i < blocks.size(); ++i) {
+		int xaux, yaux;
+		blocks[i].GetPosition(&xaux, &yaux);
+		if (map[((yaux/TILE_SIZE)*SCENE_WIDTH)+xaux/TILE_SIZE] == 10) {
+		map[((yaux/TILE_SIZE)*SCENE_WIDTH)+xaux/TILE_SIZE] = 0;
+		}
+	}
 	projectiles = vector<cProjectile>();
 	blocks = vector<cBlock>();
 }
