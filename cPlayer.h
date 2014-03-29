@@ -1,6 +1,6 @@
 #pragma once
 
-#include "cProjectile.h"
+#include "cBlock.h"
 #include "cBicho.h"
 #include "cData.h"
 
@@ -38,6 +38,7 @@ public:
 	void SetSnowballOnTopOf(int snowball);
 	void ResetPosition();
 	void SetCurrentPoints(int pts);
+	void PutBlock(int x, int y,int* map);
 
 private: 
 	int timecount;
@@ -47,6 +48,6 @@ private:
 	int lives;
 	int snowballPushing;
 	int snowballOnTopOf;
-
+	vector<cBlock> blocks;
 	int timeThrowing;
 };

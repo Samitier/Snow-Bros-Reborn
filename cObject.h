@@ -27,7 +27,7 @@ public:
 	void GetWidthHeight(int *w,int *h);
 
 	bool Collides(cRect *rc);
-	bool CollidesMapWall(int *map,bool right);
+	virtual bool CollidesMapWall(int *map,bool right);
 	virtual bool CollidesMapFloor(int *map);
 	virtual void GetArea(cRect *rc);
 	void DrawRect(int tex_id,float xo,float yo,float xf,float yf);

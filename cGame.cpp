@@ -90,6 +90,9 @@ void cGame::ReadKeyboard(unsigned char key, int x, int y, bool press)
 
 void cGame::ReadMouse(int button, int state, int x, int y)
 {
+	if (state == STATE_PLAYING) {
+		Player.PutBlock(x,-1*(y-GAME_HEIGHT), Scene.GetMap());
+	}
 }
 
 bool cGame::startGame() {
@@ -368,7 +371,6 @@ bool cGame::ProcessWining() {
 	Player.SetState(STATE_WINING_LEVEL);
 	Player.Logic(Scene.GetMap());
 	if(alfa ==0) alfa =1;
-	
 
 	if(particles.empty()) {
 		++timer;

@@ -17,6 +17,7 @@ void cPlayer::init() {
 	invincible = false;
 	snowballPushing = -1;
 	snowballOnTopOf = -1;
+	blocks = vector<cBlock>();
 	seq=0;
 	delay=0;
 	timeThrowing =0;
@@ -93,6 +94,8 @@ void cPlayer::Draw(int tex_id, bool pause)
 	else {
 		DrawRect(tex_id,xo,yo,xf,yf);
 	}
+	for (int i = 0; i < int(blocks.size()); ++i) 
+		blocks[i].Draw(tex_id);
 	for (int i = 0; i < int(projectiles.size()); ++i) projectiles[i].Draw(tex_id);
 }
 
@@ -109,6 +112,39 @@ void cPlayer::Die() {
 
 bool cPlayer::isDead() {
 	return (dead || state == STATE_RESPAWN);
+}
+
+void cPlayer::PutBlock(int xx,int yy,int* map) {
+	if (map[((yy/TILE_SIZE)*SCENE_WIDTH)+xx/TILE_SIZE] == 0 &&
+		int(blocks.size()) < MAX_BLOCKS) {
+		bool bb = true;
+		for (int i = 0; i < int(blocks.size()); ++i)
+		{
+			int xaux, yaux;
+			blocks[i].GetPosition(&xaux, &yaux);
+			if ((xx/TILE_SIZE)*TILE_SIZE == xaux && 
+				(yy/TILE_SIZE)*TILE_SIZE == yaux) {
+				bb = false;
+				break;
+			}
+		}
+		if (bb) {
+			cBlock b(xx,yy);
+			blocks.push_back(b);
+			map[((yy/TILE_SIZE)*SCENE_WIDTH)+xx/TILE_SIZE] = 10;
+		}
+	}
+	else if (map[((yy/TILE_SIZE)*SCENE_WIDTH)+xx/TILE_SIZE] == 10) {
+		map[((yy/TILE_SIZE)*SCENE_WIDTH)+xx/TILE_SIZE] = 0;
+		for (int i = 0; i < blocks.size(); ++i) {
+			int xaux, yaux;
+			blocks[i].GetPosition(&xaux, &yaux);
+			if ((xx/TILE_SIZE)*TILE_SIZE == xaux && 
+				(yy/TILE_SIZE)*TILE_SIZE == yaux) {
+					blocks.erase(blocks.begin() + i);
+			}
+		}
+	}
 }
 
 
@@ -171,6 +207,13 @@ void cPlayer::Logic(int *map) {
 		if (projectiles[i].Destroy(map)) 
 			projectiles.erase(projectiles.begin() + i);
 	}
+
+	//BLOCKS
+	for (int i = 0; i < int(blocks.size()); ++i) 
+	{
+		blocks[i].Logic(map);
+	}
+
 	cBicho::Logic(map);
 }
 

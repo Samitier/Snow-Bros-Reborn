@@ -39,6 +39,7 @@ public:
 	int  GetID(int img);
 	void GetSize(int img,int *w,int *h);
 	bool LoadImage(int img,char *filename,int type = GL_RGBA);
+
 	
 	bool LoadSound(int id, char *filename);
 	void PlaySound(int id);
@@ -54,3 +55,5 @@ private:
 	FMOD::System     *system; //handle to FMOD engine
 
 };
+
+
