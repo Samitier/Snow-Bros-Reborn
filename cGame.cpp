@@ -115,19 +115,16 @@ bool cGame::startGame() {
 bool cGame::ProcessMenu() {
 	bool res = true;
 	if (keys['w'] && keyboard_enabled)  {
-		ui.stateUp();
+		ui.stateUp(3);
 		Data.PlaySound(SOUND_SELECT);
 		keyboard_enabled = false;
 	}
 	else if (keys['s'] && keyboard_enabled)  {
-		ui.stateDown();		
+		ui.stateDown(3);		
 		Data.PlaySound(SOUND_SELECT);
 		keyboard_enabled = false;
 	}
-	if ((!keys['s'] && !keys['w']) && !keyboard_enabled)  {
-	keyboard_enabled = true;
-	}
-	if (keys[' ']) {
+	if (keys[' '] && keyboard_enabled) {
 		int s = ui.getMenuState();
 		Data.PlaySound(SOUND_ACCEPT);
 		switch(s) {
@@ -146,6 +143,9 @@ bool cGame::ProcessMenu() {
 				return false;
 				break;
 		}
+	}
+	if ((!keys['s'] && !keys['w'] && !keys[' ']) && !keyboard_enabled)  {
+		keyboard_enabled = true;
 	}
 	return res;
 }
@@ -321,8 +321,10 @@ bool cGame::ProcessPlaying() {
 				else if(!Player.isInvincible() && !enemies[i].isHit()&& enemies[i].GetState() != STATE_STUNNED && Player.GetState()!=STATE_SNOWBALL_PLAYER) {
 					Player.Die();
 					Data.PlaySound(SOUND_PLAYER_DEATH);
-					if(Player.GetCurrentLives() <= 0)
+					if(Player.GetCurrentLives() <= 0) {
 						state = STATE_GAMEOVER;
+						Player.SetCurrentPoints(Player.GetCurrentPoints()/2);
+					}
 				}
 			}
 			//Player projectiles to  Enemy
@@ -334,7 +336,10 @@ bool cGame::ProcessPlaying() {
 				if(enemies[i].CheckProjectileCollisions(&rec)) {
 					Player.Die();
 					Data.PlaySound(SOUND_PLAYER_DEATH);
-					if(Player.GetCurrentLives() <= 0) state = STATE_GAMEOVER;
+					if(Player.GetCurrentLives() <= 0) {
+						state = STATE_GAMEOVER;
+						Player.SetCurrentPoints(Player.GetCurrentPoints()/2);
+					}
 				}
 				for(int j=0; j<enemies.size();++j){
 					enemies[j].GetArea(&rec);
@@ -408,11 +413,37 @@ bool cGame::ProcessTransition() {
 }
 
 bool cGame::ProcessGameOver() {
-	if (keys[27])  {
-		state = STATE_MENU;
+	bool res = true;
+	if (keys['a'] && keyboard_enabled)  {
+		ui.stateUp(1);
+		Data.PlaySound(SOUND_SELECT);
 		keyboard_enabled = false;
-	} 
-	//podriamos hacer un continue, simplemente que no continuar lleve al menu principal y continuar lleve a LoadLevel(currentLevel)
+	}
+	else if (keys['d'] && keyboard_enabled)  {
+		ui.stateDown(1);		
+		Data.PlaySound(SOUND_SELECT);
+		keyboard_enabled = false;
+	}
+	if (keys[' ']) {
+		int s = ui.getMenuState();
+		Data.PlaySound(SOUND_ACCEPT);
+		switch(s) {
+			case 0:	
+				state = STATE_PLAYING;
+				LoadLevel(currentLevel);
+				break;
+			case 1:
+				state = STATE_MENU;
+				ui.resetMenuState();
+				break;
+		}
+		keyboard_enabled = false;
+	}
+	if ((!keys['a'] && !keys['d'] && !keys[' ']) && !keyboard_enabled)  {
+		keyboard_enabled = true;
+	}
+	return res;
+	//LoadLevel(currentLevel)
 	return true;
 }
 bool cGame::ProcessInstructions() {
@@ -591,6 +622,8 @@ void cGame::KillEnemy(int i) {
 void cGame::LoadLevel(int level) {
 	Scene.LoadLevel(level);
 	Player.ResetPosition();
+	enemies = vector<Enemy>();
+	Player.lvlUp(Scene.GetMap());
 	LoadEnemies(level);
 	state = STATE_TRANSITION;
 }

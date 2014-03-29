@@ -56,14 +56,14 @@ void UI::NextFrame(int max)
 		delay = 0;
 	}
 }
-void UI::stateDown() {
+void UI::stateDown(int max) {
 	++menuState;
-	if (menuState > 3) menuState = 0;
+	if (menuState > max) menuState = 0;
 }
 
-void UI::stateUp() {
+void UI::stateUp(int max) {
 	--menuState;
-	if (menuState < 0) menuState = 3;
+	if (menuState < 0) menuState = max;
 }
 
 int UI::getMenuState() {
@@ -144,7 +144,7 @@ void UI::DrawCredits(int tex_id) {
 
 void UI::DrawInstructions(int tex_id) {
 	float xo, yo, xf, yf;
-	xo = 0.50f;		yo = 0.75f;
+	xo = 0.50f;		yo = 0.25f;
 	xf = xo + 0.25f;	yf = yo - 0.25f;
 
 	glEnable(GL_TEXTURE_2D);
@@ -193,10 +193,21 @@ void UI::render_string(void* font, const char* string)
 	for(i=0;i<len;i++)
 		glutBitmapCharacter(font, string[i]);
 }
-
+void UI::resetMenuState() {
+	menuState = 0;
+}
 void UI::DrawGameOver(int tex_id) {
-	float xo,yo,xf,yf;
-	xo = 0.5; yo =0.25;
+	float xo, yo, xf, yf;
+	switch(menuState) {
+		case 0:
+			xo = 0.50f+seq*0.25f;	yo = 0.75f;
+			NextFrame(2);
+		break;
+		case 1:
+			xo = 0.50f+seq*0.25f;	yo = 1.0f;
+			NextFrame(2);
+		break;
+	}
 	xf = xo + 0.25f;	yf = yo - 0.25f;
 
 	glEnable(GL_TEXTURE_2D);

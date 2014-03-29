@@ -17,18 +17,19 @@ public:
 	void DrawCredits(int tex_id);
 	void DrawPause(int tex_id);
 	void DrawGameOver(int tex_id);
-	void stateUp();
-	void stateDown();
+	void stateUp(int max);
+	void stateDown(int max);
 	void setWidthHeight(int width, int height);
 	void setLevel(int level);
 	int getMenuState();
-
+	void resetMenuState();
 private:
 	void NextFrame(int max);
 	
 	int width, height;
 	int id0;
 	int menuState;
+	int goverState;
 	int delay;
 	int seq;
 	void GenerateCallList();

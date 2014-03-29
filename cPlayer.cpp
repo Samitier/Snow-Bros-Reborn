@@ -114,6 +114,7 @@ void cPlayer::lvlUp(int* map) {
 	}
 	projectiles = vector<cProjectile>();
 	blocks = vector<cBlock>();
+	lives = 3;
 }
 
 void cPlayer::Die() {
