@@ -37,6 +37,8 @@ public:
 	bool ProcessWining();
 	bool ProcessGameOver();
 	bool ProcessTransition();
+	bool ProcessInstructions();
+	bool ProcessCredits();
 	//Output
 	void Render();
 	void RenderPlaying();

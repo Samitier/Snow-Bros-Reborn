@@ -13,6 +13,8 @@ public:
 
 	void DrawPlaying(int lives, int points, int level);
 	void DrawMenu(int tex_id);
+	void DrawInstructions(int tex_id);
+	void DrawCredits(int tex_id);
 	void DrawPause(int tex_id);
 	void DrawGameOver(int tex_id);
 	void stateUp();

@@ -111,6 +111,7 @@ bool cGame::startGame() {
 	state=STATE_TRANSITION;
 	return res;
 }
+
 bool cGame::ProcessMenu() {
 	bool res = true;
 	if (keys['w'] && keyboard_enabled)  {
@@ -136,11 +137,12 @@ bool cGame::ProcessMenu() {
 				startGame();
 				break;
 			case 1:
-				numPlayers = 2;
-				startGame();
-				state = STATE_PLAYING;
+				state = STATE_INSTRUCTIONS;
 				break;
-			case 2: 
+			case 2:
+				state = STATE_CREDITS;
+				break;
+			case 3: 
 				return false;
 				break;
 		}
@@ -408,11 +410,28 @@ bool cGame::ProcessTransition() {
 bool cGame::ProcessGameOver() {
 	if (keys[27])  {
 		state = STATE_MENU;
+		keyboard_enabled = false;
 	} 
 	//podriamos hacer un continue, simplemente que no continuar lleve al menu principal y continuar lleve a LoadLevel(currentLevel)
 	return true;
 }
-
+bool cGame::ProcessInstructions() {
+	if (keys[27])  {
+		keyboard_enabled = false;
+		state = STATE_MENU;
+	} 
+	if ((!keys[27] && !keyboard_enabled))
+		keyboard_enabled = true;
+	return true;
+}
+bool cGame::ProcessCredits() {
+	if (keys[27])  {
+		state = STATE_MENU;
+	}
+	if ((!keys[27] && !keyboard_enabled))
+		keyboard_enabled = true;
+	return true;
+}
 //Process
 bool cGame::Process()
 {
@@ -435,6 +454,12 @@ bool cGame::Process()
 			break;
 			case STATE_TRANSITION:
 			res = ProcessTransition();
+			break;
+		case STATE_INSTRUCTIONS:
+			res = ProcessInstructions();
+			break;
+		case STATE_CREDITS:
+			res = ProcessCredits();
 			break;
 	}
 	Data.Update();
@@ -488,6 +513,12 @@ void cGame::Render()
 		break;
 		case STATE_GAMEOVER:
 			ui.DrawGameOver(Data.GetID(IMG_MENU));
+		break;
+		case STATE_INSTRUCTIONS:
+			ui.DrawInstructions(Data.GetID(IMG_MENU));
+		break;
+		case STATE_CREDITS:
+			ui.DrawCredits(Data.GetID(IMG_MENU));
 		break;
 		case STATE_TRANSITION:
 			RenderTransition();
