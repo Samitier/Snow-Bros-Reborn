@@ -3,7 +3,6 @@
 #include "cTexture.h"
 #include "Globals.h"
 #include "fmod.hpp"
-#pragma comment( lib, "fmodex_vc.lib" ) // fmod library
 
 
 //Array size
