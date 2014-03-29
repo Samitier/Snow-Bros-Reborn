@@ -54,6 +54,7 @@ using namespace std;
 #define STEP_LENGTH			2
 #define TIME_THROWING		FRAME_DELAY*2
 #define THROW_LOAD			FRAME_DELAY+FRAME_DELAY/2		//THROW_LOAD <= TIME_THROWING
+#define MAX_BLOCKS			2		
 
 //Enemy defines//
 #define ENEMY_WIDTH			32

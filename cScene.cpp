@@ -72,7 +72,22 @@ bool cScene::LoadLevel(int level)
 						}else if(t==4){
 							coordx_tile = 0.5f;
 							coordy_tile = 0.5f;
+						}/*						if(t <= 4) {
+							coordx_tile = 0.25*(t-1);
+							coordy_tile = 0.0f;
 						}
+						else if(t<=8) {
+							coordx_tile = 0.25*(t-5);
+							coordy_tile = 0.25f;
+						}
+						else if (t<=12){
+							coordx_tile = 0.25*(t-9);
+							coordy_tile = 0.5f;
+						}
+						else {
+							coordx_tile = 0.25*(t-13);
+							coordy_tile = 0.75f;
+						}*/
 
 						glTexCoord2f(coordx_tile       ,coordy_tile+0.5f);	    glVertex2i(px           ,py           );
 						glTexCoord2f(coordx_tile+0.5f  ,coordy_tile+0.5f);	    glVertex2i(px+BLOCK_SIZE,py           );
