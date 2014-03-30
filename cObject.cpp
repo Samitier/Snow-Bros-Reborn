@@ -92,7 +92,7 @@ bool cObject::CollidesBlockOnJump(int *map)
 	for(j=0;j<width_tiles;j++)
 	{
 		if(map[ tile_x + ((tile_y+j)*SCENE_WIDTH) ] == 10 ||
-		map[tile_x-1 + ((tile_y+j)*SCENE_WIDTH) ] == 10)	return true;
+		map[tile_x+1 + ((tile_y+j)*SCENE_WIDTH) ] == 10)	return true;
 	}
 
 	return false;

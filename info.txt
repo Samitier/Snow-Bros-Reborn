@@ -4,7 +4,11 @@ Daniel Albarral
  *Funcionalitats implementades 
 
  	-Crear bloques mediante el mouse para cambiar el mapa.
- 	-
+ 	-Interfície gràfica amb informació referent a vides, punts.
+	-Estructura bàsica de 4 pantalles: menú principal, jugar, instruccions, crèdits 
+	-Enriquir escenari amb capes superposades al davant i de fons 
+	-So: música de fons i efectes especials 
+
 
  *Instruciones:
 
