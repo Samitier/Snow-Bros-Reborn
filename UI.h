@@ -17,6 +17,7 @@ public:
 	void DrawCredits(int tex_id);
 	void DrawPause(int tex_id);
 	void DrawGameOver(int tex_id);
+	void DrawGameEnd(int tex_id,int liv,int score,int lvl);
 	void stateUp(int max);
 	void stateDown(int max);
 	void setWidthHeight(int width, int height);

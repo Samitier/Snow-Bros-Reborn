@@ -45,6 +45,7 @@ public:
 	bool CheckProjectileCollisions(cRect *rec);
 
 protected:
+	bool canJump(int* map);
 	bool jumping;
 	bool throwing;
 	vector<cProjectile> projectiles;

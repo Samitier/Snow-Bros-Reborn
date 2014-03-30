@@ -26,6 +26,7 @@ public:
 	void SetWidthHeight(int w,int h);
 	void GetWidthHeight(int *w,int *h);
 
+	virtual bool CollidesBlockOnJump(int *map);
 	bool Collides(cRect *rc);
 	virtual bool CollidesMapWall(int *map,bool right);
 	virtual bool CollidesMapFloor(int *map);

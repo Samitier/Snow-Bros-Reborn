@@ -142,6 +142,8 @@ void UI::DrawCredits(int tex_id) {
 	glDisable(GL_TEXTURE_2D);
 }
 
+
+
 void UI::DrawInstructions(int tex_id) {
 	float xo, yo, xf, yf;
 	xo = 0.50f;		yo = 0.25f;
@@ -159,6 +161,12 @@ void UI::DrawInstructions(int tex_id) {
 
 	glDisable(GL_TEXTURE_2D);
 }
+
+void UI::DrawGameEnd(int tex_id,int liv, int score,int lvl) {
+	DrawCredits(tex_id);
+	DrawPlaying(liv,score,lvl);
+}
+
 void UI::DrawPlaying(int lives, int points, int level) {
 	glCallList(id0);
 	//pintar points lives i level

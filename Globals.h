@@ -8,15 +8,16 @@
 using namespace std;
 
 //Game States
-#define STATE_MENU		0
-#define STATE_PLAYING	1
-#define STATE_INTRO		2
-#define STATE_PAUSE		3
-#define STATE_GAMEOVER	4
-#define STATE_WINING    5
-#define STATE_TRANSITION 6
-#define STATE_INSTRUCTIONS 7
-#define STATE_CREDITS 8
+#define STATE_MENU			0
+#define STATE_PLAYING		1
+#define STATE_INTRO			2
+#define STATE_PAUSE			3
+#define STATE_GAMEOVER		4
+#define STATE_WINING		5
+#define STATE_TRANSITION	6
+#define STATE_INSTRUCTIONS	7
+#define STATE_CREDITS		8
+#define STATE_GAME_END		9
 
 
 //Number of pixels of the window//
@@ -65,6 +66,8 @@ using namespace std;
 #define TIME_STUNNED        50
 #define SNOWBALL_LIMIT		10
 #define ENEMY_POINTS		500
+
+#define MAX_LVL				3
 
 //somos el grupo 07
 //pctic0405.lsi.upc.edu

@@ -100,14 +100,14 @@ bool cGame::startGame() {
 	enemies = vector<Enemy>();
 	Player.lvlUp(Scene.GetMap());
 	particles = vector<cParticle>();
-	res = Scene.LoadLevel(1);
+	res = Scene.LoadLevel(1);	//CAMBIAR
 	if(!res) return false;
 	res = LoadEnemies(1);
 	if(!res) return false;
 	Player.init();
 	ui.init(Player.GetCurrentPoints(),Player.GetCurrentLives());
 	throwing = false;
-	currentLevel =1;
+	currentLevel = 1;			//CAMBIAR
 	state=STATE_TRANSITION;
 	return res;
 }
@@ -389,8 +389,11 @@ bool cGame::ProcessWining() {
 		timer =0;
 		alfa=0;
 		++currentLevel;
-		Player.lvlUp(Scene.GetMap());
-		LoadLevel(currentLevel);
+		if (currentLevel > MAX_LVL) state = STATE_GAME_END; 
+		else {
+			Player.lvlUp(Scene.GetMap());
+			LoadLevel(currentLevel);
+		}
 	}
 	return true;
 }
@@ -492,9 +495,21 @@ bool cGame::Process()
 		case STATE_CREDITS:
 			res = ProcessCredits();
 			break;
+		case STATE_GAME_END:
+			res = ProcessGameEnd();
+			break;
 	}
 	Data.Update();
 	return res;
+}
+
+bool cGame::ProcessGameEnd() {
+	if (keys[27])  {
+		state = STATE_MENU;
+	}
+	if ((!keys[27] && !keyboard_enabled))
+		keyboard_enabled = true;
+	return true;
 }
 
 void cGame::RenderPlaying()
@@ -553,6 +568,9 @@ void cGame::Render()
 		break;
 		case STATE_TRANSITION:
 			RenderTransition();
+		break;
+		case STATE_GAME_END:
+			ui.DrawGameEnd(Data.GetID(IMG_MENU),Player.GetCurrentLives(),Player.GetCurrentPoints(), currentLevel-1);
 		break;
 	}
 	glutSwapBuffers();

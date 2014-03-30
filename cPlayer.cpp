@@ -96,7 +96,8 @@ void cPlayer::Draw(int tex_id, bool pause)
 	}
 	for (int i = 0; i < int(blocks.size()); ++i) 
 		blocks[i].Draw(tex_id);
-	for (int i = 0; i < int(projectiles.size()); ++i) projectiles[i].Draw(tex_id);
+	for (int i = 0; i < int(projectiles.size()); ++i) 
+		projectiles[i].Draw(tex_id);
 }
 
 int cPlayer::GetCurrentPoints()
@@ -109,7 +110,7 @@ void cPlayer::lvlUp(int* map) {
 		int xaux, yaux;
 		blocks[i].GetPosition(&xaux, &yaux);
 		if (map[((yaux/TILE_SIZE)*SCENE_WIDTH)+xaux/TILE_SIZE] == 10) {
-		map[((yaux/TILE_SIZE)*SCENE_WIDTH)+xaux/TILE_SIZE] = 0;
+			map[((yaux/TILE_SIZE)*SCENE_WIDTH)+xaux/TILE_SIZE] = 0;
 		}
 	}
 	projectiles = vector<cProjectile>();

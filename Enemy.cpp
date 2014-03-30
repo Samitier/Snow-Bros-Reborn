@@ -152,8 +152,8 @@ void Enemy::Logic(int *map)
 void Enemy::AI(int *map){
 	switch(enemyType) {
 		case ENEMY_ONE:
-				++movsps;
-			if(movsps == 30) {
+			++movsps;
+			if(movsps > 30) {
 				movsps =0;
 				rnd = rand()%100; 
 			}
@@ -161,14 +161,14 @@ void Enemy::AI(int *map){
 				if(rand()%1000 <= 5) {
 					Jump(map);
 				}
-				if(rnd < 68) {
+				if(rnd < 50) {
 					MoveLeft(map);
 				}
-				else if (rnd > 42) {
+				else if (rnd > 50) {
 					MoveRight(map);
 				}
 			}
-			if (rand()%1000 < 18) Throw(map);
+			if (rand()%1000 < 9) Throw(map);
 			break;
 
 		case ENEMY_TWO:
@@ -177,16 +177,14 @@ void Enemy::AI(int *map){
 				movsps =0;
 				rnd = rand()%100; 
 			}
-			else if (!throwing){
-				if(rand()%1000 <= 5) {
-					Jump(map);
-				}
-				if(rnd < 68) {
-					MoveLeft(map);
-				}
-				else if (rnd > 42) {
-					MoveRight(map);
-				}
+			if(rand()%1000 <= 5) {
+				Jump(map);
+			}
+			if(rnd < 50) {
+				MoveLeft(map);
+			}
+			else if (rnd > 50) {
+				MoveRight(map);
 			}
 			break;
 	}

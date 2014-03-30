@@ -184,6 +184,13 @@ void cBicho::Stop()
 		}
 	}
 }
+
+bool cBicho::canJump(int *map) {
+	if (CollidesBlockOnJump(map)) 
+		return false;
+	return true;
+}
+
 void cBicho::Jump(int *map)
 {	
 	if(!jumping && !throwing)
@@ -239,7 +246,8 @@ void cBicho::Throw(int *map)
 void cBicho::Logic(int *map)
 {
 	float alfa;
-
+	if (CollidesBlockOnJump(map) && jumping) 
+		jumping = false;
 	if(jumping)
 	{
 		jump_alfa += JUMP_STEP;

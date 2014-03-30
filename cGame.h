@@ -39,6 +39,7 @@ public:
 	bool ProcessTransition();
 	bool ProcessInstructions();
 	bool ProcessCredits();
+	bool ProcessGameEnd();
 	//Output
 	void Render();
 	void RenderPlaying();

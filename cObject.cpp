@@ -76,6 +76,28 @@ bool cObject::CollidesMapWall(int *map,bool right)
 	return false;
 }
 
+bool cObject::CollidesBlockOnJump(int *map)
+{
+	int tile_x,tile_y;
+	int j;
+	int width_tiles,height_tiles;
+
+	tile_x = x / TILE_SIZE;
+	tile_y = y / TILE_SIZE;
+	width_tiles  = w / TILE_SIZE;
+	height_tiles = h / TILE_SIZE;
+
+	tile_y += height_tiles;
+	
+	for(j=0;j<width_tiles;j++)
+	{
+		if(map[ tile_x + ((tile_y+j)*SCENE_WIDTH) ] == 10 ||
+		map[tile_x-1 + ((tile_y+j)*SCENE_WIDTH) ] == 10)	return true;
+	}
+
+	return false;
+}
+
 bool cObject::CollidesMapFloor(int *map)
 {
 	if(y>=TILE_SIZE*SCENE_HEIGHT) return false;
