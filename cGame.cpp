@@ -57,6 +57,12 @@ bool cGame::Init()
 	if(!res) return false;
 	res = Data.LoadSound(SOUND_ACCEPT,"sounds/accept.wav");
 	if(!res) return false;
+	res = Data.LoadSound(SOUND_GAME_OVER,"sounds/gameOver.mid");
+	if(!res) return false;
+	res = Data.LoadSound(SOUND_VICTORY,"sounds/victory.mid");
+	if(!res) return false;
+	res = Data.LoadMusic(MUSIC_MAIN,"sounds/mainMusic.mid");
+	if(!res) return false;
 
 	keyboard_enabled = true;
 	numPlayers = 0;
@@ -153,9 +159,11 @@ bool cGame::ProcessMenu() {
 bool cGame::ProcessPlaying() {
 	bool res = true;
 	if (keys[27]) {
-			state = STATE_MENU; 
+		Data.StopMusic();
+		state = STATE_MENU; 
 	}
 	if ((keys['p'] || keys['P']) && keyboard_enabled) {
+			Data.PauseMusic();
 			state = STATE_PAUSE;
 			Data.PlaySound(SOUND_ACCEPT);
 			keyboard_enabled = false;
@@ -322,7 +330,8 @@ bool cGame::ProcessPlaying() {
 					Player.Die();
 					Data.PlaySound(SOUND_PLAYER_DEATH);
 					if(Player.GetCurrentLives() <= 0) {
-						state = STATE_GAMEOVER;
+						state = STATE_LOSING;
+						Data.StopMusic();
 						Player.SetCurrentPoints(Player.GetCurrentPoints()/2);
 					}
 				}
@@ -337,7 +346,8 @@ bool cGame::ProcessPlaying() {
 					Player.Die();
 					Data.PlaySound(SOUND_PLAYER_DEATH);
 					if(Player.GetCurrentLives() <= 0) {
-						state = STATE_GAMEOVER;
+						state = STATE_LOSING;
+						Data.StopMusic();
 						Player.SetCurrentPoints(Player.GetCurrentPoints()/2);
 					}
 				}
@@ -350,6 +360,8 @@ bool cGame::ProcessPlaying() {
 			}
 		}
 		if(enemies.size()==0) {
+			Data.StopMusic();
+			Data.PlaySound(SOUND_VICTORY);
 			state = STATE_WINING;
 		}
 	}
@@ -359,12 +371,40 @@ bool cGame::ProcessPlaying() {
 bool cGame::ProcessPause() 
 {
 	if ((keys['p'] || keys['P']) && keyboard_enabled) {
+		Data.PauseMusic();
 		state = STATE_PLAYING;
 		keyboard_enabled = false;
 	}
 	if ((!keys['p'] && !keys['P']) && !keyboard_enabled)  keyboard_enabled = true;
 	else if (keys[27])  {
 		state = STATE_MENU;
+	}
+	return true;
+}
+
+bool cGame::ProcessLosing() {
+	if (keys[27]) {
+		alfa =0;
+		timer =0;
+		state = STATE_MENU; 
+	}
+	
+	if(alfa ==0) alfa =1;
+
+	particles.clear();
+
+	++timer;
+
+	if(timer >= 45) {
+		Player.SetState(STATE_SNOWBALL_PLAYER);
+		alfa -=0.01;
+		if (alfa<0) alfa =0.01;
+	}
+	if(timer >= TIME_TRANSITION+45) {
+		timer =0;
+		alfa=0;
+		Data.PlaySound(SOUND_GAME_OVER);
+		state= STATE_GAMEOVER;
 	}
 	return true;
 }
@@ -409,6 +449,7 @@ bool cGame::ProcessTransition() {
 	if (alfa>1) alfa =1;
 	if(timer >= TIME_TRANSITION) {
 		state=STATE_PLAYING;
+		Data.PlayMusic(MUSIC_MAIN);
 		timer =0;
 		alfa =0;
 	}
@@ -486,7 +527,7 @@ bool cGame::Process()
 		case STATE_GAMEOVER:
 			res = ProcessGameOver();
 			break;
-			case STATE_TRANSITION:
+		case STATE_TRANSITION:
 			res = ProcessTransition();
 			break;
 		case STATE_INSTRUCTIONS:
@@ -494,6 +535,9 @@ bool cGame::Process()
 			break;
 		case STATE_CREDITS:
 			res = ProcessCredits();
+			break;
+		case STATE_LOSING:
+			res = ProcessLosing();
 			break;
 		case STATE_GAME_END:
 			res = ProcessGameEnd();
@@ -519,8 +563,8 @@ void cGame::RenderPlaying()
 	//DRAWENEMYS
 	for(int i=0;i<int(enemies.size());++i) {
 		switch(enemies[i].getType()) {
-			case ENEMY_ONE: enemies[i].Draw(Data.GetID(IMG_ENEMY), state==STATE_PAUSE); break;
-			case ENEMY_TWO:  enemies[i].Draw(Data.GetID(IMG_ENEMY2), state==STATE_PAUSE); break;
+			case ENEMY_ONE: enemies[i].Draw(Data.GetID(IMG_ENEMY), (state==STATE_PAUSE||state==STATE_LOSING)); break;
+			case ENEMY_TWO:  enemies[i].Draw(Data.GetID(IMG_ENEMY2),(state==STATE_PAUSE||state==STATE_LOSING)); break;
 		}
 	}
 
@@ -530,7 +574,7 @@ void cGame::RenderPlaying()
 	//DRAW PARTICLES
 	for(int i=0; i<particles.size();++i) {
 		if(particles[i].Dead()) particles.erase(particles.begin()+i);
-		else particles[i].Draw(Data.GetID(IMG_PARTICLE),state==STATE_PAUSE);
+		else particles[i].Draw(Data.GetID(IMG_PARTICLE),(state==STATE_PAUSE||state==STATE_LOSING));
 	}
 
 	ui.DrawPlaying(Player.GetCurrentLives(),Player.GetCurrentPoints(), currentLevel);
@@ -567,6 +611,9 @@ void cGame::Render()
 			ui.DrawCredits(Data.GetID(IMG_MENU));
 		break;
 		case STATE_TRANSITION:
+			RenderTransition();
+		break;
+		case STATE_LOSING:
 			RenderTransition();
 		break;
 		case STATE_GAME_END:

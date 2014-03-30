@@ -40,6 +40,7 @@ public:
 	bool ProcessInstructions();
 	bool ProcessCredits();
 	bool ProcessGameEnd();
+	bool ProcessLosing();
 	//Output
 	void Render();
 	void RenderPlaying();

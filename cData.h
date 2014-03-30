@@ -7,7 +7,7 @@
 
 //Array size
 #define NUM_IMG			7
-#define NUM_AUDIO		10
+#define NUM_AUDIO		11
 
 //Image identifiers
 #define IMG_BLOCKS		0
@@ -26,7 +26,10 @@
 #define SOUND_PLAYER_SHOT	4
 #define SOUND_ENEMY_SHOT	5
 #define SOUND_SNOWBALL_SHOT 6
-#define SOUND_ACCEPT        7
+#define SOUND_GAME_OVER     7
+#define SOUND_VICTORY       8
+#define SOUND_ACCEPT        9
+#define MUSIC_MAIN			10
 
 class cData
 {
@@ -41,7 +44,13 @@ public:
 
 	
 	bool LoadSound(int id, char *filename);
+	bool LoadMusic(int id, char *filename);
+
+	void PlayMusic(int id);
 	void PlaySound(int id);
+
+	void StopMusic();
+	void PauseMusic();
 
 	void Update();
 	void Release();
@@ -52,7 +61,7 @@ private:
 
 	//FMod Stuff
 	FMOD::System     *system; //handle to FMOD engine
-
+	FMOD::Channel *channelMusic;
 };
 
 

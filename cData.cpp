@@ -33,13 +33,34 @@ bool cData::LoadSound(int id, char *filename)
 {
 	//load sounds
 	system->createSound(filename, FMOD_HARDWARE, 0, &sound[id]);
-	sound[id]->setMode(FMOD_LOOP_OFF);    /* drumloop.wav has embedded loop points which automatically makes looping turn on, */
-										/* so turn it off here.  We could have also just put FMOD_LOOP_OFF in the above CreateSound call. */
+	sound[id]->setMode(FMOD_LOOP_OFF);    
+	return true;
+}
+
+bool cData::LoadMusic(int id, char *filename)
+{
+	//load sounds
+	system->createSound(filename, FMOD_HARDWARE, 0, &sound[id]);
+	sound[id]->setMode(FMOD_LOOP_NORMAL);   
 	return true;
 }
 
 void cData::PlaySound(int id) {
 	system->playSound(sound[id], NULL, false, 0);
+}
+
+void cData::PlayMusic(int id) {
+	system->playSound(sound[id], NULL, false, &channelMusic);
+}
+
+void cData::StopMusic() {
+	channelMusic->stop();
+}
+
+void cData::PauseMusic() {
+	bool p;
+	channelMusic->getPaused(&p);
+	channelMusic->setPaused(!p);
 }
 
 void cData::Update() {

@@ -18,6 +18,7 @@ using namespace std;
 #define STATE_INSTRUCTIONS	7
 #define STATE_CREDITS		8
 #define STATE_GAME_END		9
+#define STATE_LOSING		10
 
 
 //Number of pixels of the window//
