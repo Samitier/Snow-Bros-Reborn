@@ -39,7 +39,7 @@ void cBicho::MoveLeft(int *map)
 		if(CollidesMapWall(map,false))
 		{
 			x = xaux;
-			if (!jumping) state = STATE_LOOKLEFT;
+			if (!jumping && state != STATE_THROWLEFT) state = STATE_LOOKLEFT;
 		}
 	}
 	//Advance, no problem
@@ -100,7 +100,7 @@ void cBicho::MoveRight(int *map)
 		if(CollidesMapWall(map,true))
 		{
 			x = xaux;
-			if (!jumping) state = STATE_LOOKRIGHT;
+			if (!jumping && state != STATE_THROWRIGHT) state = STATE_LOOKRIGHT;
 		}
 	}
 	//Advance, no problem

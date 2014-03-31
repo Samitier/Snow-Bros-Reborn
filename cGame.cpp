@@ -262,47 +262,48 @@ bool cGame::ProcessPlaying() {
 
 	//COLLISIONS
 
-	//Player 
-	if(!Player.isDead()) { 
-		cRect rec;
+	//Player  
+	cRect rec;
 		
-		//this checks wether you exit a collision with a snowball if you were standing on top of it
-		if(Player.GetSnowballOnTopOf() != -1) {
-		enemies[Player.GetSnowballOnTopOf()].GetArea(&rec);
-			if(!enemies[Player.GetSnowballOnTopOf()].IsSnowball() ||!Player.Collides(&rec)) {
-				Player.SetSnowballOnTopOf(-1);
+	//this checks wether you exit a collision with a snowball if you were standing on top of it
+	if(Player.GetSnowballOnTopOf() != -1) {
+	enemies[Player.GetSnowballOnTopOf()].GetArea(&rec);
+		if(!enemies[Player.GetSnowballOnTopOf()].IsSnowball() ||!Player.Collides(&rec)) {
+			Player.SetSnowballOnTopOf(-1);
+		}
+	}
+
+	
+	for(int i=0; i<int(enemies.size()); ++i) {
+		enemies[i].GetArea(&rec);
+			
+		//Logic for the moving snowball collisions
+		if(enemies[i].GetState()==STATE_SNOWBALL_MOVING || enemies[i].GetState()==STATE_SNOWBALL_PLAYER) {
+			//Check if it collides with another enemy, and kill it if it does
+			for(int j=0; j<int(enemies.size()); ++j) {
+				if(i != j && enemies[j].Collides(&rec)) {
+					if(enemies[j].IsSnowball()) {
+						if(enemies[i].getDirection() ==-1) enemies[j].ShootSnowballLeft();
+						else enemies[j].ShootSnowballRight();
+						enemies[i].SetDirection(enemies[i].getDirection()*-1);
+					}
+					else if(enemies[j].GetState() != STATE_SNOWBALL_MOVING){
+						if(j<i) i--;
+						KillEnemy(j);
+						continue;
+					}
+				}
+			}	
+			//Check if enemy is a moving snowball and reached the end of level
+			int x, y;
+			enemies[i].GetPosition(&x,&y);
+			if(y <= BLOCK_SIZE+4 &&(enemies[i].CollidesMapWall(Scene.GetMap(),true)||enemies[i].CollidesMapWall(Scene.GetMap(),false))){
+				KillEnemy(i);
+				continue;
 			}
 		}
 
-		//if(enemies.size==0)LoadLevel(currentLevel+1);
-		for(int i=0; i<int(enemies.size()); ++i) {
-			enemies[i].GetArea(&rec);
-			
-			//Logic for the moving snowball collisions
-			if(enemies[i].GetState()==STATE_SNOWBALL_MOVING || enemies[i].GetState()==STATE_SNOWBALL_PLAYER) {
-				//Check if it collides with another enemy, and kill it if it does
-				for(int j=0; j<int(enemies.size()); ++j) {
-					if(i != j && enemies[j].Collides(&rec)) {
-						if(enemies[j].IsSnowball()) {
-							if(enemies[i].getDirection() ==-1) enemies[j].ShootSnowballLeft();
-							else enemies[j].ShootSnowballRight();
-							enemies[i].SetDirection(enemies[i].getDirection()*-1);
-						}
-						else if(enemies[j].GetState() != STATE_SNOWBALL_MOVING){
-							if(j<i) i--;
-							KillEnemy(j);
-							continue;
-						}
-					}
-				}	
-				//Check if enemy is a moving snowball and reached the end of level
-				int x, y;
-				enemies[i].GetPosition(&x,&y);
-				if(y <= BLOCK_SIZE+4 &&(enemies[i].CollidesMapWall(Scene.GetMap(),true)||enemies[i].CollidesMapWall(Scene.GetMap(),false))){
-					KillEnemy(i);
-					continue;
-				}
-			}
+		if(!Player.isDead()) {
 			if(Player.Collides(&rec)) {
 				//If the enemy is a moving snowball, it drags the player if he is not in another snowball
 				if(enemies[i].GetState()==STATE_SNOWBALL_MOVING && !Player.isJumping() && Player.GetState() != STATE_SNOWBALL_PLAYER) {
@@ -359,11 +360,11 @@ bool cGame::ProcessPlaying() {
 				}
 			}
 		}
-		if(enemies.size()==0) {
-			Data.StopMusic();
-			Data.PlaySound(SOUND_VICTORY);
-			state = STATE_WINING;
-		}
+	}
+	if(enemies.size()==0) {
+		Data.StopMusic();
+		Data.PlaySound(SOUND_VICTORY);
+		state = STATE_WINING;
 	}
 	return res;
 }
