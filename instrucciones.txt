@@ -1,0 +1,27 @@
+﻿
+ *Instruciones:
+
+ 	CONTROLES:
+	 	Volver al menu principal:					ESC
+	 	MENUS:
+			Desplazarse por el menu principal:			w,s
+			Desplazarse por el menu de la pantalla GameOver:	a,d
+			Escojer opcion:						Espacio
+		JUGANDO:
+			Saltar:							w
+			Moverse a la derecha:					d
+			Moverse a la izquierda:					a
+			Disparar:						Espacio
+			Colocar bloque:						Click Izquierdo
+			Eliminar bloque:					Click Izquierdo
+
+	OBJETIVOS:
+		Elimina a todos los enemigos de cada nivel. 
+		Para eliminar un enemigo se ha de disparar contra el hasta que esté
+			totalmente cubierto de nieve. Una vez cubierto puedes arrastrarlo y
+			con el espacio lanzarlo. Todos los otros enemigos alcanzados por la
+			bola de nieve son eliminados.
+		Los bloques se pueden usar para bloquear el paso de los enemigos o 
+			para hacer rebotar las bolas de nieve.
+		Cada vez que te sacan todas las vidas, si decides continuar, se te divide 
+			la puntación entre dos.
